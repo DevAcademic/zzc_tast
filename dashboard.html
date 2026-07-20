@@ -8,15 +8,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <style>
-        /* ===== 🆕 أنماط الإعلانات فقط ===== */
+        /* ============================================================
+           التصميم الرئيسي مع الإضافات
+           ============================================================ */
+        
+        /* ===== شريط الإعلانات ===== */
         .announcement-bar {
             background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
-            padding: 0.4rem 0.8rem;
+            padding: 0.3rem 0.8rem;
             position: relative;
             overflow: hidden;
             border-bottom: 2px solid rgba(255,255,255,0.2);
             box-shadow: 0 2px 20px rgba(14,165,233,0.25);
-            min-height: 40px;
+            min-height: 36px;
             display: flex;
             align-items: center;
         }
@@ -31,7 +35,7 @@
             justify-content: center;
             position: relative;
             width: 100%;
-            min-height: 36px;
+            min-height: 32px;
         }
         .announcement-slider {
             display: flex;
@@ -44,27 +48,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            padding: 0.1rem 2rem;
+            gap: 0.4rem;
+            padding: 0.05rem 1.5rem;
             color: white;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
         }
-        .announcement-item .announcement-icon { font-size: 1.1rem; flex-shrink: 0; }
+        .announcement-item .announcement-icon { font-size: 1rem; flex-shrink: 0; }
         .announcement-item .announcement-text { flex: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .announcement-item .announcement-badge {
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
-            padding: 0.05rem 0.6rem;
+            padding: 0.05rem 0.5rem;
             border-radius: 20px;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 700;
             border: 1px solid rgba(255,255,255,0.2);
             flex-shrink: 0;
         }
         .announcement-item .announcement-time {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             opacity: 0.7;
             font-weight: 400;
             flex-shrink: 0;
@@ -73,15 +77,15 @@
             background: rgba(255,255,255,0.15);
             border: none;
             color: white;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             flex-shrink: 0;
@@ -93,15 +97,15 @@
         .announcement-nav.next { right: 2px; }
         .announcement-dots {
             display: flex;
-            gap: 0.3rem;
+            gap: 0.2rem;
             position: absolute;
-            bottom: -16px;
+            bottom: -14px;
             left: 50%;
             transform: translateX(-50%);
         }
         .announcement-dots .dot {
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background: rgba(255,255,255,0.3);
             cursor: pointer;
@@ -109,12 +113,185 @@
         }
         .announcement-dots .dot.active {
             background: white;
-            width: 14px;
+            width: 12px;
             border-radius: 3px;
         }
 
+        /* ===== البانر (بدلاً من الهيرو) ===== */
+        .banner-section {
+            padding: 0.3rem 0.5rem 0.2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .banner-container {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .banner-container img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        .banner-container .banner-placeholder {
+            width: 100%;
+            height: 80px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: var(--radius);
+        }
+
+        /* ===== إخفاء الهيرو القديم ===== */
+        .hero { display: none !important; }
+
         /* ===== حذف الفلتر القديم ===== */
         .filter-section { display: none !important; }
+
+        /* ===== شريط الصفوف (يظهر بشكل صحيح) ===== */
+        .class-filter-select {
+            padding: 0.15rem 0.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.6rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all var(--transition);
+            max-width: 130px;
+            min-width: 80px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .class-filter-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.08);
+        }
+        .class-filter-select option {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        /* ===== شريط البحث مصغر ===== */
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 50px;
+            padding: 0.05rem 0.05rem 0.05rem 0.6rem;
+            border: 1.5px solid transparent;
+            transition: all var(--transition);
+            max-width: 150px;
+            flex: 1;
+            min-width: 70px;
+            height: 28px;
+        }
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.08);
+        }
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 0.6rem;
+            padding: 0.15rem 0;
+            outline: none;
+            width: 55px;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+            flex: 1;
+            min-width: 35px;
+        }
+        .search-box input::placeholder { color: var(--text-light); font-size: 0.5rem; }
+        .search-box input:focus { width: 70px; }
+        .search-box button {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.05rem 0.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.5rem;
+            transition: all var(--transition);
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .search-box button:hover { transform: scale(1.05); }
+
+        /* ===== المستخدم ===== */
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            padding: 0.05rem 0.4rem 0.05rem 0.05rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            height: 28px;
+        }
+        .user-profile-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .user-profile-btn .avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.5rem;
+            flex-shrink: 0;
+        }
+        .user-profile-btn .user-name {
+            font-size: 0.55rem;
+            font-weight: 500;
+            max-width: 45px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1.5px solid var(--border);
+            color: var(--text);
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 0.05rem;
+            border-radius: 50%;
+            transition: all var(--transition);
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.05) rotate(15deg);
+            border-color: var(--primary);
+        }
+        body:not(.dark-mode) .theme-toggle .fa-sun { display: none; }
+        body.dark-mode .theme-toggle .fa-moon { display: none; }
 
         /* ===== إدارة الإعلانات في لوحة التحكم ===== */
         .announcement-list-item {
@@ -166,10 +343,50 @@
         }
         .announcement-list-item .ann-delete-btn:hover { background: #dc2626; }
 
+        /* ===== NAVBAR ===== */
+        .navbar .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 0.3rem;
+            flex-wrap: nowrap;
+        }
+        .nav-left { display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; }
+        .logo-text { font-size: 0.9rem; font-weight: 900; color: var(--primary); white-space: nowrap; }
+        .logo-text span { color: var(--text); }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex: 1;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
         @media (max-width: 480px) {
-            .announcement-item { font-size: 0.65rem; padding: 0.05rem 1.2rem; }
-            .announcement-item .announcement-icon { font-size: 0.8rem; }
-            .announcement-nav { width: 22px; height: 22px; font-size: 0.55rem; }
+            .logo-text { font-size: 0.7rem; }
+            .class-filter-select { max-width: 80px; min-width: 55px; font-size: 0.45rem; height: 24px; }
+            .search-box { max-width: 90px; min-width: 55px; height: 24px; }
+            .search-box input { width: 35px; font-size: 0.5rem; }
+            .search-box input:focus { width: 45px; }
+            .search-box button { padding: 0.05rem 0.25rem; font-size: 0.4rem; height: 18px; }
+            .user-profile-btn { height: 24px; }
+            .user-profile-btn .user-name { max-width: 30px; font-size: 0.45rem; }
+            .user-profile-btn .avatar { width: 16px; height: 16px; font-size: 0.4rem; }
+            .theme-toggle { width: 22px; height: 22px; font-size: 0.6rem; }
+            .announcement-item { font-size: 0.6rem; padding: 0.05rem 1rem; }
+            .announcement-item .announcement-icon { font-size: 0.7rem; }
+            .announcement-nav { width: 20px; height: 20px; font-size: 0.5rem; }
+            .banner-container .banner-placeholder { height: 50px; font-size: 0.6rem; }
         }
     </style>
 </head>
@@ -182,42 +399,36 @@
     <nav class="navbar" id="navbar" style="display:none;">
         <div class="nav-container">
             <div class="nav-left">
-                <div class="logo">
-                    <span class="logo-text">ديف <span>أكاديمي</span></span>
-                </div>
-                <ul class="nav-links">
-                    <li class="active">
-                        <a href="#" data-page="home">
-                            <i class="fas fa-home"></i> الرئيسية
-                        </a>
-                    </li>
-                </ul>
+                <span class="logo-text" onclick="navigateTo('home')">ديف <span>أكاديمي</span></span>
             </div>
-            <div class="nav-right">
-                <!-- 🆕 شريط الصفوف + البحث في صف واحد -->
-                <select class="class-filter-select" id="classFilterSelect" onchange="filterByClass()" style="padding:0.2rem 0.5rem;border:1.5px solid var(--border);border-radius:50px;background:var(--bg);color:var(--text);font-size:0.7rem;font-weight:600;outline:none;cursor:pointer;font-family:'Cairo',sans-serif;max-width:140px;min-width:90px;height:32px;flex-shrink:0;">
-                    <option value="all" class="all-classes">🎯 جميع الصفوف</option>
+
+            <!-- ===== شريط الصفوف + البحث (صف واحد) ===== -->
+            <div class="nav-center">
+                <select class="class-filter-select" id="classFilterSelect" onchange="filterByClass()">
+                    <option value="all">🎯 جميع الصفوف</option>
                 </select>
-                <div class="search-box" style="display:flex;align-items:center;background:var(--bg);border-radius:50px;padding:0.05rem 0.05rem 0.05rem 0.8rem;border:1.5px solid transparent;transition:all 0.3s;max-width:180px;flex:1;min-width:80px;height:32px;">
-                    <input type="text" id="searchInput" placeholder="🔍 بحث..." style="background:none;border:none;color:var(--text);font-size:0.7rem;padding:0.2rem 0;outline:none;width:70px;transition:0.3s;font-family:'Cairo',sans-serif;flex:1;min-width:40px;" />
-                    <button id="searchBtn" style="background:var(--primary-gradient);border:none;color:white;padding:0.1rem 0.6rem;border-radius:50px;cursor:pointer;font-size:0.6rem;transition:all 0.3s;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                        <i class="fas fa-search"></i>
-                    </button>
+
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 بحث..." />
+                    <button id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
-                <div class="nav-user-section">
-                    <div class="user-profile-btn" id="userProfileBtn">
-                        <span class="avatar" id="userAvatar">👤</span>
-                        <span class="user-name" id="userNameDisplay">غير مسجل</span>
-                    </div>
-                    <button class="theme-toggle" id="themeToggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
+            </div>
+
+            <div class="nav-right">
+                <div class="user-profile-btn" id="userProfileBtn" onclick="navigateTo('account')">
+                    <span class="avatar" id="userAvatar">👤</span>
+                    <span class="user-name" id="userNameDisplay">غير مسجل</span>
                 </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- ===== 🆕 لوحة الإعلانات ===== -->
+    <!-- ============================================================
+    شريط الإعلانات
+    ============================================================ -->
     <div class="announcement-bar" id="announcementBar">
         <div class="announcement-container">
             <button class="announcement-nav prev" onclick="prevAnnouncement()">
@@ -231,76 +442,73 @@
         </div>
     </div>
 
-    <!-- ===== PAGE HOME ===== -->
-    <div id="page-home" style="display:none;">
-        <section class="hero" id="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">📚 ديف <span>أكاديمي</span></h1>
-                <p class="hero-desc">منصة تعليمية متكاملة. اختر صفك وابدأ التعلم</p>
-                <div class="hero-buttons">
-                    <button class="btn-play" onclick="navigateTo('teachers')">
-                        <i class="fas fa-play"></i> استعراض المدرسين
-                    </button>
-                    <button class="btn-info" onclick="navigateTo('my-courses')">
-                        <i class="fas fa-book-open"></i> دوراتي
-                    </button>
-                </div>
+    <!-- ============================================================
+    البانر (بدلاً من الهيرو)
+    ============================================================ -->
+    <div class="banner-section" id="bannerSection">
+        <div class="banner-container">
+            <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:auto;max-height:150px;object-fit:cover;" />
+            <div id="mainBannerPlaceholder" class="banner-placeholder">
+                📚 ديف أكاديمي - منصتك التعليمية
             </div>
-        </section>
-
-        <div class="teachers-container" id="teachersContainer">
-            <!-- ===== تم حذف الفلتر القديم ===== -->
-            <div id="teachersGridContainer"></div>
         </div>
     </div>
 
-    <!-- ===== PAGE MY COURSES ===== -->
-    <div id="page-my-courses" style="display:none;">
-        <div class="my-courses-section">
-            <div class="section-header">
-                <h2><i class="fas fa-book-open"></i> دوراتي</h2>
-                <span id="myCoursesCount" style="color:var(--text-light);font-size:.9rem;font-weight:600;">0 دورة</span>
-            </div>
-            <div id="myCoursesContainer"></div>
+    <!-- ============================================================
+    PAGE HOME
+    ============================================================ -->
+    <div id="page-home" style="display:none;">
+        <div class="teachers-container" id="teachersContainer" style="padding:0.5rem 1rem 80px;max-width:1200px;margin:0 auto;">
+            <div id="teachersGridContainer"></div>
         </div>
     </div>
 
     <!-- ===== PAGE TEACHERS ===== -->
     <div id="page-teachers" style="display:none;">
-        <div class="teachers-container" style="padding-top:0.5rem;">
-            <div class="teachers-page-header">
-                <h2>👨‍🏫 جميع المدرسين</h2>
-                <p>اختر الصف المناسب ثم اختر المدرس</p>
+        <div class="teachers-container" style="padding:0.5rem 1rem 80px;max-width:1200px;margin:0 auto;">
+            <div style="text-align:center;padding:0.3rem 0;">
+                <h2 style="font-size:1rem;font-weight:800;">👨‍🏫 جميع المدرسين</h2>
+                <p style="color:var(--text-light);font-size:0.75rem;">اختر الصف المناسب ثم اختر المدرس</p>
             </div>
-            <!-- ===== تم حذف الفلتر القديم ===== -->
             <div id="teachersGridContainer2"></div>
+        </div>
+    </div>
+
+    <!-- ===== PAGE MY COURSES ===== -->
+    <div id="page-my-courses" style="display:none;">
+        <div class="my-courses-section" style="padding:1rem 1rem 80px;max-width:700px;margin:0 auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;padding-bottom:0.3rem;border-bottom:1.5px solid var(--border);">
+                <h2 style="font-size:1rem;font-weight:800;"><i class="fas fa-book-open" style="color:var(--primary);margin-left:0.3rem;"></i> دوراتي</h2>
+                <span id="myCoursesCount" style="color:var(--text-light);font-size:0.8rem;font-weight:600;">0 دورة</span>
+            </div>
+            <div id="myCoursesContainer"></div>
         </div>
     </div>
 
     <!-- ===== PAGE ACCOUNT ===== -->
     <div id="page-account" style="display:none;">
-        <div class="account-section">
-            <div class="profile-header">
-                <div class="profile-avatar" id="accountAvatar">👤</div>
-                <div class="profile-name" id="accountName">غير مسجل</div>
-                <div class="profile-email" id="accountEmail">البريد الإلكتروني</div>
-                <div style="font-size:.75rem;color:var(--text-light);margin-top:0.2rem;" id="accountRegistered">مسجل منذ: --</div>
+        <div class="account-section" style="padding:1rem 1rem 80px;max-width:400px;margin:0 auto;">
+            <div style="text-align:center;padding:0.8rem 0;">
+                <div class="profile-avatar" id="accountAvatar" style="width:60px;height:60px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;font-size:2rem;color:white;margin:0 auto 0.5rem;border:3px solid var(--primary);box-shadow:var(--shadow-md);">👤</div>
+                <div class="profile-name" id="accountName" style="font-size:0.95rem;font-weight:800;">غير مسجل</div>
+                <div class="profile-email" id="accountEmail" style="color:var(--text-light);font-size:0.7rem;">البريد الإلكتروني</div>
+                <div style="font-size:0.55rem;color:var(--text-light);margin-top:0.1rem;" id="accountRegistered">مسجل منذ: --</div>
             </div>
-            <div class="profile-stats">
-                <div class="stat-box">
-                    <div class="number" id="accountCourses">0</div>
-                    <div class="label">📚 دوراتي</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.5rem 0;">
+                <div class="stat-box" style="background:var(--bg-card);padding:0.5rem;border-radius:10px;text-align:center;border:1px solid var(--border);">
+                    <div class="number" id="accountCourses" style="font-size:1.2rem;font-weight:900;color:var(--primary);">0</div>
+                    <div class="label" style="font-size:0.6rem;color:var(--text-light);">📚 دوراتي</div>
                 </div>
-                <div class="stat-box">
-                    <div class="number" id="accountCodes">0</div>
-                    <div class="label">🔑 أكواد مفعلة</div>
+                <div class="stat-box" style="background:var(--bg-card);padding:0.5rem;border-radius:10px;text-align:center;border:1px solid var(--border);">
+                    <div class="number" id="accountCodes" style="font-size:1.2rem;font-weight:900;color:var(--primary);">0</div>
+                    <div class="label" style="font-size:0.6rem;color:var(--text-light);">🔑 أكواد</div>
                 </div>
             </div>
-            <div class="account-actions">
-                <button class="btn-admin" id="adminPanelBtn" style="display:none;">
+            <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.5rem;">
+                <button class="btn-admin" id="adminPanelBtn" style="display:none;padding:0.4rem;border:none;border-radius:10px;font-size:0.75rem;font-weight:700;cursor:pointer;background:var(--primary-gradient);color:white;">
                     <i class="fas fa-cog"></i> لوحة الإدارة
                 </button>
-                <button class="btn-logout-account" id="logoutAccountBtn">
+                <button class="btn-logout-account" id="logoutAccountBtn" style="padding:0.4rem;border:none;border-radius:10px;font-size:0.75rem;font-weight:700;cursor:pointer;background:#ef4444;color:white;">
                     <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
                 </button>
             </div>
@@ -309,20 +517,20 @@
 
     <!-- ===== BOTTOM NAV ===== -->
     <nav class="bottom-nav" id="bottomNav" style="display:none;">
-        <button class="nav-item active" data-page="home">
+        <button class="nav-item active" data-page="home" onclick="navigateTo('home')">
             <i class="fas fa-home"></i>
             <span>الرئيسية</span>
         </button>
-        <button class="nav-item" data-page="teachers">
+        <button class="nav-item" data-page="teachers" onclick="navigateTo('teachers')">
             <i class="fas fa-chalkboard-teacher"></i>
             <span>المدرسون</span>
         </button>
-        <button class="nav-item" data-page="my-courses">
+        <button class="nav-item" data-page="my-courses" onclick="navigateTo('my-courses')">
             <i class="fas fa-book-open"></i>
             <span>دوراتي</span>
             <span class="badge" id="coursesBadge" style="display:none;">0</span>
         </button>
-        <button class="nav-item" data-page="account">
+        <button class="nav-item" data-page="account" onclick="navigateTo('account')">
             <i class="fas fa-user"></i>
             <span>حسابي</span>
         </button>
@@ -333,11 +541,6 @@
             <div class="footer-logo">
                 <span class="logo-text">ديف <span>أكاديمي</span></span>
                 <p style="font-size:.7rem;">© 2026 ديف أكاديمي</p>
-            </div>
-            <div class="footer-links">
-                <a href="#"><i class="fas fa-globe"></i> العربية</a>
-                <a href="#"><i class="fas fa-question-circle"></i> المساعدة</a>
-                <a href="#"><i class="fas fa-shield-alt"></i> الخصوصية</a>
             </div>
         </div>
     </footer>
@@ -380,7 +583,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ============================================================
-    ADMIN PANEL - مع 🆕 علامة تبويب الإعلانات
+    ADMIN PANEL
     ============================================================ -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-content">
@@ -399,7 +602,6 @@
                 <button class="tab-btn" data-tab="delete">🗑️ حذف</button>
                 <button class="tab-btn" data-tab="users">👥 مستخدمين</button>
                 <button class="tab-btn" data-tab="add-admin">👑 أدمن</button>
-                <!-- 🆕 علامة تبويب الإعلانات -->
                 <button class="tab-btn" data-tab="announcements">📢 إعلانات</button>
                 <button class="tab-btn" data-tab="publish">📤 نشر</button>
             </div>
@@ -499,7 +701,7 @@
                     <div class="form-group">
                         <label>📹 رابط الفيديو *</label>
                         <input type="url" id="lectureUrl" placeholder="https://player.mediadelivery.net/play/..." required />
-                        <small style="color:var(--text-light);font-size:.65rem;display:block;margin-top:2px;">يدعم mediadelivery و YouTube</small>
+                        <small style="color:var(--text-light);font-size:.6rem;display:block;margin-top:2px;">يدعم mediadelivery و YouTube</small>
                     </div>
                     <div class="form-group">
                         <label>🔒 الحالة *</label>
@@ -761,7 +963,7 @@
             </div>
 
             <!-- ============================================================
-            🆕 TAB: Announcements
+            🆕 TAB: ANNOUNCEMENTS
             ============================================================ -->
             <div class="tab-content" id="tab-announcements">
                 <div class="announcements-admin">
