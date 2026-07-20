@@ -1,3 +1,83 @@
+// ============================================================
+// إصلاح المشاكل - منع الروابط العشوائية
+// ============================================================
+
+// ===== إخفاء الروابط العشوائية فور تحميل الصفحة =====
+document.addEventListener('DOMContentLoaded', function() {
+    // إخفاء أي روابط عشوائية
+    var unwantedElements = document.querySelectorAll('.footer-links, .footer-links a, .footer-content, .extra-links, .additional-links');
+    unwantedElements.forEach(function(el) {
+        if (el) el.style.display = 'none';
+    });
+    
+    // منع الروابط الفارغة من العمل
+    document.querySelectorAll('a[href="#"], a[href=""]').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+    });
+});
+
+// ===== منع جميع الروابط الفارغة =====
+document.querySelectorAll('a:not([onclick])').forEach(function(el) {
+    var href = el.getAttribute('href');
+    if (href === '#' || href === '' || href === null) {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+    }
+});
+
+// ===== إصلاح مشكلة زر الإدارة =====
+document.addEventListener('DOMContentLoaded', function() {
+    var adminBtn = document.getElementById('adminPanelBtn');
+    if (adminBtn) {
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!currentUser) {
+                showToast('warning', '⚠️ يرجى تسجيل الدخول أولاً');
+                return;
+            }
+            isUserAdmin(currentUser.email).then(function(isAdmin) {
+                if (isAdmin) {
+                    var panel = document.getElementById('adminPanel');
+                    var overlay = document.getElementById('adminOverlay');
+                    if (panel) panel.classList.add('open');
+                    if (overlay) overlay.classList.add('show');
+                    updateAllAdminSelects();
+                    updatePendingChanges();
+                    loadAdminsList();
+                    renderUsersTable();
+                    showToast('success', '🔓 مرحباً بك في لوحة التحكم');
+                } else {
+                    showToast('error', '❌ غير مصرح لك بالدخول إلى لوحة التحكم');
+                }
+            });
+        });
+    }
+});
+
+// ===== إصلاح مشكلة عرض الصفحات =====
+function fixPageDisplay() {
+    var pages = document.querySelectorAll('.page-content');
+    pages.forEach(function(p) {
+        if (p.id === 'page-home') {
+            p.style.display = 'block';
+        } else {
+            p.style.display = 'none';
+        }
+    });
+}
+
+// ===== تشغيل الإصلاحات بعد تحميل الصفحة =====
+setTimeout(function() {
+    fixPageDisplay();
+}, 100);
 (function() {
     'use strict';
 

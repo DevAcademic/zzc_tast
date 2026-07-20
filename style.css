@@ -3860,3 +3860,228 @@ body.dark-mode .hero {
 /* ============================================================
    🎉 نهاية الملف - تصميم احترافي متطور
    ============================================================ */
+   /* ============================================================
+   إصلاح المشاكل - إزالة الروابط العشوائية والمربعات الخضراء
+   ============================================================ */
+
+/* ===== إخفاء جميع الروابط العشوائية ===== */
+.footer,
+.footer-links,
+.footer-content,
+footer .footer-links,
+footer .footer-content,
+body .footer-links,
+body .footer-content,
+body .footer {
+    display: none !important;
+}
+
+/* ===== إخفاء أي عناصر غير مرغوب فيها ===== */
+.nav-links .extra-links,
+.extra-links,
+.additional-links {
+    display: none !important;
+}
+
+/* ===== إصلاح المربعات الخضراء ===== */
+.teacher-card .teacher-badge,
+.teacher-badge,
+.teacher-card .badge,
+.badge-green {
+    display: none !important;
+}
+
+/* ===== إصلاح عرض الأزرار ===== */
+.filter-btn .btn-count {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.02rem 0.35rem;
+    border-radius: 20px;
+    font-size: 0.55rem;
+    font-weight: 700;
+}
+
+.filter-btn.active .btn-count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== منع الروابط الفارغة ===== */
+a[href="#"],
+a[href=""] {
+    cursor: default;
+    pointer-events: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ===== إصلاح عرض الصفحات ===== */
+.page-content {
+    display: none;
+}
+
+#page-home {
+    display: block;
+}
+
+/* ===== إصلاح الوضع المظلم ===== */
+body.dark-mode .teacher-card {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+body.dark-mode .filter-section {
+    background: var(--bg-card);
+}
+
+body.dark-mode .modal {
+    background: var(--bg-card);
+}
+
+/* ===== إصلاح زر الإدارة ===== */
+#adminPanelBtn {
+    display: none !important;
+}
+
+#adminPanelBtn.show {
+    display: flex !important;
+}
+
+/* ===== إصلاح شاشة التحميل ===== */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+}
+
+/* ===== إصلاح عرض الإعلان ===== */
+.banner-preview {
+    width: 100%;
+    height: 160px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 2px dashed var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    transition: var(--transition);
+}
+
+.banner-preview:hover {
+    border-color: var(--primary);
+}
+
+.banner-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-preview .banner-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    gap: 0.3rem;
+}
+
+.banner-preview .banner-placeholder i {
+    font-size: 3rem;
+    opacity: 0.3;
+}
+
+.banner-preview .banner-placeholder span {
+    font-size: 0.8rem;
+}
+
+/* ===== إصلاح عرض الجداول ===== */
+.students-table-wrapper {
+    overflow-x: auto;
+    margin-top: 0.5rem;
+}
+
+.students-table {
+    width: 100%;
+    min-width: 550px;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.students-table th {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 0.4rem 0.6rem;
+    text-align: right;
+    font-weight: 700;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.students-table td {
+    padding: 0.3rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+}
+
+.students-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+/* ===== إصلاح أكواد الجدول ===== */
+.codes-table-wrapper {
+    overflow-x: auto;
+}
+
+.codes-table {
+    width: 100%;
+    min-width: 450px;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+}
+
+.codes-table th {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    text-align: right;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.codes-table td {
+    padding: 0.3rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.7rem;
+}
+
+.codes-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+.codes-table code {
+    font-family: monospace;
+    background: var(--bg);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* ============================================================
+   نهاية الإصلاحات
+   ============================================================ */
