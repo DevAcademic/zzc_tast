@@ -1851,7 +1851,7 @@ body.dark-mode .hero .star {
 }
 
 /* ============================================================
-   26) VIDEO PLAYER
+   26) VIDEO PLAYER - معدل لإزالة النصوص العلوية
    ============================================================ */
 .video-player-container {
     display: none;
@@ -1903,6 +1903,7 @@ body.dark-mode .hero .star {
     pointer-events: auto !important;
 }
 
+/* ===== إخفاء أي نصوص علوية في مشغل الفيديو ===== */
 .video-player-wrapper .player-info {
     display: none !important;
 }
@@ -2907,3 +2908,176 @@ body:not(.dark-mode) .theme-toggle .fa-moon {
 /* ============================================================
    🎉 نهاية الملف - تصميم احترافي مع أنميش رائعة 🌙
    ============================================================ */
+   /* ============================================================
+   🆕 أنماط الإعلانات
+   ============================================================ */
+
+.announcement-bar {
+    background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
+    padding: 0.4rem 0.8rem;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 2px 20px rgba(14,165,233,0.25);
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+body.dark-mode .announcement-bar {
+    background: linear-gradient(135deg, #0C4A6E, #0284C7, #0EA5E9);
+}
+
+.announcement-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    min-height: 36px;
+}
+
+.announcement-slider {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+    width: 100%;
+    overflow: hidden;
+}
+
+.announcement-item {
+    min-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.announcement-item .announcement-icon { font-size: 1.1rem; flex-shrink: 0; }
+.announcement-item .announcement-text { flex: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.announcement-item .announcement-badge {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.05rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border: 1px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+}
+.announcement-item .announcement-time {
+    font-size: 0.6rem;
+    opacity: 0.7;
+    font-weight: 400;
+    flex-shrink: 0;
+}
+
+.announcement-nav {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    flex-shrink: 0;
+    position: absolute;
+    z-index: 2;
+}
+.announcement-nav:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+.announcement-nav.prev { left: 2px; }
+.announcement-nav.next { right: 2px; }
+
+.announcement-dots {
+    display: flex;
+    gap: 0.3rem;
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.announcement-dots .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.announcement-dots .dot.active {
+    background: white;
+    width: 14px;
+    border-radius: 3px;
+}
+
+/* ===== حذف الفلتر القديم ===== */
+.filter-section { display: none !important; }
+
+/* ===== إدارة الإعلانات في لوحة التحكم ===== */
+.announcement-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+.announcement-list-item .ann-content {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex: 1;
+    min-width: 0;
+}
+.announcement-list-item .ann-content .ann-icon { font-size: 1rem; flex-shrink: 0; }
+.announcement-list-item .ann-content .ann-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.announcement-list-item .ann-content .ann-badge {
+    background: var(--primary);
+    color: white;
+    padding: 0.05rem 0.4rem;
+    border-radius: 12px;
+    font-size: 0.5rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.announcement-list-item .ann-content .ann-time {
+    font-size: 0.5rem;
+    color: var(--text-light);
+    flex-shrink: 0;
+}
+.announcement-list-item .ann-delete-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+    cursor: pointer;
+    font-size: 0.55rem;
+    flex-shrink: 0;
+}
+.announcement-list-item .ann-delete-btn:hover { background: #dc2626; }
+
+@media (max-width: 480px) {
+    .announcement-item { font-size: 0.65rem; padding: 0.05rem 1.2rem; }
+    .announcement-item .announcement-icon { font-size: 0.8rem; }
+    .announcement-nav { width: 22px; height: 22px; font-size: 0.55rem; }
+}
