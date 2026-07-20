@@ -577,10 +577,10 @@
 
     <script>
         // ===== Supabase Config =====
-        const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
+        var SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
+        var SUPABASE_ANON_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
 
-        let supabaseClient = null;
+        var supabaseClient = null;
         if (window.supabase) {
             if (!window._supabaseClient) {
                 window._supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -588,7 +588,7 @@
             supabaseClient = window._supabaseClient;
         }
 
-        const statusEl = document.getElementById('supabaseStatus');
+        var statusEl = document.getElementById('supabaseStatus');
         if (supabaseClient) {
             statusEl.textContent = '✅ الخدمة جاهزة';
             statusEl.style.color = '#22C55E';
@@ -598,19 +598,19 @@
         }
 
         // ===== Tabs =====
-        const tabs = document.querySelectorAll('.tab-btn');
-        const loginContainer = document.getElementById('loginForm');
-        const signupContainer = document.getElementById('signupForm');
-        const loginForm = document.getElementById('loginFormElement');
-        const signupForm = document.getElementById('signupFormElement');
-        const loginBtn = document.getElementById('loginBtn');
-        const signupBtn = document.getElementById('signupBtn');
-        const loginMsg = document.getElementById('loginMessage');
-        const signupMsg = document.getElementById('signupMessage');
-        const footerText = document.getElementById('footerText');
+        var tabs = document.querySelectorAll('.tab-btn');
+        var loginContainer = document.getElementById('loginForm');
+        var signupContainer = document.getElementById('signupForm');
+        var loginForm = document.getElementById('loginFormElement');
+        var signupForm = document.getElementById('signupFormElement');
+        var loginBtn = document.getElementById('loginBtn');
+        var signupBtn = document.getElementById('signupBtn');
+        var loginMsg = document.getElementById('loginMessage');
+        var signupMsg = document.getElementById('signupMessage');
+        var footerText = document.getElementById('footerText');
 
         function switchTab(tabId) {
-            tabs.forEach(btn => {
+            tabs.forEach(function(btn) {
                 btn.classList.toggle('active', btn.dataset.tab === tabId);
             });
             loginContainer.classList.toggle('active', tabId === 'login');
@@ -622,31 +622,32 @@
 
             if (tabId === 'login') {
                 footerText.innerHTML = 'ليس لديك حساب؟ <a href="#" id="switchToSignup">أنشئ حساباً</a>';
-                document.getElementById('switchToSignup')?.addEventListener('click', (e) => {
+                document.getElementById('switchToSignup')?.addEventListener('click', function(e) {
                     e.preventDefault();
                     switchTab('signup');
                 });
             } else {
                 footerText.innerHTML = 'لديك حساب بالفعل؟ <a href="#" id="switchToLogin">سجل الدخول</a>';
-                document.getElementById('switchToLogin')?.addEventListener('click', (e) => {
+                document.getElementById('switchToLogin')?.addEventListener('click', function(e) {
                     e.preventDefault();
                     switchTab('login');
                 });
             }
         }
 
-        tabs.forEach(btn => {
-            btn.addEventListener('click', () => {
+        tabs.forEach(function(btn) {
+            btn.addEventListener('click', function() {
                 switchTab(btn.dataset.tab);
             });
         });
 
         switchTab('login');
 
-        function showMessage(element, message, type = 'error') {
-            const icons = { error: '❌', success: '✅', info: 'ℹ️' };
-            element.className = `message ${type}`;
-            element.innerHTML = `<span class="msg-icon">${icons[type] || '📌'}</span> ${message}`;
+        function showMessage(element, message, type) {
+            type = type || 'error';
+            var icons = { error: '❌', success: '✅', info: 'ℹ️' };
+            element.className = 'message ' + type;
+            element.innerHTML = '<span class="msg-icon">' + (icons[type] || '📌') + '</span> ' + message;
         }
 
         function setLoading(btn, loading) {
@@ -664,13 +665,13 @@
         }
 
         // ===== Login =====
-        loginForm.addEventListener('submit', async (e) => {
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             loginMsg.className = 'message';
             loginMsg.textContent = '';
 
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
+            var email = document.getElementById('loginEmail').value.trim();
+            var password = document.getElementById('loginPassword').value;
 
             if (!email || !password) {
                 showMessage(loginMsg, 'يرجى ملء جميع الحقول.', 'error');
@@ -694,14 +695,14 @@
                     return;
                 }
 
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) throw error;
+                var result = await supabaseClient.auth.signInWithPassword({ email: email, password: password });
+                if (result.error) throw result.error;
 
-                if (data?.user) {
-                    localStorage.setItem('devAcademicUser', JSON.stringify({ email, name: data.user.user_metadata
-                            ?.full_name || null }));
+                if (result.data?.user) {
+                    localStorage.setItem('devAcademicUser', JSON.stringify({ email: email, name: result.data.user
+                            .user_metadata?.full_name || null }));
                     showMessage(loginMsg, 'تم تسجيل الدخول بنجاح، جارِ التوجيه...', 'success');
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+                    setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
                 } else {
                     showMessage(loginMsg, 'حدث خطأ غير متوقع.', 'error');
                 }
@@ -712,7 +713,7 @@
                 } else if (err.message.includes('Email not confirmed')) {
                     showMessage(loginMsg, 'يرجى تأكيد بريدك الإلكتروني أولاً.', 'info');
                 } else {
-                    showMessage(loginMsg, `${err.message || 'حدث خطأ، حاول مجدداً.'}`, 'error');
+                    showMessage(loginMsg, (err.message || 'حدث خطأ، حاول مجدداً.'), 'error');
                 }
             } finally {
                 setLoading(loginBtn, false);
@@ -720,14 +721,14 @@
         });
 
         // ===== Signup =====
-        signupForm.addEventListener('submit', async (e) => {
+        signupForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             signupMsg.className = 'message';
             signupMsg.textContent = '';
 
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value;
+            var name = document.getElementById('signupName').value.trim();
+            var email = document.getElementById('signupEmail').value.trim();
+            var password = document.getElementById('signupPassword').value;
 
             if (!name || !email || !password) {
                 showMessage(signupMsg, 'يرجى ملء جميع الحقول.', 'error');
@@ -755,22 +756,22 @@
                     return;
                 }
 
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email,
-                    password,
+                var result = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
                     options: { data: { full_name: name } }
                 });
 
-                if (error) throw error;
+                if (result.error) throw result.error;
 
-                if (data?.user) {
-                    localStorage.setItem('devAcademicUser', JSON.stringify({ email, name }));
+                if (result.data?.user) {
+                    localStorage.setItem('devAcademicUser', JSON.stringify({ email: email, name: name }));
 
-                    if (data.user.confirmed_at === null) {
+                    if (result.data.user.confirmed_at === null) {
                         showMessage(signupMsg, 'تم إنشاء الحساب! يرجى تأكيد بريدك الإلكتروني.', 'info');
                     } else {
                         showMessage(signupMsg, 'تم إنشاء الحساب بنجاح! جارِ التوجيه...', 'success');
-                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+                        setTimeout(function() { window.location.href = 'dashboard.html'; }, 800);
                     }
                 } else {
                     showMessage(signupMsg, 'حدث خطأ غير متوقع.', 'error');
@@ -780,7 +781,7 @@
                 if (err.message.includes('User already registered')) {
                     showMessage(signupMsg, 'هذا البريد الإلكتروني مسجل بالفعل.', 'error');
                 } else {
-                    showMessage(signupMsg, `${err.message || 'حدث خطأ، حاول مجدداً.'}`, 'error');
+                    showMessage(signupMsg, (err.message || 'حدث خطأ، حاول مجدداً.'), 'error');
                 }
             } finally {
                 setLoading(signupBtn, false);
@@ -790,10 +791,10 @@
         // ===== Check Session =====
         (async function checkSession() {
             try {
-                const storedUser = localStorage.getItem('devAcademicUser');
+                var storedUser = localStorage.getItem('devAcademicUser');
                 if (!supabaseClient && storedUser) {
                     try {
-                        const user = JSON.parse(storedUser);
+                        var user = JSON.parse(storedUser);
                         if (user && user.email) {
                             window.location.href = 'dashboard.html';
                             return;
@@ -802,8 +803,8 @@
                     return;
                 }
                 if (!supabaseClient) return;
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                if (session?.user) {
+                var sessionResult = await supabaseClient.auth.getSession();
+                if (sessionResult.data?.session?.user) {
                     window.location.href = 'dashboard.html';
                 } else {
                     localStorage.removeItem('devAcademicUser');
