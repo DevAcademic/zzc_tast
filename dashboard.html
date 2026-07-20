@@ -10,7 +10,7 @@
     </script>
     <style>
         /* ============================================================
-           تصميم احترافي - إصلاح جميع المشاكل
+           تصميم احترافي
            ============================================================ */
         :root {
             --primary: #0EA5E9;
@@ -221,7 +221,7 @@
         }
         .search-box button:hover { transform: scale(1.05); }
 
-        /* ===== CLASS FILTER - بجانب الملف الشخصي ===== */
+        /* ===== CLASS FILTER ===== */
         .class-filter-select {
             padding: 0.15rem 0.4rem;
             border: 1.5px solid var(--border);
@@ -310,16 +310,16 @@
         body.dark-mode .theme-toggle .fa-moon { display: none; }
 
         /* ============================================================
-           HERO - بدون "تعلم بذكاء" والمربع
+           HERO
            ============================================================ */
         .hero {
             background: var(--primary-gradient);
-            padding: 0.8rem 1.2rem;
-            margin: 0 0.5rem 0.5rem;
+            padding: 0.6rem 1.2rem;
+            margin: 0 0.5rem 0.3rem;
             border-radius: var(--radius);
             position: relative;
             overflow: hidden;
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
         }
@@ -351,16 +351,16 @@
         .hero-badge {
             display: inline-block;
             background: rgba(255, 255, 255, 0.15);
-            padding: 0.1rem 0.6rem;
+            padding: 0.05rem 0.6rem;
             border-radius: var(--radius-full);
             font-size: 0.5rem;
             color: white;
             font-weight: 600;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 0.1rem;
+            margin-bottom: 0.05rem;
         }
         .hero-title {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 900;
             color: white;
             line-height: 1.2;
@@ -368,14 +368,14 @@
         .hero-title span { color: #FCD34D; }
         .hero-stats {
             display: flex;
-            gap: 1.2rem;
-            margin-top: 0.15rem;
-            padding-top: 0.15rem;
+            gap: 1rem;
+            margin-top: 0.1rem;
+            padding-top: 0.1rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         .hero-stats .stat-item { text-align: center; }
-        .hero-stats .stat-number { font-size: 0.85rem; font-weight: 900; color: white; display: block; }
-        .hero-stats .stat-label { font-size: 0.45rem; color: rgba(255, 255, 255, 0.7); }
+        .hero-stats .stat-number { font-size: 0.8rem; font-weight: 900; color: white; display: block; }
+        .hero-stats .stat-label { font-size: 0.4rem; color: rgba(255, 255, 255, 0.7); }
 
         /* ============================================================
            BANNER
@@ -420,13 +420,13 @@
         }
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 0.4rem;
         }
         .feature-card {
             background: var(--bg-card);
             border-radius: var(--radius-sm);
-            padding: 0.4rem 0.3rem;
+            padding: 0.4rem 0.2rem;
             text-align: center;
             border: 1.5px solid var(--border);
             transition: all var(--transition);
@@ -442,10 +442,10 @@
         .feature-card p { font-size: 0.45rem; color: var(--text-light); margin-top: 0.05rem; }
 
         /* ============================================================
-           TEACHERS - بدون أزرار الفلتر
+           TEACHERS - بدون أزرار فلتر
            ============================================================ */
         .teachers-container {
-            padding: 0.3rem 0.5rem 80px;
+            padding: 0.2rem 0.5rem 80px;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -474,7 +474,7 @@
         }
         .section-more:hover { color: var(--primary); }
 
-        /* ===== تم إخفاء الفلتر تماماً ===== */
+        /* ===== إخفاء الفلتر الزائد ===== */
         .filter-section {
             display: none !important;
         }
@@ -583,7 +583,7 @@
         .empty-teachers p { font-size: 0.7rem; }
 
         /* ============================================================
-           MODALS (نفسها بدون تغيير)
+           MODALS
            ============================================================ */
         .modal-overlay {
             display: none;
@@ -1562,9 +1562,9 @@
             .user-profile-btn .avatar { width: 20px; height: 20px; font-size: 0.5rem; }
             .class-filter-select { max-width: 90px; font-size: 0.5rem; padding: 0.1rem 0.3rem; }
             .theme-toggle { width: 26px; height: 26px; font-size: 0.7rem; }
-            .hero { min-height: 50px; padding: 0.4rem 0.8rem; margin: 0 0.3rem 0.3rem; border-radius: 10px; }
-            .hero-title { font-size: 0.8rem; }
-            .hero-stats .stat-number { font-size: 0.65rem; }
+            .hero { min-height: 40px; padding: 0.3rem 0.6rem; margin: 0 0.3rem 0.2rem; border-radius: 10px; }
+            .hero-title { font-size: 0.7rem; }
+            .hero-stats .stat-number { font-size: 0.6rem; }
             .banner-container .banner-placeholder { height: 60px; font-size: 0.7rem; }
             .features-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
             .feature-card { padding: 0.3rem 0.15rem; }
@@ -1584,8 +1584,8 @@
         }
 
         @media (max-width: 480px) {
-            .hero-title { font-size: 0.7rem; }
-            .hero-stats .stat-number { font-size: 0.55rem; }
+            .hero-title { font-size: 0.6rem; }
+            .hero-stats .stat-number { font-size: 0.5rem; }
             .teachers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
             .teacher-card { padding: 0.3rem 0.15rem; border-radius: 10px; }
             .teacher-card .teacher-card-image { width: 40px; height: 40px; border-width: 2px; }
@@ -1674,7 +1674,6 @@
 
         .teachers-container { padding: 0.3rem 0 80px; max-width: 1200px; margin: 0 auto; }
 
-        /* ===== تنسيقات التقدم ===== */
         .progress-detail {
             background: var(--bg);
             border-radius: var(--radius-sm);
@@ -1729,7 +1728,6 @@
                 </div>
                 <div class="nav-right">
 
-                    <!-- ===== فلتر الصفوف - مميز ===== -->
                     <select class="class-filter-select" id="classFilterSelect" onchange="filterByClass()">
                         <option value="all" class="all-classes">🎯 جميع الصفوف</option>
                     </select>
@@ -1756,7 +1754,6 @@
         ============================================================ -->
         <div id="page-home" class="page-content">
 
-            <!-- ===== HERO (بدون "تعلم بذكاء" والمربع) ===== -->
             <section class="hero" id="hero">
                 <div class="hero-content">
                     <div class="hero-badge">📚 ديف أكاديمي</div>
@@ -1821,7 +1818,6 @@
                     <span class="section-more" onclick="navigateTo('teachers')">عرض الكل <i class="fas fa-arrow-left"></i></span>
                 </div>
 
-                <!-- الفلتر مخفي تماماً -->
                 <div class="filter-section" id="sectionFilter"></div>
 
                 <div id="teachersGridContainer"></div>
