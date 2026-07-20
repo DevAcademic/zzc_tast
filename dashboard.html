@@ -10,7 +10,7 @@
     </script>
     <style>
         /* ============================================================
-           تصميم احترافي
+           تصميم احترافي - بدون هيرو
            ============================================================ */
         :root {
             --primary: #0EA5E9;
@@ -100,7 +100,9 @@
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
 
-        /* ===== NAVBAR ===== */
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
         .navbar {
             position: fixed;
             top: 0;
@@ -310,80 +312,19 @@
         body.dark-mode .theme-toggle .fa-moon { display: none; }
 
         /* ============================================================
-           HERO
+           HERO - تم إزالته بالكامل
            ============================================================ */
         .hero {
-            background: var(--primary-gradient);
-            padding: 0.6rem 1.2rem;
-            margin: 0 0.5rem 0.3rem;
-            border-radius: var(--radius);
-            position: relative;
-            overflow: hidden;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
+            display: none !important;
         }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 250px;
-            height: 250px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -40%;
-            left: -10%;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 50%;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            flex: 1;
-        }
-        .hero-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 0.05rem 0.6rem;
-            border-radius: var(--radius-full);
-            font-size: 0.5rem;
-            color: white;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 0.05rem;
-        }
-        .hero-title {
-            font-size: 0.9rem;
-            font-weight: 900;
-            color: white;
-            line-height: 1.2;
-        }
-        .hero-title span { color: #FCD34D; }
-        .hero-stats {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.1rem;
-            padding-top: 0.1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .hero-stats .stat-item { text-align: center; }
-        .hero-stats .stat-number { font-size: 0.8rem; font-weight: 900; color: white; display: block; }
-        .hero-stats .stat-label { font-size: 0.4rem; color: rgba(255, 255, 255, 0.7); }
 
         /* ============================================================
-           BANNER
+           BANNER - يظهر مباشرة بعد الشريط
            ============================================================ */
         .banner-section {
-            padding: 0 0.5rem;
+            padding: 0.5rem 0.5rem 0.3rem;
             max-width: 1200px;
-            margin: 0 auto 0.3rem;
+            margin: 0 auto;
         }
         .banner-container {
             border-radius: var(--radius);
@@ -393,19 +334,19 @@
         .banner-container img {
             width: 100%;
             height: auto;
-            max-height: 160px;
+            max-height: 180px;
             object-fit: cover;
             display: block;
         }
         .banner-container .banner-placeholder {
             width: 100%;
-            height: 80px;
+            height: 100px;
             background: linear-gradient(135deg, #0EA5E9, #38BDF8);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.85rem;
+            font-size: 1rem;
             font-weight: 700;
             border-radius: var(--radius);
         }
@@ -1562,10 +1503,7 @@
             .user-profile-btn .avatar { width: 20px; height: 20px; font-size: 0.5rem; }
             .class-filter-select { max-width: 90px; font-size: 0.5rem; padding: 0.1rem 0.3rem; }
             .theme-toggle { width: 26px; height: 26px; font-size: 0.7rem; }
-            .hero { min-height: 40px; padding: 0.3rem 0.6rem; margin: 0 0.3rem 0.2rem; border-radius: 10px; }
-            .hero-title { font-size: 0.7rem; }
-            .hero-stats .stat-number { font-size: 0.6rem; }
-            .banner-container .banner-placeholder { height: 60px; font-size: 0.7rem; }
+            .banner-container .banner-placeholder { height: 70px; font-size: 0.75rem; }
             .features-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
             .feature-card { padding: 0.3rem 0.15rem; }
             .feature-card .feature-icon { font-size: 1rem; }
@@ -1584,8 +1522,6 @@
         }
 
         @media (max-width: 480px) {
-            .hero-title { font-size: 0.6rem; }
-            .hero-stats .stat-number { font-size: 0.5rem; }
             .teachers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
             .teacher-card { padding: 0.3rem 0.15rem; border-radius: 10px; }
             .teacher-card .teacher-card-image { width: 40px; height: 40px; border-width: 2px; }
@@ -1613,7 +1549,7 @@
             .feature-card .feature-icon { font-size: 0.9rem; }
             .feature-card h4 { font-size: 0.5rem; }
             .feature-card p { font-size: 0.4rem; }
-            .banner-container .banner-placeholder { height: 50px; font-size: 0.6rem; }
+            .banner-container .banner-placeholder { height: 60px; font-size: 0.65rem; }
             .students-table { min-width: 280px; font-size: 0.5rem; }
             .codes-table { min-width: 220px; font-size: 0.45rem; }
         }
@@ -1754,31 +1690,12 @@
         ============================================================ -->
         <div id="page-home" class="page-content">
 
-            <section class="hero" id="hero">
-                <div class="hero-content">
-                    <div class="hero-badge">📚 ديف أكاديمي</div>
-                    <h1 class="hero-title">منصة التعلم <span>المتطورة</span></h1>
-                    <div class="hero-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalTeachers">0</span>
-                            <span class="stat-label">مدرس</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalCourses">0</span>
-                            <span class="stat-label">دورة</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalStudents">0</span>
-                            <span class="stat-label">طالب</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- ===== HERO - تم إزالته بالكامل ===== -->
 
             <!-- ===== BANNER ===== -->
             <div class="banner-section" id="bannerSection">
                 <div class="banner-container">
-                    <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:auto;max-height:160px;object-fit:cover;" />
+                    <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:auto;max-height:180px;object-fit:cover;" />
                     <div id="mainBannerPlaceholder" class="banner-placeholder">
                         📚 ديف أكاديمي - منصتك التعليمية
                     </div>
