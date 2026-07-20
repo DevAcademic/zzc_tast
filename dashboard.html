@@ -10,7 +10,7 @@
     </script>
     <style>
         /* ============================================================
-           تصميم احترافي - بدون هيرو
+           تصميم احترافي
            ============================================================ */
         :root {
             --primary: #0EA5E9;
@@ -175,7 +175,6 @@
             text-align: center;
         }
 
-        /* ===== NAV RIGHT ===== */
         .nav-right {
             display: flex;
             align-items: center;
@@ -183,7 +182,6 @@
             flex-wrap: nowrap;
         }
 
-        /* ===== SEARCH BOX ===== */
         .search-box {
             display: flex;
             align-items: center;
@@ -223,7 +221,6 @@
         }
         .search-box button:hover { transform: scale(1.05); }
 
-        /* ===== CLASS FILTER ===== */
         .class-filter-select {
             padding: 0.15rem 0.4rem;
             border: 1.5px solid var(--border);
@@ -252,7 +249,6 @@
             color: var(--primary);
         }
 
-        /* ===== USER PROFILE ===== */
         .user-profile-btn {
             display: flex;
             align-items: center;
@@ -312,14 +308,7 @@
         body.dark-mode .theme-toggle .fa-moon { display: none; }
 
         /* ============================================================
-           HERO - تم إزالته بالكامل
-           ============================================================ */
-        .hero {
-            display: none !important;
-        }
-
-        /* ============================================================
-           BANNER - يظهر مباشرة بعد الشريط
+           BANNER
            ============================================================ */
         .banner-section {
             padding: 0.5rem 0.5rem 0.3rem;
@@ -341,7 +330,7 @@
         .banner-container .banner-placeholder {
             width: 100%;
             height: 100px;
-            background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+            background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -383,7 +372,7 @@
         .feature-card p { font-size: 0.45rem; color: var(--text-light); margin-top: 0.05rem; }
 
         /* ============================================================
-           TEACHERS - بدون أزرار فلتر
+           TEACHERS
            ============================================================ */
         .teachers-container {
             padding: 0.2rem 0.5rem 80px;
@@ -415,12 +404,10 @@
         }
         .section-more:hover { color: var(--primary); }
 
-        /* ===== إخفاء الفلتر الزائد ===== */
         .filter-section {
             display: none !important;
         }
 
-        /* ===== TEACHERS GRID ===== */
         .teachers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -993,7 +980,7 @@
         }
 
         /* ============================================================
-           ADMIN PANEL - مُصلح بالكامل
+           ADMIN PANEL
            ============================================================ */
         .admin-overlay {
             position: fixed;
@@ -1454,7 +1441,6 @@
         }
         .btn-delete-admin:hover { background: #DC2626; transform: scale(1.05); }
 
-        /* ===== ADMIN DARK MODE ===== */
         body.dark-mode .admin-content { background: #1E293B; }
         body.dark-mode .admin-header h2 { color: #38BDF8; }
         body.dark-mode .admin-tabs .tab-btn { color: #94A3B8; }
@@ -1554,26 +1540,11 @@
             .codes-table { min-width: 220px; font-size: 0.45rem; }
         }
 
-        /* ============================================================
-           إخفاء العناصر غير المرغوب فيها
-           ============================================================ */
         .footer, .footer-links, .footer-content, footer .footer-links, footer .footer-content,
         body .footer-links, body .footer-content, body .footer, .extra-links, .additional-links {
             display: none !important;
         }
-        .teacher-card .teacher-badge, .teacher-badge, .teacher-card .badge, .badge-green {
-            display: none !important;
-        }
-        a[href="#"], a[href=""] {
-            cursor: default;
-            pointer-events: none;
-            text-decoration: none;
-            color: inherit;
-        }
 
-        /* ============================================================
-           أنماط إضافية
-           ============================================================ */
         .page-header { text-align: center; padding: 0.2rem 0 0.5rem; }
         .page-header h2 { font-size: 1rem; font-weight: 800; }
         .page-header p { color: var(--text-light); font-size: 0.7rem; }
@@ -1663,11 +1634,9 @@
                     </ul>
                 </div>
                 <div class="nav-right">
-
                     <select class="class-filter-select" id="classFilterSelect" onchange="filterByClass()">
                         <option value="all" class="all-classes">🎯 جميع الصفوف</option>
                     </select>
-
                     <div class="search-box">
                         <input type="text" id="searchInput" placeholder="🔍 بحث..." />
                         <button id="searchBtn"><i class="fas fa-search"></i></button>
@@ -1689,8 +1658,6 @@
         PAGE: HOME
         ============================================================ -->
         <div id="page-home" class="page-content">
-
-            <!-- ===== HERO - تم إزالته بالكامل ===== -->
 
             <!-- ===== BANNER ===== -->
             <div class="banner-section" id="bannerSection">
@@ -1734,9 +1701,6 @@
                     <h2><i class="fas fa-chalkboard-teacher"></i> المدرسون</h2>
                     <span class="section-more" onclick="navigateTo('teachers')">عرض الكل <i class="fas fa-arrow-left"></i></span>
                 </div>
-
-                <div class="filter-section" id="sectionFilter"></div>
-
                 <div id="teachersGridContainer"></div>
             </div>
 
@@ -1751,9 +1715,6 @@
                     <h2>👨‍🏫 جميع المدرسين</h2>
                     <p>اختر الصف المناسب ثم اختر المدرس</p>
                 </div>
-
-                <div class="filter-section" id="sectionFilter2"></div>
-
                 <div id="teachersGridContainer2"></div>
             </div>
         </div>
@@ -1767,7 +1728,6 @@
                     <h2><i class="fas fa-book-open"></i> دوراتي</h2>
                     <span id="myCoursesCount" class="courses-count">0 دورة</span>
                 </div>
-
                 <div class="progress-summary">
                     <div class="progress-card">
                         <div class="progress-icon">📊</div>
@@ -1780,7 +1740,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="myCoursesContainer"></div>
             </div>
         </div>
@@ -1796,7 +1755,6 @@
                     <div class="profile-email" id="accountEmail">البريد الإلكتروني</div>
                     <div class="profile-registered" id="accountRegistered">مسجل منذ: --</div>
                 </div>
-
                 <div class="profile-stats">
                     <div class="stat-box">
                         <div class="stat-number" id="accountCourses">0</div>
@@ -1815,7 +1773,6 @@
                         <div class="stat-label">📹 محاضرات</div>
                     </div>
                 </div>
-
                 <div class="account-actions">
                     <button class="btn-admin" id="adminPanelBtn" style="display:none;">
                         <i class="fas fa-cog"></i> لوحة الإدارة
@@ -1827,7 +1784,6 @@
                         <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
                     </button>
                 </div>
-
                 <div class="app-version">
                     <span>📱 ديف أكاديمي v2.0</span>
                     <span>🔒 جميع الحقوق محفوظة © 2026</span>
@@ -1861,7 +1817,6 @@
         <!-- ============================================================
         MODALS
         ============================================================ -->
-
         <div class="modal-overlay" id="teachersModal">
             <div class="modal modal-large">
                 <button class="close-btn" id="closeTeachersModal"><i class="fas fa-times"></i></button>
@@ -1886,7 +1841,6 @@
             </div>
         </div>
 
-        <!-- ===== تتبع تقدم الطالب ===== -->
         <div class="modal-overlay" id="studentProgressModal">
             <div class="modal modal-large">
                 <button class="close-btn" id="closeStudentProgressModal"><i class="fas fa-times"></i></button>
@@ -1942,13 +1896,10 @@
         </div>
 
         <!-- ============================================================
-        ADMIN PANEL - مُصلح بالكامل
+        ADMIN PANEL
         ============================================================ -->
-
-        <!-- ===== ADMIN OVERLAY ===== -->
         <div class="admin-overlay" id="adminOverlay" onclick="closeAdminPanel()"></div>
 
-        <!-- ===== ADMIN PANEL ===== -->
         <div class="admin-panel" id="adminPanel">
             <div class="admin-content">
                 <div class="admin-header">
@@ -1962,9 +1913,10 @@
                     <button class="tab-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')">📊</button>
                     <button class="tab-btn" data-tab="sections" onclick="showAdminTab('sections')">📚</button>
                     <button class="tab-btn" data-tab="teachers" onclick="showAdminTab('teachers')">👨‍🏫</button>
+                    <button class="tab-btn" data-tab="edit-teacher" onclick="showAdminTab('edit-teacher')">✏️👨‍🏫</button>
                     <button class="tab-btn" data-tab="semesters" onclick="showAdminTab('semesters')">📀</button>
                     <button class="tab-btn" data-tab="lectures" onclick="showAdminTab('lectures')">🎥</button>
-                    <button class="tab-btn" data-tab="edit-lecture" onclick="showAdminTab('edit-lecture')">✏️</button>
+                    <button class="tab-btn" data-tab="edit-lecture" onclick="showAdminTab('edit-lecture')">✏️🎥</button>
                     <button class="tab-btn" data-tab="students" onclick="showAdminTab('students')">👥</button>
                     <button class="tab-btn" data-tab="codes" onclick="showAdminTab('codes')">🔑</button>
                     <button class="tab-btn" data-tab="admins" onclick="showAdminTab('admins')">👑</button>
@@ -2054,6 +2006,42 @@
                     </div>
                 </div>
 
+                <!-- ===== TAB: Edit Teacher ===== -->
+                <div class="tab-content" id="tab-edit-teacher">
+                    <div class="admin-edit-teacher">
+                        <h3>✏️ تعديل المدرس</h3>
+                        <form id="editTeacherForm" class="admin-form" onsubmit="event.preventDefault();">
+                            <div class="form-group">
+                                <label>📚 القسم *</label>
+                                <select id="editTeacherSection" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>👨‍🏫 المدرس *</label>
+                                <select id="editTeacherSelect" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>📝 الاسم الجديد *</label>
+                                <input type="text" id="editTeacherName" placeholder="اسم المدرس" required />
+                            </div>
+                            <div class="form-group">
+                                <label>📚 التخصص</label>
+                                <input type="text" id="editTeacherSubject" placeholder="مدرس رياضيات" />
+                            </div>
+                            <div class="form-group">
+                                <label>📝 الوصف</label>
+                                <textarea id="editTeacherDesc" placeholder="وصف المدرس..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>🖼️ رابط الصورة</label>
+                                <input type="url" id="editTeacherImage" placeholder="https://..." />
+                            </div>
+                            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                            <div id="editTeacherMessage"></div>
+                        </form>
+                        <div id="editTeacherListAdmin"></div>
+                    </div>
+                </div>
+
                 <!-- ===== TAB: Semesters ===== -->
                 <div class="tab-content" id="tab-semesters">
                     <div class="admin-semesters">
@@ -2128,7 +2116,7 @@
                 <div class="tab-content" id="tab-edit-lecture">
                     <div class="admin-edit-lecture">
                         <h3>✏️ تعديل المحاضرة</h3>
-                        <form id="editLectureForm" class="admin-form" onsubmit="event.preventDefault(); editLecture();">
+                        <form id="editLectureForm" class="admin-form" onsubmit="event.preventDefault();">
                             <div class="form-group">
                                 <label>📚 القسم *</label>
                                 <select id="editLectureSection" required></select>
@@ -2258,7 +2246,6 @@
                 <div class="tab-content" id="tab-settings">
                     <div class="admin-settings">
                         <h3>⚙️ الإعدادات</h3>
-
                         <div class="settings-group">
                             <h4>🖼️ صورة الإعلان الرئيسية</h4>
                             <div class="banner-preview" id="bannerPreview">
@@ -2276,7 +2263,6 @@
                             </div>
                             <div id="bannerMessage"></div>
                         </div>
-
                         <div class="settings-group">
                             <h4>🔧 إعدادات التطبيق</h4>
                             <div class="setting-item">
@@ -2297,7 +2283,6 @@
                                 </button>
                             </div>
                         </div>
-
                         <div class="danger-zone">
                             <h4 style="color:#EF4444;">⚠️ منطقة خطرة</h4>
                             <button onclick="deleteAllData()" class="btn-danger" style="padding:0.25rem;border:none;border-radius:4px;cursor:pointer;width:100%;font-size:0.65rem;font-weight:700;">
