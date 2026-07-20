@@ -9,10 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <style>
         /* ============================================================
-           التصميم الرئيسي مع الإضافات
+           التصميم الرئيسي
            ============================================================ */
         
-        /* ===== إخفاء الهيرو القديم تماماً ===== */
+        /* ===== إخفاء الهيرو القديم ===== */
         .hero { display: none !important; }
 
         /* ===== حذف الفلتر القديم ===== */
@@ -469,7 +469,9 @@
             <button class="announcement-nav prev" onclick="prevAnnouncement()">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <div class="announcement-slider" id="announcementSlider"></div>
+            <div class="announcement-slider" id="announcementSlider">
+                <!-- يتم إضافة الإعلانات بواسطة JavaScript -->
+            </div>
             <button class="announcement-nav next" onclick="nextAnnouncement()">
                 <i class="fas fa-chevron-left"></i>
             </button>
