@@ -772,7 +772,7 @@
                     <div class="teacher-card-image">
                         ${imageUrl ? `<img src="${imageUrl}" alt="${name}" onerror="this.style.display='none'; this.parentElement.querySelector('.teacher-emoji').style.display='block';">` : ''}
                         <span class="teacher-emoji" style="${imageUrl ? 'display:none;' : 'display:block;'}">${emoji}</span>
-                        ${hasAccess ? '<div class="teacher-badge">✅</div>' : ''}
+                        ${hasAccess ? '<div class="teacher-badge" style="position:absolute;bottom:-4px;right:-4px;background:#22C55E;color:white;padding:0.1rem 0.4rem;border-radius:20px;font-size:0.45rem;font-weight:700;border:2px solid var(--bg-card);z-index:2;">✅</div>' : ''}
                     </div>
                     <div class="teacher-card-info">
                         <h3>${name}</h3>
@@ -805,6 +805,12 @@
         // بناء أزرار الفلتر
         buildFilterButtons(sectionFilter, teachersCount);
         buildFilterButtons(sectionFilter2, teachersCount2);
+        
+        // تحديث قائمة الصفوف في النافبار
+        updateClassFilter();
+        
+        // إظهار الإعلانات في الصفحة الرئيسية فقط
+        showAnnouncementsOnHome();
     }
 
     // ===== OPEN TEACHER =====
@@ -1153,6 +1159,9 @@
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // إظهار الإعلانات في الصفحة الرئيسية فقط
+        setTimeout(showAnnouncementsOnHome, 100);
     };
 
     // ===== NAVIGATION EVENTS =====
@@ -2805,10 +2814,24 @@ grant execute on function add_user_and_admin(text) to authenticated;
             if (saved) {
                 announcements = JSON.parse(saved);
             } else {
+                // إعلانات افتراضية مع صور
                 announcements = [
-                    { id: 'ann-1', text: '🎉 انضم إلى دورة الرياضيات مع أ.حيدر طابور', icon: '📐', badge: 'جديد', time: new Date().toISOString() },
-                    { id: 'ann-2', text: '📢 قريباً: اختبارات دورية محاكية للوزاري', icon: '📊', badge: 'قريباً', time: new Date().toISOString() },
-                    { id: 'ann-3', text: '💎 خصم 50% على جميع الدورات حتى نهاية الشهر', icon: '🎁', badge: 'عرض', time: new Date().toISOString() }
+                    { 
+                        id: 'ann-1', 
+                        text: '📢 انضم إلى دورة الرياضيات مع أ.حيدر طابور', 
+                        icon: '📐', 
+                        image: 'https://via.placeholder.com/80/0EA5E9/FFFFFF?text=رياضيات',
+                        badge: 'جديد', 
+                        time: new Date().toISOString() 
+                    },
+                    { 
+                        id: 'ann-2', 
+                        text: '📊 اختبارات دورية محاكية للوزاري', 
+                        icon: '📊', 
+                        image: 'https://via.placeholder.com/80/8B5CF6/FFFFFF?text=اختبارات',
+                        badge: 'قريباً', 
+                        time: new Date().toISOString() 
+                    }
                 ];
                 saveAnnouncements();
             }
@@ -2838,9 +2861,14 @@ grant execute on function add_user_and_admin(text) to authenticated;
         var html = '';
         announcements.forEach(function(ann, index) {
             var timeAgo = getTimeAgo(ann.time);
+            // استخدام الصورة إذا وجدت وإلا استخدم الأيقونة
+            var imageHtml = ann.image ? 
+                '<img src="' + ann.image + '" class="announcement-image" alt="إعلان" onerror="this.style.display=\'none\'; this.parentElement.querySelector(\'.announcement-icon\').style.display=\'block\';">' : 
+                '<span class="announcement-icon">' + (ann.icon || '📢') + '</span>';
+            
             html +=
                 '<div class="announcement-item" data-index="' + index + '">' +
-                '<span class="announcement-icon">' + (ann.icon || '📢') + '</span>' +
+                imageHtml +
                 '<span class="announcement-text">' + ann.text + '</span>' +
                 (ann.badge ? '<span class="announcement-badge">' + ann.badge + '</span>' : '') +
                 '<span class="announcement-time">' + timeAgo + '</span>' +
@@ -2942,10 +2970,11 @@ grant execute on function add_user_and_admin(text) to authenticated;
         var html = '';
         announcements.forEach(function(ann, index) {
             var timeAgo = getTimeAgo(ann.time);
+            var imagePreview = ann.image ? '<img src="' + ann.image + '" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display=\'none\';">' : '';
             html +=
                 '<div class="announcement-list-item">' +
                 '<div class="ann-content">' +
-                '<span class="ann-icon">' + (ann.icon || '📢') + '</span>' +
+                (imagePreview || '<span class="ann-icon">' + (ann.icon || '📢') + '</span>') +
                 '<span class="ann-text">' + ann.text + '</span>' +
                 (ann.badge ? '<span class="ann-badge">' + ann.badge + '</span>' : '') +
                 '<span class="ann-time">' + timeAgo + '</span>' +
@@ -2958,6 +2987,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
 
     window.addAnnouncement = function() {
         var textInput = document.getElementById('announcementText');
+        var imageInput = document.getElementById('announcementImage');
         var iconInput = document.getElementById('announcementIcon');
         var badgeInput = document.getElementById('announcementBadge');
 
@@ -2971,6 +3001,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
         var newAnn = {
             id: 'ann-' + Date.now(),
             text: text,
+            image: imageInput.value.trim() || '',
             icon: iconInput.value.trim() || '📢',
             badge: badgeInput.value.trim() || '',
             time: new Date().toISOString()
@@ -2982,6 +3013,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
         renderAdminAnnouncements();
 
         textInput.value = '';
+        imageInput.value = '';
         iconInput.value = '';
         badgeInput.value = '';
         document.getElementById('addAnnouncementMessage').innerHTML = '✅ تم إضافة الإعلان بنجاح';
@@ -3033,7 +3065,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
         showToast('success', '✅ تم تحديث صورة الإعلان');
     };
 
-    // تحميل الصورة المحفوظة عند بدء التطبيق
+    // ===== تحميل الصورة المحفوظة =====
     var savedBanner = localStorage.getItem('bannerImage');
     if (savedBanner) {
         var mainBanner = document.getElementById('mainBannerImage');
@@ -3045,7 +3077,41 @@ grant execute on function add_user_and_admin(text) to authenticated;
         if (mainPlaceholder) mainPlaceholder.style.display = 'none';
     }
 
-    loadAnnouncements();
+    // ===== إظهار الإعلانات في الصفحة الرئيسية فقط =====
+    function showAnnouncementsOnHome() {
+        var announcementBar = document.getElementById('announcementBar');
+        var bannerSection = document.getElementById('bannerSection');
+        var currentPage = document.querySelector('.page-content:not([style*="display:none"])');
+        
+        if (currentPage && currentPage.id === 'page-home') {
+            if (announcementBar) announcementBar.style.display = 'flex';
+            if (bannerSection) bannerSection.style.display = 'block';
+        } else {
+            if (announcementBar) announcementBar.style.display = 'none';
+            if (bannerSection) bannerSection.style.display = 'none';
+        }
+    }
+
+    // ===== دالة تحديث الصفوف =====
+    function updateClassFilter() {
+        var classFilterSelect = document.getElementById('classFilterSelect');
+        if (!classFilterSelect) return;
+        
+        var currentValue = classFilterSelect.value;
+        var options = '<option value="all" class="all-classes">🎯 جميع الصفوف</option>';
+        
+        if (data && data.sections) {
+            data.sections.forEach(function(section) {
+                var teacherCount = section.teachers ? section.teachers.length : 0;
+                options += '<option value="' + section.id + '">📚 ' + section.name + ' (' + teacherCount + ')</option>';
+            });
+        }
+        
+        classFilterSelect.innerHTML = options;
+        if (currentValue && data.sections.find(function(s) { return s.id === currentValue; })) {
+            classFilterSelect.value = currentValue;
+        }
+    }
 
     // ============================================================
     // ===== INIT =====
@@ -3056,6 +3122,9 @@ grant execute on function add_user_and_admin(text) to authenticated;
         document.body.classList.add('dark-mode');
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
+
+    // تحميل الإعلانات
+    loadAnnouncements();
 
     async function init() {
         if (supabaseClient) {
