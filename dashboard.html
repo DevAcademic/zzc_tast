@@ -12,6 +12,12 @@
            التصميم الرئيسي مع الإضافات
            ============================================================ */
         
+        /* ===== إخفاء الهيرو القديم تماماً ===== */
+        .hero { display: none !important; }
+
+        /* ===== حذف الفلتر القديم ===== */
+        .filter-section { display: none !important; }
+
         /* ===== شريط الإعلانات ===== */
         .announcement-bar {
             background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
@@ -124,9 +130,9 @@
             margin: 0 auto;
         }
         .banner-container {
-            border-radius: var(--radius);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
         .banner-container img {
             width: 100%;
@@ -138,23 +144,17 @@
         .banner-container .banner-placeholder {
             width: 100%;
             height: 80px;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 0.9rem;
             font-weight: 700;
-            border-radius: var(--radius);
+            border-radius: 12px;
         }
 
-        /* ===== إخفاء الهيرو القديم ===== */
-        .hero { display: none !important; }
-
-        /* ===== حذف الفلتر القديم ===== */
-        .filter-section { display: none !important; }
-
-        /* ===== شريط الصفوف (يظهر بشكل صحيح) ===== */
+        /* ===== شريط الصفوف ===== */
         .class-filter-select {
             padding: 0.15rem 0.4rem;
             border: 1.5px solid var(--border);
@@ -181,7 +181,7 @@
             color: var(--text);
         }
 
-        /* ===== شريط البحث مصغر ===== */
+        /* ===== شريط البحث ===== */
         .search-box {
             display: flex;
             align-items: center;
@@ -293,6 +293,35 @@
         body:not(.dark-mode) .theme-toggle .fa-sun { display: none; }
         body.dark-mode .theme-toggle .fa-moon { display: none; }
 
+        /* ===== NAVBAR ===== */
+        .navbar .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 0.3rem;
+            flex-wrap: nowrap;
+        }
+        .nav-left { display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; }
+        .logo-text { font-size: 0.9rem; font-weight: 900; color: var(--primary); white-space: nowrap; }
+        .logo-text span { color: var(--text); }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex: 1;
+            justify-content: center;
+            flex-wrap: nowrap;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
         /* ===== إدارة الإعلانات في لوحة التحكم ===== */
         .announcement-list-item {
             display: flex;
@@ -343,33 +372,39 @@
         }
         .announcement-list-item .ann-delete-btn:hover { background: #dc2626; }
 
-        /* ===== NAVBAR ===== */
-        .navbar .nav-container {
+        /* ===== زر إضافة رابط البانر ===== */
+        .banner-url-input-group {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
             gap: 0.3rem;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
+            margin-top: 0.3rem;
         }
-        .nav-left { display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0; }
-        .logo-text { font-size: 0.9rem; font-weight: 900; color: var(--primary); white-space: nowrap; }
-        .logo-text span { color: var(--text); }
-
-        .nav-center {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
+        .banner-url-input-group input {
             flex: 1;
-            justify-content: center;
-            flex-wrap: nowrap;
+            min-width: 120px;
+            padding: 0.3rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.7rem;
+            outline: none;
         }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            flex-shrink: 0;
+        .banner-url-input-group input:focus {
+            border-color: var(--primary);
+        }
+        .banner-url-input-group button {
+            padding: 0.3rem 0.8rem;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .banner-url-input-group button:hover {
+            transform: scale(1.05);
         }
 
         @media (max-width: 480px) {
@@ -986,6 +1021,17 @@
                         <button type="submit" class="btn-submit"><i class="fas fa-plus-circle"></i> إضافة إعلان</button>
                         <div id="addAnnouncementMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
                     </form>
+
+                    <hr style="margin:1rem 0;border-color:var(--border);">
+
+                    <!-- 🆕 إضافة رابط صورة البانر -->
+                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">🖼️ صورة الإعلان الرئيسية</h3>
+                    <p style="color:var(--text-light);font-size:.75rem;margin-bottom:0.3rem;">أضف رابط الصورة التي تظهر في أعلى الصفحة</p>
+                    <div class="banner-url-input-group">
+                        <input type="url" id="bannerUrlInput" placeholder="https://example.com/image.jpg" />
+                        <button onclick="updateBanner()"><i class="fas fa-save"></i> حفظ</button>
+                    </div>
+                    <div id="bannerMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
 
                     <hr style="margin:1rem 0;border-color:var(--border);">
 
