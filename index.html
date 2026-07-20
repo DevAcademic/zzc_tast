@@ -37,14 +37,12 @@
             z-index: 0;
             pointer-events: none;
         }
-
         .bg-shapes .shape {
             position: absolute;
             border-radius: 50%;
             opacity: 0.12;
             animation: floatShape 20s ease-in-out infinite alternate;
         }
-
         .bg-shapes .shape:nth-child(1) {
             width: 500px;
             height: 500px;
@@ -53,7 +51,6 @@
             right: -150px;
             animation-duration: 25s;
         }
-
         .bg-shapes .shape:nth-child(2) {
             width: 400px;
             height: 400px;
@@ -63,7 +60,6 @@
             animation-duration: 20s;
             animation-delay: 3s;
         }
-
         .bg-shapes .shape:nth-child(3) {
             width: 200px;
             height: 200px;
@@ -126,7 +122,6 @@
             gap: 10px;
             margin-bottom: 4px;
         }
-
         .auth-card .logo-icon {
             width: 48px;
             height: 48px;
@@ -139,7 +134,6 @@
             color: #fff;
             box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
         }
-
         .auth-card h1 {
             text-align: center;
             font-size: 26px;
@@ -148,11 +142,9 @@
             letter-spacing: -0.5px;
             margin-bottom: 2px;
         }
-
         .auth-card h1 span {
             color: #0EA5E9;
         }
-
         .auth-card .subtitle {
             text-align: center;
             color: #64748B;
@@ -160,7 +152,6 @@
             font-weight: 400;
             margin-bottom: 6px;
         }
-
         .auth-card .status-badge {
             text-align: center;
             color: #0EA5E9;
@@ -184,7 +175,6 @@
             margin-bottom: 24px;
             border: 1px solid rgba(14, 165, 233, 0.08);
         }
-
         .tab-btn {
             flex: 1;
             padding: 12px 0;
@@ -198,7 +188,6 @@
             transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
         }
-
         .tab-btn::after {
             content: '';
             position: absolute;
@@ -211,17 +200,14 @@
             border-radius: 4px;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .tab-btn.active {
             background: #ffffff;
             color: #0C4A6E;
             box-shadow: 0 4px 16px rgba(14, 165, 233, 0.12);
         }
-
         .tab-btn.active::after {
             transform: translateX(-50%) scaleX(1);
         }
-
         .tab-btn:hover:not(.active) {
             color: #475569;
         }
@@ -230,7 +216,6 @@
             display: none;
             animation: slideFade 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .form-container.active {
             display: block;
         }
@@ -250,7 +235,6 @@
             margin-bottom: 18px;
             position: relative;
         }
-
         .form-group label {
             display: block;
             color: #334155;
@@ -259,12 +243,10 @@
             margin-bottom: 5px;
             letter-spacing: 0.2px;
         }
-
         .form-group label .required {
             color: #EF4444;
             margin-right: 2px;
         }
-
         .form-group input {
             width: 100%;
             padding: 14px 18px;
@@ -277,19 +259,16 @@
             transition: all 0.3s ease;
             font-weight: 500;
         }
-
         .form-group input::placeholder {
             color: #94A3B8;
             font-weight: 400;
         }
-
         .form-group input:focus {
             border-color: #0EA5E9;
             background: #ffffff;
             box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.1);
             transform: translateY(-1px);
         }
-
         .form-group input:hover:not(:focus) {
             border-color: #BAE6FD;
         }
@@ -310,7 +289,6 @@
             overflow: hidden;
             letter-spacing: 0.3px;
         }
-
         .submit-btn::before {
             content: '';
             position: absolute;
@@ -321,27 +299,22 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
             transition: left 0.6s ease;
         }
-
         .submit-btn:hover:not(:disabled)::before {
             left: 100%;
         }
-
         .submit-btn:hover:not(:disabled) {
             transform: translateY(-3px) scale(1.01);
             box-shadow: 0 12px 40px rgba(14, 165, 233, 0.35);
         }
-
         .submit-btn:active:not(:disabled) {
             transform: scale(0.97);
         }
-
         .submit-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
-
         .submit-btn .spinner {
             display: none;
             width: 22px;
@@ -352,7 +325,6 @@
             animation: spin 0.7s linear infinite;
             margin: 0 auto;
         }
-
         .submit-btn.loading .spinner {
             display: block;
         }
@@ -377,26 +349,22 @@
             gap: 10px;
             animation: slideFade 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .message .msg-icon {
             font-size: 18px;
             flex-shrink: 0;
         }
-
         .message.error {
             display: flex;
             background: rgba(239, 68, 68, 0.08);
             border: 1px solid rgba(239, 68, 68, 0.15);
             color: #B91C1C;
         }
-
         .message.success {
             display: flex;
             background: rgba(34, 197, 94, 0.08);
             border: 1px solid rgba(34, 197, 94, 0.15);
             color: #15803D;
         }
-
         .message.info {
             display: flex;
             background: rgba(14, 165, 233, 0.08);
@@ -410,7 +378,6 @@
             color: #94A3B8;
             font-size: 14px;
         }
-
         .auth-footer a {
             color: #0EA5E9;
             text-decoration: none;
@@ -418,7 +385,6 @@
             transition: all 0.3s ease;
             position: relative;
         }
-
         .auth-footer a::after {
             content: '';
             position: absolute;
@@ -429,11 +395,9 @@
             background: linear-gradient(135deg, #0EA5E9, #38BDF8);
             transition: width 0.3s ease;
         }
-
         .auth-footer a:hover::after {
             width: 100%;
         }
-
         .auth-footer a:hover {
             color: #0284C7;
         }
