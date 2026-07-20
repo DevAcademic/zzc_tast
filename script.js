@@ -2792,6 +2792,262 @@ grant execute on function add_user_and_admin(text) to authenticated;
     });
 
     // ============================================================
+    // 🆕 إدارة الإعلانات وتحديث البانر
+    // ============================================================
+
+    var announcements = [];
+    var currentAnnouncementIndex = 0;
+    var announcementInterval = null;
+
+    function loadAnnouncements() {
+        try {
+            var saved = localStorage.getItem('announcements');
+            if (saved) {
+                announcements = JSON.parse(saved);
+            } else {
+                announcements = [
+                    { id: 'ann-1', text: '🎉 انضم إلى دورة الرياضيات مع أ.حيدر طابور', icon: '📐', badge: 'جديد', time: new Date().toISOString() },
+                    { id: 'ann-2', text: '📢 قريباً: اختبارات دورية محاكية للوزاري', icon: '📊', badge: 'قريباً', time: new Date().toISOString() },
+                    { id: 'ann-3', text: '💎 خصم 50% على جميع الدورات حتى نهاية الشهر', icon: '🎁', badge: 'عرض', time: new Date().toISOString() }
+                ];
+                saveAnnouncements();
+            }
+        } catch (e) {
+            announcements = [];
+        }
+        renderAnnouncements();
+    }
+
+    function saveAnnouncements() {
+        try {
+            localStorage.setItem('announcements', JSON.stringify(announcements));
+        } catch (e) {}
+    }
+
+    function renderAnnouncements() {
+        var slider = document.getElementById('announcementSlider');
+        var dots = document.getElementById('announcementDots');
+        if (!slider) return;
+
+        if (announcements.length === 0) {
+            slider.innerHTML = '<div class="announcement-item"><span class="announcement-icon">📢</span><span class="announcement-text">لا توجد إعلانات حالياً</span></div>';
+            if (dots) dots.innerHTML = '';
+            return;
+        }
+
+        var html = '';
+        announcements.forEach(function(ann, index) {
+            var timeAgo = getTimeAgo(ann.time);
+            html +=
+                '<div class="announcement-item" data-index="' + index + '">' +
+                '<span class="announcement-icon">' + (ann.icon || '📢') + '</span>' +
+                '<span class="announcement-text">' + ann.text + '</span>' +
+                (ann.badge ? '<span class="announcement-badge">' + ann.badge + '</span>' : '') +
+                '<span class="announcement-time">' + timeAgo + '</span>' +
+                '</div>';
+        });
+        slider.innerHTML = html;
+
+        if (dots) {
+            var dotsHtml = '';
+            announcements.forEach(function(_, i) {
+                dotsHtml += '<span class="dot ' + (i === currentAnnouncementIndex ? 'active' : '') + '" onclick="goToAnnouncement(' + i + ')"></span>';
+            });
+            dots.innerHTML = dotsHtml;
+        }
+
+        updateAnnouncementSlider();
+        startAnnouncementAutoPlay();
+    }
+
+    function updateAnnouncementSlider() {
+        var slider = document.getElementById('announcementSlider');
+        if (!slider) return;
+        var items = slider.querySelectorAll('.announcement-item');
+        if (items.length === 0) return;
+        if (currentAnnouncementIndex >= items.length) {
+            currentAnnouncementIndex = 0;
+        }
+        slider.style.transform = 'translateX(-' + currentAnnouncementIndex * 100 + '%)';
+        var dots = document.querySelectorAll('.announcement-dots .dot');
+        dots.forEach(function(dot, i) {
+            dot.classList.toggle('active', i === currentAnnouncementIndex);
+        });
+    }
+
+    window.goToAnnouncement = function(index) {
+        currentAnnouncementIndex = index;
+        updateAnnouncementSlider();
+        resetAnnouncementAutoPlay();
+    };
+
+    window.nextAnnouncement = function() {
+        if (announcements.length === 0) return;
+        currentAnnouncementIndex = (currentAnnouncementIndex + 1) % announcements.length;
+        updateAnnouncementSlider();
+        resetAnnouncementAutoPlay();
+    };
+
+    window.prevAnnouncement = function() {
+        if (announcements.length === 0) return;
+        currentAnnouncementIndex = (currentAnnouncementIndex - 1 + announcements.length) % announcements.length;
+        updateAnnouncementSlider();
+        resetAnnouncementAutoPlay();
+    };
+
+    function startAnnouncementAutoPlay() {
+        stopAnnouncementAutoPlay();
+        if (announcements.length > 1) {
+            announcementInterval = setInterval(function() {
+                nextAnnouncement();
+            }, 5000);
+        }
+    }
+
+    function stopAnnouncementAutoPlay() {
+        if (announcementInterval) {
+            clearInterval(announcementInterval);
+            announcementInterval = null;
+        }
+    }
+
+    function resetAnnouncementAutoPlay() {
+        startAnnouncementAutoPlay();
+    }
+
+    function getTimeAgo(dateString) {
+        try {
+            var date = new Date(dateString);
+            var now = new Date();
+            var diff = Math.floor((now - date) / 1000);
+            if (diff < 60) return 'الآن';
+            if (diff < 3600) return Math.floor(diff / 60) + ' د';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' س';
+            if (diff < 604800) return Math.floor(diff / 86400) + ' ي';
+            return date.toLocaleDateString('ar');
+        } catch (e) {
+            return 'منذ وقت';
+        }
+    }
+
+    function renderAdminAnnouncements() {
+        var container = document.getElementById('adminAnnouncementsList');
+        if (!container) return;
+
+        if (announcements.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:0.3rem 0;font-size:.8rem;">لا توجد إعلانات</p>';
+            return;
+        }
+
+        var html = '';
+        announcements.forEach(function(ann, index) {
+            var timeAgo = getTimeAgo(ann.time);
+            html +=
+                '<div class="announcement-list-item">' +
+                '<div class="ann-content">' +
+                '<span class="ann-icon">' + (ann.icon || '📢') + '</span>' +
+                '<span class="ann-text">' + ann.text + '</span>' +
+                (ann.badge ? '<span class="ann-badge">' + ann.badge + '</span>' : '') +
+                '<span class="ann-time">' + timeAgo + '</span>' +
+                '</div>' +
+                '<button class="ann-delete-btn" onclick="deleteAnnouncement(' + index + ')">🗑️ حذف</button>' +
+                '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    window.addAnnouncement = function() {
+        var textInput = document.getElementById('announcementText');
+        var iconInput = document.getElementById('announcementIcon');
+        var badgeInput = document.getElementById('announcementBadge');
+
+        var text = textInput.value.trim();
+        if (!text) {
+            document.getElementById('addAnnouncementMessage').innerHTML = '⚠️ يرجى إدخال نص الإعلان';
+            document.getElementById('addAnnouncementMessage').style.color = '#f59e0b';
+            return;
+        }
+
+        var newAnn = {
+            id: 'ann-' + Date.now(),
+            text: text,
+            icon: iconInput.value.trim() || '📢',
+            badge: badgeInput.value.trim() || '',
+            time: new Date().toISOString()
+        };
+
+        announcements.push(newAnn);
+        saveAnnouncements();
+        renderAnnouncements();
+        renderAdminAnnouncements();
+
+        textInput.value = '';
+        iconInput.value = '';
+        badgeInput.value = '';
+        document.getElementById('addAnnouncementMessage').innerHTML = '✅ تم إضافة الإعلان بنجاح';
+        document.getElementById('addAnnouncementMessage').style.color = '#22c55e';
+        showToast('success', '✅ تم إضافة الإعلان بنجاح');
+    };
+
+    window.deleteAnnouncement = function(index) {
+        if (!confirm('⚠️ هل أنت متأكد من حذف هذا الإعلان؟')) return;
+        announcements.splice(index, 1);
+        saveAnnouncements();
+        renderAnnouncements();
+        renderAdminAnnouncements();
+        showToast('success', '✅ تم حذف الإعلان بنجاح');
+    };
+
+    // ===== تحديث صورة البانر =====
+    window.updateBanner = function() {
+        var urlInput = document.getElementById('bannerUrlInput');
+        var message = document.getElementById('bannerMessage');
+        var url = urlInput.value.trim();
+
+        if (!url) {
+            message.innerHTML = '⚠️ يرجى إدخال رابط الصورة';
+            message.style.color = '#f59e0b';
+            return;
+        }
+
+        try {
+            new URL(url);
+        } catch (e) {
+            message.innerHTML = '⚠️ الرابط غير صحيح';
+            message.style.color = '#f59e0b';
+            return;
+        }
+
+        localStorage.setItem('bannerImage', url);
+        
+        var mainBanner = document.getElementById('mainBannerImage');
+        var mainPlaceholder = document.getElementById('mainBannerPlaceholder');
+        if (mainBanner) {
+            mainBanner.src = url;
+            mainBanner.style.display = 'block';
+        }
+        if (mainPlaceholder) mainPlaceholder.style.display = 'none';
+
+        message.innerHTML = '✅ تم تحديث صورة الإعلان بنجاح';
+        message.style.color = '#22c55e';
+        showToast('success', '✅ تم تحديث صورة الإعلان');
+    };
+
+    // تحميل الصورة المحفوظة عند بدء التطبيق
+    var savedBanner = localStorage.getItem('bannerImage');
+    if (savedBanner) {
+        var mainBanner = document.getElementById('mainBannerImage');
+        var mainPlaceholder = document.getElementById('mainBannerPlaceholder');
+        if (mainBanner) {
+            mainBanner.src = savedBanner;
+            mainBanner.style.display = 'block';
+        }
+        if (mainPlaceholder) mainPlaceholder.style.display = 'none';
+    }
+
+    loadAnnouncements();
+
+    // ============================================================
     // ===== INIT =====
     // ============================================================
     const savedTheme = localStorage.getItem('devAcademicTheme');
@@ -2878,213 +3134,5 @@ grant execute on function add_user_and_admin(text) to authenticated;
         console.error('Initialization failed:', error);
         window.location.href = 'index.html';
     });
-// ============================================================
-// 🆕 إدارة الإعلانات
-// ============================================================
 
-var announcements = [];
-var currentAnnouncementIndex = 0;
-var announcementInterval = null;
-
-function loadAnnouncements() {
-    try {
-        var saved = localStorage.getItem('announcements');
-        if (saved) {
-            announcements = JSON.parse(saved);
-        } else {
-            announcements = [
-                { id: 'ann-1', text: '🎉 انضم إلى دورة الرياضيات مع أ.حيدر طابور', icon: '📐', badge: 'جديد', time: new Date().toISOString() },
-                { id: 'ann-2', text: '📢 قريباً: اختبارات دورية محاكية للوزاري', icon: '📊', badge: 'قريباً', time: new Date().toISOString() },
-                { id: 'ann-3', text: '💎 خصم 50% على جميع الدورات حتى نهاية الشهر', icon: '🎁', badge: 'عرض', time: new Date().toISOString() }
-            ];
-            saveAnnouncements();
-        }
-    } catch (e) {
-        announcements = [];
-    }
-    renderAnnouncements();
-}
-
-function saveAnnouncements() {
-    try {
-        localStorage.setItem('announcements', JSON.stringify(announcements));
-    } catch (e) {}
-}
-
-function renderAnnouncements() {
-    var slider = document.getElementById('announcementSlider');
-    var dots = document.getElementById('announcementDots');
-    if (!slider) return;
-
-    if (announcements.length === 0) {
-        slider.innerHTML = '<div class="announcement-item"><span class="announcement-icon">📢</span><span class="announcement-text">لا توجد إعلانات حالياً</span></div>';
-        if (dots) dots.innerHTML = '';
-        return;
-    }
-
-    var html = '';
-    announcements.forEach(function(ann, index) {
-        var timeAgo = getTimeAgo(ann.time);
-        html +=
-            '<div class="announcement-item" data-index="' + index + '">' +
-            '<span class="announcement-icon">' + (ann.icon || '📢') + '</span>' +
-            '<span class="announcement-text">' + ann.text + '</span>' +
-            (ann.badge ? '<span class="announcement-badge">' + ann.badge + '</span>' : '') +
-            '<span class="announcement-time">' + timeAgo + '</span>' +
-            '</div>';
-    });
-    slider.innerHTML = html;
-
-    if (dots) {
-        var dotsHtml = '';
-        announcements.forEach(function(_, i) {
-            dotsHtml += '<span class="dot ' + (i === currentAnnouncementIndex ? 'active' : '') + '" onclick="goToAnnouncement(' + i + ')"></span>';
-        });
-        dots.innerHTML = dotsHtml;
-    }
-
-    updateAnnouncementSlider();
-    startAnnouncementAutoPlay();
-}
-
-function updateAnnouncementSlider() {
-    var slider = document.getElementById('announcementSlider');
-    if (!slider) return;
-    var items = slider.querySelectorAll('.announcement-item');
-    if (items.length === 0) return;
-    if (currentAnnouncementIndex >= items.length) {
-        currentAnnouncementIndex = 0;
-    }
-    slider.style.transform = 'translateX(-' + currentAnnouncementIndex * 100 + '%)';
-    var dots = document.querySelectorAll('.announcement-dots .dot');
-    dots.forEach(function(dot, i) {
-        dot.classList.toggle('active', i === currentAnnouncementIndex);
-    });
-}
-
-window.goToAnnouncement = function(index) {
-    currentAnnouncementIndex = index;
-    updateAnnouncementSlider();
-    resetAnnouncementAutoPlay();
-};
-
-window.nextAnnouncement = function() {
-    if (announcements.length === 0) return;
-    currentAnnouncementIndex = (currentAnnouncementIndex + 1) % announcements.length;
-    updateAnnouncementSlider();
-    resetAnnouncementAutoPlay();
-};
-
-window.prevAnnouncement = function() {
-    if (announcements.length === 0) return;
-    currentAnnouncementIndex = (currentAnnouncementIndex - 1 + announcements.length) % announcements.length;
-    updateAnnouncementSlider();
-    resetAnnouncementAutoPlay();
-};
-
-function startAnnouncementAutoPlay() {
-    stopAnnouncementAutoPlay();
-    if (announcements.length > 1) {
-        announcementInterval = setInterval(function() {
-            nextAnnouncement();
-        }, 5000);
-    }
-}
-
-function stopAnnouncementAutoPlay() {
-    if (announcementInterval) {
-        clearInterval(announcementInterval);
-        announcementInterval = null;
-    }
-}
-
-function resetAnnouncementAutoPlay() {
-    startAnnouncementAutoPlay();
-}
-
-function getTimeAgo(dateString) {
-    try {
-        var date = new Date(dateString);
-        var now = new Date();
-        var diff = Math.floor((now - date) / 1000);
-        if (diff < 60) return 'الآن';
-        if (diff < 3600) return Math.floor(diff / 60) + ' د';
-        if (diff < 86400) return Math.floor(diff / 3600) + ' س';
-        if (diff < 604800) return Math.floor(diff / 86400) + ' ي';
-        return date.toLocaleDateString('ar');
-    } catch (e) {
-        return 'منذ وقت';
-    }
-}
-
-function renderAdminAnnouncements() {
-    var container = document.getElementById('adminAnnouncementsList');
-    if (!container) return;
-
-    if (announcements.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:0.3rem 0;font-size:.8rem;">لا توجد إعلانات</p>';
-        return;
-    }
-
-    var html = '';
-    announcements.forEach(function(ann, index) {
-        var timeAgo = getTimeAgo(ann.time);
-        html +=
-            '<div class="announcement-list-item">' +
-            '<div class="ann-content">' +
-            '<span class="ann-icon">' + (ann.icon || '📢') + '</span>' +
-            '<span class="ann-text">' + ann.text + '</span>' +
-            (ann.badge ? '<span class="ann-badge">' + ann.badge + '</span>' : '') +
-            '<span class="ann-time">' + timeAgo + '</span>' +
-            '</div>' +
-            '<button class="ann-delete-btn" onclick="deleteAnnouncement(' + index + ')">🗑️ حذف</button>' +
-            '</div>';
-    });
-    container.innerHTML = html;
-}
-
-window.addAnnouncement = function() {
-    var textInput = document.getElementById('announcementText');
-    var iconInput = document.getElementById('announcementIcon');
-    var badgeInput = document.getElementById('announcementBadge');
-
-    var text = textInput.value.trim();
-    if (!text) {
-        document.getElementById('addAnnouncementMessage').innerHTML = '⚠️ يرجى إدخال نص الإعلان';
-        document.getElementById('addAnnouncementMessage').style.color = '#f59e0b';
-        return;
-    }
-
-    var newAnn = {
-        id: 'ann-' + Date.now(),
-        text: text,
-        icon: iconInput.value.trim() || '📢',
-        badge: badgeInput.value.trim() || '',
-        time: new Date().toISOString()
-    };
-
-    announcements.push(newAnn);
-    saveAnnouncements();
-    renderAnnouncements();
-    renderAdminAnnouncements();
-
-    textInput.value = '';
-    iconInput.value = '';
-    badgeInput.value = '';
-    document.getElementById('addAnnouncementMessage').innerHTML = '✅ تم إضافة الإعلان بنجاح';
-    document.getElementById('addAnnouncementMessage').style.color = '#22c55e';
-    showToast('success', '✅ تم إضافة الإعلان بنجاح');
-};
-
-window.deleteAnnouncement = function(index) {
-    if (!confirm('⚠️ هل أنت متأكد من حذف هذا الإعلان؟')) return;
-    announcements.splice(index, 1);
-    saveAnnouncements();
-    renderAnnouncements();
-    renderAdminAnnouncements();
-    showToast('success', '✅ تم حذف الإعلان بنجاح');
-};
-
-// تحميل الإعلانات عند بدء التطبيق
-loadAnnouncements();
 })();
