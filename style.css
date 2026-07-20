@@ -1,6 +1,6 @@
 /* ============================================================
    ديف أكاديمي - ملف التنسيقات الرئيسي
-   تصميم حديث مثل منصة أندي
+   تصميم احترافي مستوحى من منصة مرماز
    ============================================================ */
 
 /* ============================================================
@@ -56,10 +56,10 @@
     --shadow-2xl: 0 40px 100px rgba(14, 165, 233, 0.2);
 
     /* ===== الحواف ===== */
-    --radius: 16px;
-    --radius-sm: 10px;
-    --radius-lg: 24px;
-    --radius-full: 9999px;
+    --radius: 20px;
+    --radius-sm: 12px;
+    --radius-lg: 28px;
+    --radius-full: 50px;
 
     /* ===== الانتقالات ===== */
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -209,7 +209,8 @@ body {
 }
 
 @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0px);
     }
     50% {
@@ -218,7 +219,8 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         transform: scale(1);
     }
     50% {
@@ -246,6 +248,17 @@ body {
     }
 }
 
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
@@ -253,7 +266,8 @@ body {
 }
 
 @keyframes wave {
-    0%, 100% {
+    0%,
+    100% {
         transform: rotate(0deg);
     }
     25% {
@@ -274,7 +288,8 @@ body {
 }
 
 @keyframes starFloat {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0) scale(1);
         opacity: 0.3;
     }
@@ -580,7 +595,35 @@ body.dark-mode .logo-text span {
 }
 
 /* ============================================================
-   12) THEME TOGGLE
+   12) CLASS FILTER SELECT
+   ============================================================ */
+.class-filter-select {
+    padding: 0.25rem 0.6rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-full);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    transition: all var(--transition);
+    max-width: 120px;
+}
+
+.class-filter-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.class-filter-select option {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+/* ============================================================
+   13) THEME TOGGLE
    ============================================================ */
 .theme-toggle {
     background: var(--bg-card);
@@ -645,16 +688,16 @@ body.dark-mode .theme-toggle .fa-moon {
 }
 
 /* ============================================================
-   13) HERO SECTION
+   14) HERO SECTION
    ============================================================ */
 .hero {
     background: var(--primary-gradient);
-    padding: 1.5rem 1.2rem;
-    margin: 0 1rem 1rem;
+    padding: 1.8rem 1.5rem;
+    margin: 0 1rem 0.5rem;
     border-radius: var(--radius);
     position: relative;
     overflow: hidden;
-    min-height: 140px;
+    min-height: 150px;
     display: flex;
     align-items: center;
 }
@@ -666,7 +709,7 @@ body.dark-mode .theme-toggle .fa-moon {
     right: -20%;
     width: 300px;
     height: 300px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 50%;
 }
 
@@ -704,7 +747,7 @@ body.dark-mode .hero {
 }
 
 .hero-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 900;
     color: white;
     line-height: 1.2;
@@ -716,13 +759,13 @@ body.dark-mode .hero {
 
 .hero-desc {
     color: rgba(255, 255, 255, 0.85);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     margin-top: 0.1rem;
 }
 
 .hero-stats {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.8rem;
     margin-top: 0.6rem;
     padding-top: 0.5rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -745,10 +788,95 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   14) TEACHERS CONTAINER
+   15) FEATURES SECTION
+   ============================================================ */
+.features-section {
+    padding: 1rem 1rem 0.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+}
+
+.feature-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 1rem 0.8rem;
+    text-align: center;
+    border: 1.5px solid var(--border);
+    transition: all var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.feature-card .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.feature-card h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.feature-card p {
+    font-size: 0.65rem;
+    color: var(--text-light);
+    margin-top: 0.1rem;
+}
+
+/* ============================================================
+   16) BANNER SECTION
+   ============================================================ */
+.banner-section {
+    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto 0.5rem;
+}
+
+.banner-container {
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.banner-container img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.banner-container .banner-placeholder {
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(135deg, #0EA5E9, #38BDF8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: var(--radius);
+}
+
+/* ============================================================
+   17) TEACHERS CONTAINER
    ============================================================ */
 .teachers-container {
-    padding: 0.5rem 1rem 100px;
+    padding: 0.5rem 0 100px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -792,7 +920,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   15) FILTER SECTION
+   18) FILTER SECTION
    ============================================================ */
 .filter-section {
     display: flex;
@@ -844,16 +972,16 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   16) TEACHERS GRID
+   19) TEACHERS GRID
    ============================================================ */
 .teachers-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: 0.8rem;
 }
 
 /* ============================================================
-   17) TEACHER CARD
+   20) TEACHER CARD
    ============================================================ */
 .teacher-card {
     background: var(--bg-card);
@@ -879,7 +1007,7 @@ body.dark-mode .hero {
 }
 
 /* ===== Teacher Image ===== */
-.teacher-card-image {
+.teacher-card .teacher-card-image {
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -901,7 +1029,7 @@ body.dark-mode .hero {
     box-shadow: var(--primary-glow);
 }
 
-.teacher-card-image img {
+.teacher-card .teacher-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -912,7 +1040,7 @@ body.dark-mode .hero {
     transform: scale(1.05);
 }
 
-.teacher-card-image .teacher-emoji {
+.teacher-card .teacher-card-image .teacher-emoji {
     font-size: 2rem;
     transition: var(--transition);
 }
@@ -922,7 +1050,7 @@ body.dark-mode .hero {
 }
 
 /* ===== Section Badge ===== */
-.teacher-section-badge {
+.teacher-card .teacher-section-badge {
     position: absolute;
     top: 0.4rem;
     right: 0.4rem;
@@ -937,7 +1065,7 @@ body.dark-mode .hero {
 }
 
 /* ===== Teacher Info ===== */
-.teacher-card-info h3 {
+.teacher-card .teacher-card-info h3 {
     font-size: 0.8rem;
     font-weight: 700;
     margin: 0.1rem 0;
@@ -949,20 +1077,20 @@ body.dark-mode .hero {
     color: var(--primary);
 }
 
-.teacher-card-info .teacher-subject {
+.teacher-card .teacher-card-info .teacher-subject {
     font-size: 0.6rem;
     color: var(--primary);
     font-weight: 500;
 }
 
-.teacher-card-info .teacher-stats {
+.teacher-card .teacher-card-info .teacher-stats {
     font-size: 0.55rem;
     color: var(--text-light);
     margin-top: 0.05rem;
 }
 
 /* ===== Overlay ===== */
-.teacher-card-overlay {
+.teacher-card .teacher-card-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -984,20 +1112,20 @@ body.dark-mode .hero {
     opacity: 1;
 }
 
-.teacher-card-overlay i {
+.teacher-card .teacher-card-overlay i {
     font-size: 1.8rem;
     color: white;
     animation: float 3s ease-in-out infinite;
 }
 
-.teacher-card-overlay span {
+.teacher-card .teacher-card-overlay span {
     color: white;
     font-size: 0.7rem;
     font-weight: 600;
 }
 
 /* ============================================================
-   18) EMPTY STATE
+   21) EMPTY STATE
    ============================================================ */
 .empty-teachers {
     text-align: center;
@@ -1023,7 +1151,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   19) MODALS
+   22) MODALS
    ============================================================ */
 .modal-overlay {
     display: none;
@@ -1101,7 +1229,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   20) SEMESTERS & LECTURES
+   23) SEMESTERS & LECTURES
    ============================================================ */
 .semesters-list,
 .lectures-list,
@@ -1203,7 +1331,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   21) CODE BOX
+   24) CODE BOX
    ============================================================ */
 .code-box-mini {
     background: var(--bg);
@@ -1265,10 +1393,10 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   22) MY COURSES
+   25) MY COURSES
    ============================================================ */
 .my-courses-section {
-    padding: 0.5rem 1rem 100px;
+    padding: 0.5rem 0 100px;
     max-width: 900px;
     margin: 0 auto;
 }
@@ -1328,7 +1456,7 @@ body.dark-mode .hero {
     font-weight: 600;
     color: var(--text-light);
     display: block;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.05rem;
 }
 
 .progress-bar {
@@ -1495,10 +1623,10 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   23) ACCOUNT PAGE
+   26) ACCOUNT PAGE
    ============================================================ */
 .account-section {
-    padding: 0.5rem 1rem 100px;
+    padding: 0.5rem 0 100px;
     max-width: 420px;
     margin: 0 auto;
 }
@@ -1651,7 +1779,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   24) VIDEO PLAYER
+   27) VIDEO PLAYER
    ============================================================ */
 .video-player-overlay {
     display: none;
@@ -1758,7 +1886,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   25) BOTTOM NAV
+   28) BOTTOM NAV
    ============================================================ */
 .bottom-nav {
     position: fixed;
@@ -1829,7 +1957,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   26) TOAST
+   29) TOAST
    ============================================================ */
 .toast-container {
     position: fixed;
@@ -1895,18 +2023,38 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   27) ADMIN PANEL
+   30) ADMIN PANEL - OVERLAY
+   ============================================================ */
+.admin-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 4999;
+    display: none;
+}
+
+.admin-overlay.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ============================================================
+   31) ADMIN PANEL
    ============================================================ */
 .admin-panel {
     position: fixed;
     top: 0;
     right: -100%;
     width: 100%;
-    max-width: 420px;
+    max-width: 480px;
     height: 100vh;
     background: var(--bg-card);
     z-index: 5000;
-    transition: right var(--transition);
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: var(--shadow-lg);
     overflow-y: auto;
     border-left: 1px solid var(--border);
@@ -1920,25 +2068,8 @@ body.dark-mode .hero {
     width: 4px;
 }
 
-.admin-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    z-index: 4999;
-    display: none;
-}
-
-.admin-overlay.show {
-    display: block;
-    animation: fadeIn 0.3s ease;
-}
-
 .admin-content {
-    padding: 0.8rem;
+    padding: 1rem 1.2rem;
     padding-bottom: 80px;
 }
 
@@ -1947,28 +2078,28 @@ body.dark-mode .hero {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.6rem;
-    padding-bottom: 0.4rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.6rem;
     border-bottom: 2px solid var(--primary);
 }
 
 .admin-header h2 {
     color: var(--primary);
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 800;
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.5rem;
 }
 
 .admin-close {
     background: none;
     border: none;
     color: var(--text-light);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1985,25 +2116,25 @@ body.dark-mode .hero {
 /* ===== Admin Tabs ===== */
 .admin-tabs {
     display: flex;
-    gap: 0.2rem;
-    margin-bottom: 0.6rem;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.3rem;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.5rem;
 }
 
 .admin-tabs .tab-btn {
-    padding: 0.2rem 0.5rem;
+    padding: 0.35rem 0.7rem;
     background: none;
     border: none;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
+    border-radius: 8px;
+    font-weight: 700;
     cursor: pointer;
     transition: all var(--transition);
     color: var(--text-light);
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     text-align: center;
-    min-width: 32px;
+    min-width: 36px;
 }
 
 .admin-tabs .tab-btn:hover {
@@ -2028,21 +2159,21 @@ body.dark-mode .hero {
 }
 
 .tab-content h3 {
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
     color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
 /* ===== Admin Forms ===== */
 .admin-form .form-group {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.6rem;
 }
 
 .admin-form .form-group label {
     display: block;
     color: var(--text-light);
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 600;
     margin-bottom: 0.05rem;
 }
@@ -2051,9 +2182,9 @@ body.dark-mode .hero {
 .admin-form .form-group select,
 .admin-form .form-group textarea {
     width: 100%;
-    padding: 0.3rem 0.5rem;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.6rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
     background: var(--bg);
     color: var(--text);
     font-size: 0.8rem;
@@ -2069,6 +2200,11 @@ body.dark-mode .hero {
     box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
 }
 
+.admin-form .form-group textarea {
+    resize: vertical;
+    min-height: 50px;
+}
+
 .admin-form .form-group small {
     color: var(--text-light);
     font-size: 0.55rem;
@@ -2076,19 +2212,14 @@ body.dark-mode .hero {
     margin-top: 2px;
 }
 
-.admin-form .form-group textarea {
-    resize: vertical;
-    min-height: 50px;
-}
-
 /* ===== Admin Buttons ===== */
 .btn-submit {
     width: 100%;
-    padding: 0.4rem;
+    padding: 0.5rem;
     background: var(--primary-gradient);
     color: white;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
     font-size: 0.8rem;
     font-weight: 700;
     cursor: pointer;
@@ -2105,12 +2236,12 @@ body.dark-mode .hero {
 }
 
 .btn-small {
-    padding: 0.2rem 0.6rem;
+    padding: 0.25rem 0.7rem;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     transition: all var(--transition);
 }
 
@@ -2140,12 +2271,12 @@ body.dark-mode .hero {
 
 /* ===== Admin Publish ===== */
 .admin-publish {
-    margin-top: 0.6rem;
-    padding-top: 0.4rem;
-    border-top: 1px solid var(--border);
+    margin-top: 0.8rem;
+    padding-top: 0.5rem;
+    border-top: 2px solid var(--border);
     display: flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
 }
 
@@ -2155,8 +2286,8 @@ body.dark-mode .hero {
     background: var(--success);
     color: white;
     border: none;
-    border-radius: var(--radius-sm);
-    font-size: 0.8rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition);
@@ -2168,7 +2299,7 @@ body.dark-mode .hero {
 
 .btn-publish:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25);
 }
 
 .admin-publish #pendingChanges {
@@ -2181,22 +2312,22 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   28) ADMIN DASHBOARD
+   32) ADMIN DASHBOARD
    ============================================================ */
 .admin-stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
-    margin: 0.3rem 0;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
 }
 
 .admin-stat-card {
     background: var(--bg);
-    border-radius: var(--radius-sm);
-    padding: 0.5rem;
+    border-radius: 8px;
+    padding: 0.6rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     border: 1px solid var(--border);
     transition: var(--transition);
 }
@@ -2207,7 +2338,7 @@ body.dark-mode .hero {
 }
 
 .admin-stat-card .stat-icon {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
 }
 
 .admin-stat-card .stat-info {
@@ -2215,7 +2346,7 @@ body.dark-mode .hero {
 }
 
 .admin-stat-card .stat-value {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 900;
     color: var(--primary);
     display: block;
@@ -2227,8 +2358,31 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   29) STUDENTS TABLE
+   33) STUDENTS TABLE
    ============================================================ */
+.students-filters {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+}
+
+.students-filters select {
+    padding: 0.25rem 0.5rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 0.7rem;
+    outline: none;
+    font-family: 'Cairo', sans-serif;
+    transition: var(--transition);
+}
+
+.students-filters select:focus {
+    border-color: var(--primary);
+}
+
 .students-table-wrapper {
     overflow-x: auto;
     margin-top: 0.3rem;
@@ -2236,7 +2390,7 @@ body.dark-mode .hero {
 
 .students-table {
     width: 100%;
-    min-width: 400px;
+    min-width: 450px;
     border-collapse: collapse;
     font-size: 0.7rem;
 }
@@ -2244,16 +2398,17 @@ body.dark-mode .hero {
 .students-table th {
     background: var(--primary-gradient);
     color: white;
-    padding: 0.2rem 0.4rem;
+    padding: 0.3rem 0.5rem;
     text-align: right;
     font-weight: 700;
     font-size: 0.65rem;
 }
 
 .students-table td {
-    padding: 0.15rem 0.4rem;
+    padding: 0.25rem 0.5rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.65rem;
+    color: var(--text);
 }
 
 .students-table tr:hover td {
@@ -2283,19 +2438,20 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   30) CODES MANAGEMENT
+   34) CODES MANAGEMENT
    ============================================================ */
 .codes-stats {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
     margin-bottom: 0.3rem;
-    padding: 0.2rem 0.5rem;
+    padding: 0.3rem 0.6rem;
     background: var(--bg);
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
     flex-wrap: wrap;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 600;
+    color: var(--text);
 }
 
 .codes-stats span {
@@ -2318,16 +2474,17 @@ body.dark-mode .hero {
 .codes-table th {
     background: var(--primary-gradient);
     color: white;
-    padding: 0.2rem 0.4rem;
+    padding: 0.25rem 0.5rem;
     text-align: right;
     font-size: 0.6rem;
     font-weight: 700;
 }
 
 .codes-table td {
-    padding: 0.15rem 0.4rem;
+    padding: 0.2rem 0.5rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.6rem;
+    color: var(--text);
 }
 
 .codes-table tr:hover td {
@@ -2344,7 +2501,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   31) ADMINS LIST
+   35) ADMINS LIST
    ============================================================ */
 .admins-table {
     width: 100%;
@@ -2356,16 +2513,17 @@ body.dark-mode .hero {
 .admins-table th {
     background: var(--primary-gradient);
     color: white;
-    padding: 0.2rem 0.4rem;
+    padding: 0.25rem 0.5rem;
     text-align: right;
     font-size: 0.6rem;
     font-weight: 700;
 }
 
 .admins-table td {
-    padding: 0.15rem 0.4rem;
+    padding: 0.2rem 0.5rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.6rem;
+    color: var(--text);
 }
 
 .admins-table tr:hover td {
@@ -2389,49 +2547,50 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   32) SETTINGS
+   36) SETTINGS
    ============================================================ */
 .settings-group {
     margin-bottom: 0.8rem;
-    padding: 0.5rem;
+    padding: 0.6rem;
     background: var(--bg);
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
     border: 1px solid var(--border);
 }
 
 .settings-group h4 {
+    color: var(--text);
     font-size: 0.8rem;
     margin-bottom: 0.3rem;
-    color: var(--text);
 }
 
 .setting-item {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.15rem 0;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
 }
 
 .setting-item span {
     font-size: 0.75rem;
+    color: var(--text);
 }
 
 /* ===== Toggle Switch ===== */
-.setting-item .switch {
+.switch {
     position: relative;
-    width: 36px;
-    height: 20px;
+    width: 40px;
+    height: 22px;
     display: inline-block;
     flex-shrink: 0;
 }
 
-.setting-item .switch input {
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
 
-.setting-item .slider {
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -2440,14 +2599,14 @@ body.dark-mode .hero {
     bottom: 0;
     background: var(--text-light);
     transition: var(--transition);
-    border-radius: 20px;
+    border-radius: 22px;
 }
 
-.setting-item .slider:before {
+.slider:before {
     position: absolute;
     content: "";
-    height: 14px;
-    width: 14px;
+    height: 16px;
+    width: 16px;
     left: 3px;
     bottom: 3px;
     background: white;
@@ -2455,12 +2614,12 @@ body.dark-mode .hero {
     border-radius: 50%;
 }
 
-.setting-item .switch input:checked + .slider {
+.switch input:checked + .slider {
     background: var(--primary);
 }
 
-.setting-item .switch input:checked + .slider:before {
-    transform: translateX(16px);
+.switch input:checked + .slider:before {
+    transform: translateX(18px);
 }
 
 /* ===== Banner Preview ===== */
@@ -2468,8 +2627,8 @@ body.dark-mode .hero {
     width: 100%;
     height: 100px;
     background: var(--bg);
-    border-radius: var(--radius-sm);
-    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    border: 2px dashed var(--border);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -2503,15 +2662,15 @@ body.dark-mode .hero {
 }
 
 .banner-preview .banner-placeholder span {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
 }
 
 /* ===== Danger Zone ===== */
 .danger-zone {
     margin-top: 0.5rem;
-    padding: 0.5rem;
-    border: 1.5px solid var(--danger);
-    border-radius: var(--radius-sm);
+    padding: 0.6rem;
+    border: 2px solid var(--danger);
+    border-radius: 8px;
     background: rgba(239, 68, 68, 0.05);
 }
 
@@ -2522,9 +2681,9 @@ body.dark-mode .hero {
 }
 
 .danger-zone .btn-danger {
-    padding: 0.3rem;
+    padding: 0.35rem;
     border: none;
-    border-radius: var(--radius-sm);
+    border-radius: 6px;
     cursor: pointer;
     width: 100%;
     font-size: 0.75rem;
@@ -2540,7 +2699,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   33) PAGE HEADER
+   37) PAGE HEADER
    ============================================================ */
 .page-header {
     text-align: center;
@@ -2550,6 +2709,7 @@ body.dark-mode .hero {
 .page-header h2 {
     font-size: 1.2rem;
     font-weight: 800;
+    color: var(--text);
 }
 
 .page-header p {
@@ -2558,11 +2718,14 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   34) RESPONSIVE
+   38) RESPONSIVE
    ============================================================ */
 @media (max-width: 1024px) {
     .teachers-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -2615,6 +2778,12 @@ body.dark-mode .hero {
         font-size: 0.6rem;
     }
 
+    .class-filter-select {
+        max-width: 90px;
+        font-size: 0.6rem;
+        padding: 0.15rem 0.4rem;
+    }
+
     .theme-toggle {
         width: 30px;
         height: 30px;
@@ -2649,16 +2818,16 @@ body.dark-mode .hero {
         gap: 0.5rem;
     }
 
-    .teacher-card-image {
+    .teacher-card .teacher-card-image {
         width: 56px;
         height: 56px;
     }
 
-    .teacher-card-image .teacher-emoji {
+    .teacher-card .teacher-card-image .teacher-emoji {
         font-size: 1.5rem;
     }
 
-    .teacher-card-info h3 {
+    .teacher-card .teacher-card-info h3 {
         font-size: 0.7rem;
     }
 
@@ -2722,11 +2891,32 @@ body.dark-mode .hero {
         min-width: 280px;
         font-size: 0.55rem;
     }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+    }
+
+    .feature-card {
+        padding: 0.6rem 0.4rem;
+    }
+
+    .feature-card .feature-icon {
+        font-size: 1.5rem;
+    }
+
+    .feature-card h4 {
+        font-size: 0.7rem;
+    }
 }
 
 @media (max-width: 480px) {
     .hero-title {
         font-size: 1rem;
+    }
+
+    .hero-desc {
+        font-size: 0.65rem;
     }
 
     .hero-stats .stat-number {
@@ -2735,7 +2925,7 @@ body.dark-mode .hero {
 
     .teachers-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem;
+        gap: 0.3rem;
     }
 
     .teacher-card {
@@ -2743,25 +2933,25 @@ body.dark-mode .hero {
         border-radius: 12px;
     }
 
-    .teacher-card-image {
+    .teacher-card .teacher-card-image {
         width: 48px;
         height: 48px;
         border-width: 2px;
     }
 
-    .teacher-card-image .teacher-emoji {
+    .teacher-card .teacher-card-image .teacher-emoji {
         font-size: 1.2rem;
     }
 
-    .teacher-card-info h3 {
+    .teacher-card .teacher-card-info h3 {
         font-size: 0.6rem;
     }
 
-    .teacher-card-info .teacher-subject {
+    .teacher-card .teacher-card-info .teacher-subject {
         font-size: 0.5rem;
     }
 
-    .teacher-card-info .teacher-stats {
+    .teacher-card .teacher-card-info .teacher-stats {
         font-size: 0.45rem;
     }
 
@@ -2780,8 +2970,8 @@ body.dark-mode .hero {
     }
 
     .course-card-mini .course-avatar {
-        width: 32px;
-        height: 32px;
+        width: 36px;
+        height: 36px;
         font-size: 1rem;
     }
 
@@ -2845,7 +3035,7 @@ body.dark-mode .hero {
 
     .admin-tabs .tab-btn {
         font-size: 0.5rem;
-        padding: 0.12rem 0.25rem;
+        padding: 0.15rem 0.3rem;
         min-width: 28px;
     }
 
@@ -2866,6 +3056,21 @@ body.dark-mode .hero {
         font-size: 0.9rem;
     }
 
+    .class-filter-select {
+        max-width: 70px;
+        font-size: 0.55rem;
+        padding: 0.1rem 0.3rem;
+    }
+
+    .search-box input {
+        width: 50px;
+        font-size: 0.6rem;
+    }
+
+    .search-box input:focus {
+        width: 70px;
+    }
+
     .students-table {
         min-width: 280px;
         font-size: 0.55rem;
@@ -2873,7 +3078,7 @@ body.dark-mode .hero {
 
     .students-table th,
     .students-table td {
-        padding: 0.1rem 0.2rem;
+        padding: 0.15rem 0.2rem;
         font-size: 0.55rem;
     }
 
@@ -2892,12 +3097,33 @@ body.dark-mode .hero {
         font-size: 0.7rem;
         padding: 0.4rem 0.8rem;
     }
+
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.3rem;
+    }
+
+    .feature-card {
+        padding: 0.4rem 0.2rem;
+    }
+
+    .feature-card .feature-icon {
+        font-size: 1.2rem;
+    }
+
+    .feature-card h4 {
+        font-size: 0.6rem;
+    }
+
+    .feature-card p {
+        font-size: 0.5rem;
+    }
 }
 
 @media (max-width: 380px) {
     .teachers-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 0.3rem;
+        gap: 0.2rem;
     }
 
     .teacher-card {
@@ -2905,16 +3131,16 @@ body.dark-mode .hero {
         border-radius: 10px;
     }
 
-    .teacher-card-image {
+    .teacher-card .teacher-card-image {
         width: 40px;
         height: 40px;
     }
 
-    .teacher-card-image .teacher-emoji {
+    .teacher-card .teacher-card-image .teacher-emoji {
         font-size: 1rem;
     }
 
-    .teacher-card-info h3 {
+    .teacher-card .teacher-card-info h3 {
         font-size: 0.55rem;
     }
 
@@ -2957,10 +3183,16 @@ body.dark-mode .hero {
         padding: 0.1rem 0.2rem;
         min-width: 24px;
     }
+
+    .class-filter-select {
+        max-width: 60px;
+        font-size: 0.5rem;
+        padding: 0.05rem 0.2rem;
+    }
 }
 
 /* ============================================================
-   35) PRINT STYLES
+   39) PRINT STYLES
    ============================================================ */
 @media print {
     .navbar,
@@ -3016,7 +3248,7 @@ body.dark-mode .hero {
 }
 
 /* ============================================================
-   36) إزالة الروابط العشوائية والمربعات الخضراء
+   40) إزالة العناصر غير المرغوب فيها
    ============================================================ */
 .footer,
 .footer-links,
@@ -3048,5 +3280,123 @@ a[href=""] {
 }
 
 /* ============================================================
-   نهاية الملف - تصميم حديث ومتطور
+   41) DARK MODE OVERRIDES FOR ADMIN PANEL
+   ============================================================ */
+body.dark-mode .admin-panel {
+    background: var(--bg-card);
+}
+
+body.dark-mode .admin-content {
+    background: var(--bg-card);
+}
+
+body.dark-mode .admin-header h2 {
+    color: var(--primary);
+}
+
+body.dark-mode .admin-tabs .tab-btn {
+    color: var(--text-light);
+}
+
+body.dark-mode .admin-tabs .tab-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+
+body.dark-mode .admin-tabs .tab-btn.active {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+body.dark-mode .tab-content h3 {
+    color: var(--text);
+}
+
+body.dark-mode .admin-form .form-group label {
+    color: var(--text-light);
+}
+
+body.dark-mode .admin-form .form-group input,
+body.dark-mode .admin-form .form-group select {
+    background: var(--bg);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+body.dark-mode .admin-form .form-group input:focus,
+body.dark-mode .admin-form .form-group select:focus {
+    border-color: var(--primary);
+}
+
+body.dark-mode .admin-stat-card {
+    background: var(--bg);
+    border-color: var(--border);
+}
+
+body.dark-mode .admin-stat-card .stat-label {
+    color: var(--text-light);
+}
+
+body.dark-mode .students-table td {
+    color: var(--text);
+}
+
+body.dark-mode .students-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+body.dark-mode .codes-table td {
+    color: var(--text);
+}
+
+body.dark-mode .codes-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+body.dark-mode .codes-stats {
+    background: var(--bg);
+    color: var(--text);
+}
+
+body.dark-mode .settings-group {
+    background: var(--bg);
+    border-color: var(--border);
+}
+
+body.dark-mode .settings-group h4 {
+    color: var(--text);
+}
+
+body.dark-mode .setting-item span {
+    color: var(--text);
+}
+
+body.dark-mode .banner-preview {
+    background: var(--bg);
+    border-color: var(--border);
+}
+
+body.dark-mode .banner-preview .banner-placeholder {
+    color: var(--text-light);
+}
+
+body.dark-mode .admins-table td {
+    color: var(--text);
+}
+
+body.dark-mode .admins-table tr:hover td {
+    background: var(--bg-hover);
+}
+
+body.dark-mode .admin-publish {
+    border-color: var(--border);
+}
+
+body.dark-mode .admin-publish #pendingChanges {
+    background: var(--warning);
+    color: #1E293B;
+}
+
+/* ============================================================
+   نهاية الملف - تصميم احترافي مستوحى من مرماز
    ============================================================ */
