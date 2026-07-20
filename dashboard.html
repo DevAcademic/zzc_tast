@@ -67,17 +67,9 @@
             line-height: 1.6;
         }
 
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-gradient);
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--primary-gradient); border-radius: 10px; }
 
         /* ===== LOADING ===== */
         .loading-screen {
@@ -93,63 +85,20 @@
             z-index: 99999;
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .loading-screen.hidden {
-            opacity: 0;
-            transform: scale(1.05);
-            pointer-events: none;
-        }
-        .loading-content {
-            text-align: center;
-        }
-        .loading-logo {
-            font-size: 3.5rem;
-            animation: float 2s ease-in-out infinite;
-        }
-        .loading-title {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--text);
-        }
-        .loading-title span {
-            color: var(--primary);
-        }
-        .loading-spinner {
-            width: 36px;
-            height: 36px;
-            border: 3px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0.8rem auto;
-        }
-        .loading-content p {
-            color: var(--text-light);
-            font-size: 0.85rem;
-        }
+        .loading-screen.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+        .loading-content { text-align: center; }
+        .loading-logo { font-size: 3.5rem; animation: float 2s ease-in-out infinite; }
+        .loading-title { font-size: 1.5rem; font-weight: 900; color: var(--text); }
+        .loading-title span { color: var(--primary); }
+        .loading-spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0.8rem auto; }
+        .loading-content p { color: var(--text-light); font-size: 0.85rem; }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
 
         /* ===== NAVBAR ===== */
         .navbar {
@@ -189,9 +138,8 @@
             cursor: pointer;
             white-space: nowrap;
         }
-        .logo-text span {
-            color: var(--text);
-        }
+        .logo-text span { color: var(--text); }
+
         .nav-links {
             display: flex;
             list-style: none;
@@ -225,7 +173,7 @@
             text-align: center;
         }
 
-        /* ===== NAV RIGHT - صف واحد ===== */
+        /* ===== NAV RIGHT ===== */
         .nav-right {
             display: flex;
             align-items: center;
@@ -233,7 +181,7 @@
             flex-wrap: nowrap;
         }
 
-        /* ===== SEARCH BOX - مصغر ===== */
+        /* ===== SEARCH BOX ===== */
         .search-box {
             display: flex;
             align-items: center;
@@ -259,13 +207,8 @@
             transition: var(--transition);
             font-family: 'Cairo', sans-serif;
         }
-        .search-box input::placeholder {
-            color: var(--text-light);
-            font-size: 0.6rem;
-        }
-        .search-box input:focus {
-            width: 90px;
-        }
+        .search-box input::placeholder { color: var(--text-light); font-size: 0.6rem; }
+        .search-box input:focus { width: 90px; }
         .search-box button {
             background: var(--primary-gradient);
             border: none;
@@ -276,11 +219,38 @@
             font-size: 0.6rem;
             transition: all var(--transition);
         }
-        .search-box button:hover {
-            transform: scale(1.05);
+        .search-box button:hover { transform: scale(1.05); }
+
+        /* ===== CLASS FILTER - بجانب الملف الشخصي ===== */
+        .class-filter-select {
+            padding: 0.15rem 0.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-full);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.6rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all var(--transition);
+            max-width: 120px;
+            min-width: 90px;
+        }
+        .class-filter-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
+        }
+        .class-filter-select option {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+        .class-filter-select .all-classes {
+            font-weight: 800;
+            color: var(--primary);
         }
 
-        /* ===== USER PROFILE - مصغر ===== */
+        /* ===== USER PROFILE ===== */
         .user-profile-btn {
             display: flex;
             align-items: center;
@@ -317,30 +287,6 @@
             white-space: nowrap;
         }
 
-        /* ===== CLASS FILTER - بجانب الملف الشخصي ===== */
-        .class-filter-select {
-            padding: 0.15rem 0.4rem;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-full);
-            background: var(--bg);
-            color: var(--text);
-            font-size: 0.6rem;
-            font-weight: 600;
-            outline: none;
-            cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            transition: all var(--transition);
-            max-width: 100px;
-        }
-        .class-filter-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
-        }
-        .class-filter-select option {
-            background: var(--bg-card);
-            color: var(--text);
-        }
-
         .theme-toggle {
             background: var(--bg-card);
             border: 1.5px solid var(--border);
@@ -364,16 +310,16 @@
         body.dark-mode .theme-toggle .fa-moon { display: none; }
 
         /* ============================================================
-           HERO - مصغر
+           HERO - بدون "تعلم بذكاء" والمربع
            ============================================================ */
         .hero {
             background: var(--primary-gradient);
-            padding: 1rem 1.2rem;
+            padding: 0.8rem 1.2rem;
             margin: 0 0.5rem 0.5rem;
             border-radius: var(--radius);
             position: relative;
             overflow: hidden;
-            min-height: 100px;
+            min-height: 60px;
             display: flex;
             align-items: center;
         }
@@ -407,46 +353,29 @@
             background: rgba(255, 255, 255, 0.15);
             padding: 0.1rem 0.6rem;
             border-radius: var(--radius-full);
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             color: white;
             font-weight: 600;
-            margin-bottom: 0.1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.1rem;
         }
         .hero-title {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 900;
             color: white;
             line-height: 1.2;
         }
-        .hero-title span {
-            color: #FCD34D;
-        }
-        .hero-desc {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.7rem;
-            margin-top: 0.05rem;
-        }
+        .hero-title span { color: #FCD34D; }
         .hero-stats {
             display: flex;
             gap: 1.2rem;
-            margin-top: 0.4rem;
-            padding-top: 0.3rem;
+            margin-top: 0.15rem;
+            padding-top: 0.15rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .hero-stats .stat-item {
-            text-align: center;
-        }
-        .hero-stats .stat-number {
-            font-size: 1rem;
-            font-weight: 900;
-            color: white;
-            display: block;
-        }
-        .hero-stats .stat-label {
-            font-size: 0.5rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
+        .hero-stats .stat-item { text-align: center; }
+        .hero-stats .stat-number { font-size: 0.85rem; font-weight: 900; color: white; display: block; }
+        .hero-stats .stat-label { font-size: 0.45rem; color: rgba(255, 255, 255, 0.7); }
 
         /* ============================================================
            BANNER
@@ -464,7 +393,7 @@
         .banner-container img {
             width: 100%;
             height: auto;
-            max-height: 150px;
+            max-height: 160px;
             object-fit: cover;
             display: block;
         }
@@ -482,22 +411,22 @@
         }
 
         /* ============================================================
-           FEATURES - مصغر
+           FEATURES
            ============================================================ */
         .features-section {
-            padding: 0.5rem 0.5rem 0.3rem;
+            padding: 0.2rem 0.5rem 0.2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.4rem;
         }
         .feature-card {
             background: var(--bg-card);
             border-radius: var(--radius-sm);
-            padding: 0.6rem 0.4rem;
+            padding: 0.4rem 0.3rem;
             text-align: center;
             border: 1.5px solid var(--border);
             transition: all var(--transition);
@@ -508,24 +437,12 @@
             border-color: var(--primary);
             box-shadow: var(--shadow-md);
         }
-        .feature-card .feature-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.2rem;
-            display: block;
-        }
-        .feature-card h4 {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var(--text);
-        }
-        .feature-card p {
-            font-size: 0.55rem;
-            color: var(--text-light);
-            margin-top: 0.05rem;
-        }
+        .feature-card .feature-icon { font-size: 1.2rem; margin-bottom: 0.05rem; display: block; }
+        .feature-card h4 { font-size: 0.6rem; font-weight: 700; color: var(--text); }
+        .feature-card p { font-size: 0.45rem; color: var(--text-light); margin-top: 0.05rem; }
 
         /* ============================================================
-           TEACHERS
+           TEACHERS - بدون أزرار الفلتر
            ============================================================ */
         .teachers-container {
             padding: 0.3rem 0.5rem 80px;
@@ -536,20 +453,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             padding: 0 0.2rem;
         }
         .section-header h2 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 800;
             color: var(--text);
             display: flex;
             align-items: center;
             gap: 0.3rem;
         }
-        .section-header h2 i {
-            color: var(--primary);
-        }
+        .section-header h2 i { color: var(--primary); }
         .section-more {
             color: var(--text-light);
             font-size: 0.65rem;
@@ -557,52 +472,11 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .section-more:hover {
-            color: var(--primary);
-        }
+        .section-more:hover { color: var(--primary); }
 
-        /* ===== FILTER - بدون اللون الأزرق ===== */
+        /* ===== تم إخفاء الفلتر تماماً ===== */
         .filter-section {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.5rem;
-            padding: 0.1rem 0;
-        }
-        .filter-btn {
-            padding: 0.15rem 0.5rem;
-            border-radius: var(--radius-full);
-            border: 1.5px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-light);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            font-weight: 600;
-            font-size: 0.55rem;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.15rem;
-        }
-        .filter-btn:hover {
-            border-color: var(--primary);
-            color: var(--text);
-        }
-        .filter-btn.active {
-            background: var(--primary-gradient);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.2);
-        }
-        .filter-btn .btn-count {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.02rem 0.3rem;
-            border-radius: var(--radius-full);
-            font-size: 0.45rem;
-            font-weight: 700;
-        }
-        .filter-btn.active .btn-count {
-            background: rgba(255, 255, 255, 0.25);
+            display: none !important;
         }
 
         /* ===== TEACHERS GRID ===== */
@@ -651,9 +525,7 @@
             height: 100%;
             object-fit: cover;
         }
-        .teacher-card .teacher-card-image .teacher-emoji {
-            font-size: 1.6rem;
-        }
+        .teacher-card .teacher-card-image .teacher-emoji { font-size: 1.6rem; }
         .teacher-card .teacher-section-badge {
             position: absolute;
             top: 0.3rem;
@@ -697,40 +569,21 @@
             transition: all var(--transition);
             border-radius: var(--radius);
         }
-        .teacher-card:hover .teacher-card-overlay {
-            opacity: 1;
-        }
-        .teacher-card .teacher-card-overlay i {
-            font-size: 1.5rem;
-            color: white;
-        }
-        .teacher-card .teacher-card-overlay span {
-            color: white;
-            font-size: 0.6rem;
-            font-weight: 600;
-        }
+        .teacher-card:hover .teacher-card-overlay { opacity: 1; }
+        .teacher-card .teacher-card-overlay i { font-size: 1.5rem; color: white; }
+        .teacher-card .teacher-card-overlay span { color: white; font-size: 0.6rem; font-weight: 600; }
 
         .empty-teachers {
             text-align: center;
             padding: 1.5rem 1rem;
             color: var(--text-light);
         }
-        .empty-teachers .empty-icon {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 0.3rem;
-            opacity: 0.4;
-        }
-        .empty-teachers h3 {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-        .empty-teachers p {
-            font-size: 0.7rem;
-        }
+        .empty-teachers .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 0.3rem; opacity: 0.4; }
+        .empty-teachers h3 { font-size: 0.9rem; color: var(--text); }
+        .empty-teachers p { font-size: 0.7rem; }
 
         /* ============================================================
-           MODALS
+           MODALS (نفسها بدون تغيير)
            ============================================================ */
         .modal-overlay {
             display: none;
@@ -746,9 +599,7 @@
             align-items: center;
             padding: 0.8rem;
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
         .modal {
             background: var(--bg-card);
             border-radius: var(--radius);
@@ -764,13 +615,7 @@
         }
         .modal-large { max-width: 520px; }
         .modal-small { max-width: 380px; }
-        .modal h2 {
-            color: var(--primary);
-            font-size: 1rem;
-            text-align: center;
-            margin-bottom: 0.6rem;
-            font-weight: 800;
-        }
+        .modal h2 { color: var(--primary); font-size: 1rem; text-align: center; margin-bottom: 0.6rem; font-weight: 800; }
         .modal .close-btn {
             position: absolute;
             top: 0.3rem;
@@ -794,16 +639,12 @@
             transform: rotate(90deg);
         }
 
-        .semesters-list,
-        .lectures-list,
-        .teachers-list {
+        .semesters-list, .lectures-list, .teachers-list {
             display: flex;
             flex-direction: column;
             gap: 0.3rem;
         }
-        .semester-item,
-        .lecture-item,
-        .teacher-item {
+        .semester-item, .lecture-item, .teacher-item {
             background: var(--bg);
             border-radius: var(--radius-sm);
             padding: 0.4rem 0.6rem;
@@ -814,33 +655,27 @@
             align-items: center;
             border: 1.5px solid transparent;
         }
-        .semester-item:hover:not(.locked),
-        .lecture-item:hover:not(.locked),
-        .teacher-item:hover {
+        .semester-item:hover:not(.locked), .lecture-item:hover:not(.locked), .teacher-item:hover {
             background: var(--bg-hover);
             border-color: var(--primary);
         }
-        .semester-item.locked,
-        .lecture-item.locked {
+        .semester-item.locked, .lecture-item.locked {
             opacity: 0.4;
             cursor: not-allowed;
             filter: grayscale(0.5);
         }
-        .semester-number,
-        .lecture-number {
+        .semester-number, .lecture-number {
             font-weight: 700;
             color: var(--primary);
             font-size: 0.65rem;
         }
-        .semester-desc,
-        .lecture-title {
+        .semester-desc, .lecture-title {
             flex: 1;
             margin: 0 0.4rem;
             color: var(--text-light);
             font-size: 0.65rem;
         }
-        .semester-status,
-        .lecture-status {
+        .semester-status, .lecture-status {
             display: flex;
             align-items: center;
             gap: 0.15rem;
@@ -881,11 +716,7 @@
             margin-top: 0.2rem;
             border: 1.5px solid var(--primary);
         }
-        .code-box-mini p {
-            font-size: 0.6rem;
-            margin-bottom: 0.15rem;
-            color: var(--text-light);
-        }
+        .code-box-mini p { font-size: 0.6rem; margin-bottom: 0.15rem; color: var(--text-light); }
         .code-input-group {
             display: flex;
             gap: 0.2rem;
@@ -906,9 +737,7 @@
             font-family: monospace;
             min-width: 60px;
         }
-        .code-input-group input:focus {
-            border-color: var(--primary);
-        }
+        .code-input-group input:focus { border-color: var(--primary); }
         .code-input-group button {
             padding: 0.2rem 0.6rem;
             background: var(--primary-gradient);
@@ -919,9 +748,7 @@
             cursor: pointer;
             font-size: 0.65rem;
         }
-        .code-input-group button:hover {
-            transform: scale(1.05);
-        }
+        .code-input-group button:hover { transform: scale(1.05); }
 
         /* ============================================================
            MY COURSES
@@ -959,19 +786,9 @@
             font-size: 1.2rem;
             color: white;
         }
-        .course-card-mini .course-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .course-card-mini .course-name {
-            font-weight: 700;
-            font-size: 0.7rem;
-        }
-        .course-card-mini .course-meta {
-            font-size: 0.55rem;
-            color: var(--text-light);
-        }
+        .course-card-mini .course-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .course-card-mini .course-name { font-weight: 700; font-size: 0.7rem; }
+        .course-card-mini .course-meta { font-size: 0.55rem; color: var(--text-light); }
         .course-card-mini .course-badge {
             display: inline-block;
             background: var(--success);
@@ -982,46 +799,19 @@
             font-weight: 700;
             margin-top: 0.05rem;
         }
-        .course-card-mini .course-progress {
-            margin-top: 0.2rem;
-        }
-        .course-card-mini .course-progress .mini-bar {
-            width: 100%;
-            height: 3px;
-            background: var(--bg);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .course-card-mini .course-progress .mini-fill {
-            height: 100%;
-            background: var(--primary-gradient);
-            border-radius: 4px;
-            transition: width 0.6s ease;
-        }
-        .course-card-mini .course-progress .mini-label {
-            font-size: 0.45rem;
-            color: var(--text-light);
-            display: block;
-            margin-top: 0.05rem;
-        }
+        .course-card-mini .course-progress { margin-top: 0.2rem; }
+        .course-card-mini .course-progress .mini-bar { width: 100%; height: 3px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+        .course-card-mini .course-progress .mini-fill { height: 100%; background: var(--primary-gradient); border-radius: 4px; transition: width 0.6s ease; }
+        .course-card-mini .course-progress .mini-label { font-size: 0.45rem; color: var(--text-light); display: block; margin-top: 0.05rem; }
 
         .empty-courses {
             text-align: center;
             padding: 1.5rem 1rem;
             color: var(--text-light);
         }
-        .empty-courses .empty-icon {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        .empty-courses h3 {
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-        .empty-courses p {
-            font-size: 0.7rem;
-        }
+        .empty-courses .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 0.3rem; }
+        .empty-courses h3 { font-size: 0.9rem; color: var(--text); }
+        .empty-courses p { font-size: 0.7rem; }
         .empty-courses .btn-primary {
             padding: 0.3rem 1.2rem;
             background: var(--primary-gradient);
@@ -1033,21 +823,13 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-        .empty-courses .btn-primary:hover {
-            transform: scale(1.05);
-        }
+        .empty-courses .btn-primary:hover { transform: scale(1.05); }
 
         /* ============================================================
            ACCOUNT
            ============================================================ */
-        .account-section {
-            max-width: 380px;
-            margin: 0 auto;
-        }
-        .profile-header {
-            text-align: center;
-            padding: 0.8rem 0;
-        }
+        .account-section { max-width: 380px; margin: 0 auto; }
+        .profile-header { text-align: center; padding: 0.8rem 0; }
         .profile-avatar {
             width: 60px;
             height: 60px;
@@ -1062,18 +844,9 @@
             border: 3px solid var(--primary);
             box-shadow: var(--shadow-md);
         }
-        .profile-name {
-            font-size: 1rem;
-            font-weight: 800;
-        }
-        .profile-email {
-            color: var(--text-light);
-            font-size: 0.7rem;
-        }
-        .profile-registered {
-            font-size: 0.55rem;
-            color: var(--text-light);
-        }
+        .profile-name { font-size: 1rem; font-weight: 800; }
+        .profile-email { color: var(--text-light); font-size: 0.7rem; }
+        .profile-registered { font-size: 0.55rem; color: var(--text-light); }
         .profile-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -1087,16 +860,8 @@
             text-align: center;
             border: 1.5px solid var(--border);
         }
-        .stat-box .stat-number {
-            font-size: 1rem;
-            font-weight: 900;
-            color: var(--primary);
-        }
-        .stat-box .stat-label {
-            font-size: 0.45rem;
-            color: var(--text-light);
-            display: block;
-        }
+        .stat-box .stat-number { font-size: 1rem; font-weight: 900; color: var(--primary); }
+        .stat-box .stat-label { font-size: 0.45rem; color: var(--text-light); display: block; }
         .account-actions {
             display: flex;
             flex-direction: column;
@@ -1116,28 +881,12 @@
             justify-content: center;
             gap: 0.2rem;
         }
-        .btn-admin {
-            background: var(--primary-gradient);
-            color: white;
-        }
-        .btn-admin:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        .btn-delete-account {
-            background: var(--danger);
-            color: white;
-        }
-        .btn-delete-account:hover {
-            transform: translateY(-2px);
-        }
-        .btn-logout {
-            background: var(--secondary);
-            color: white;
-        }
-        .btn-logout:hover {
-            transform: translateY(-2px);
-        }
+        .btn-admin { background: var(--primary-gradient); color: white; }
+        .btn-admin:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .btn-delete-account { background: var(--danger); color: white; }
+        .btn-delete-account:hover { transform: translateY(-2px); }
+        .btn-logout { background: var(--secondary); color: white; }
+        .btn-logout:hover { transform: translateY(-2px); }
         .app-version {
             text-align: center;
             margin-top: 0.8rem;
@@ -1167,9 +916,7 @@
             align-items: center;
             padding: 0.5rem;
         }
-        .video-player-overlay.active {
-            display: flex;
-        }
+        .video-player-overlay.active { display: flex; }
         .video-player-wrapper {
             position: relative;
             width: 100%;
@@ -1183,21 +930,8 @@
             padding-bottom: 56.25%;
             height: 0;
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .video-placeholder {
             position: absolute;
             top: 0;
@@ -1211,10 +945,7 @@
             color: white;
             background: #000;
         }
-        .video-placeholder i {
-            font-size: 2.5rem;
-            margin-bottom: 0.3rem;
-        }
+        .video-placeholder i { font-size: 2.5rem; margin-bottom: 0.3rem; }
         .close-player {
             position: absolute;
             top: 0.4rem;
@@ -1233,10 +964,7 @@
             align-items: center;
             justify-content: center;
         }
-        .close-player:hover {
-            background: var(--danger);
-            transform: scale(1.1);
-        }
+        .close-player:hover { background: var(--danger); transform: scale(1.1); }
 
         /* ============================================================
            TOAST
@@ -1307,16 +1035,9 @@
             background: none;
             position: relative;
         }
-        .bottom-nav .nav-item i {
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-        .bottom-nav .nav-item.active {
-            color: var(--primary);
-        }
-        .bottom-nav .nav-item.active i {
-            transform: translateY(-2px);
-        }
+        .bottom-nav .nav-item i { font-size: 0.95rem; transition: var(--transition); }
+        .bottom-nav .nav-item.active { color: var(--primary); }
+        .bottom-nav .nav-item.active i { transform: translateY(-2px); }
         .bottom-nav .nav-item .badge {
             background: var(--secondary);
             color: white;
@@ -1344,9 +1065,7 @@
             z-index: 4999;
             display: none;
         }
-        .admin-overlay.show {
-            display: block;
-        }
+        .admin-overlay.show { display: block; }
 
         .admin-panel {
             position: fixed;
@@ -1362,19 +1081,10 @@
             overflow-y: auto;
             overflow-x: hidden;
         }
-        body.dark-mode .admin-panel {
-            background: #1E293B;
-        }
-        .admin-panel.open {
-            right: 0;
-        }
-        .admin-panel::-webkit-scrollbar {
-            width: 3px;
-        }
-        .admin-panel::-webkit-scrollbar-thumb {
-            background: #0EA5E9;
-            border-radius: 10px;
-        }
+        body.dark-mode .admin-panel { background: #1E293B; }
+        .admin-panel.open { right: 0; }
+        .admin-panel::-webkit-scrollbar { width: 3px; }
+        .admin-panel::-webkit-scrollbar-thumb { background: #0EA5E9; border-radius: 10px; }
 
         .admin-content {
             padding: 0.8rem 1rem;
@@ -1452,9 +1162,7 @@
             display: none;
             animation: fadeIn 0.3s ease;
         }
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content.active { display: block; }
         .tab-content h3 {
             color: #0C4A6E;
             font-size: 0.85rem;
@@ -1462,9 +1170,7 @@
             margin-bottom: 0.3rem;
         }
 
-        .admin-form .form-group {
-            margin-bottom: 0.4rem;
-        }
+        .admin-form .form-group { margin-bottom: 0.4rem; }
         .admin-form .form-group label {
             display: block;
             color: #475569;
@@ -1492,16 +1198,8 @@
             border-color: #0EA5E9;
             box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.08);
         }
-        .admin-form .form-group textarea {
-            resize: vertical;
-            min-height: 40px;
-        }
-        .admin-form .form-group small {
-            color: #94A3B8;
-            font-size: 0.5rem;
-            display: block;
-            margin-top: 2px;
-        }
+        .admin-form .form-group textarea { resize: vertical; min-height: 40px; }
+        .admin-form .form-group small { color: #94A3B8; font-size: 0.5rem; display: block; margin-top: 2px; }
 
         .btn-submit {
             width: 100%;
@@ -1533,9 +1231,7 @@
             font-size: 0.55rem;
             transition: all 0.3s ease;
         }
-        .btn-small:hover {
-            transform: translateY(-1px);
-        }
+        .btn-small:hover { transform: translateY(-1px); }
         .btn-success { background: #22C55E; color: #FFFFFF; }
         .btn-primary { background: #0EA5E9; color: #FFFFFF; }
         .btn-danger { background: #EF4444; color: #FFFFFF; }
@@ -1561,22 +1257,10 @@
             border-color: #0EA5E9;
             transform: translateY(-2px);
         }
-        .admin-stat-card .stat-icon {
-            font-size: 1.3rem;
-        }
-        .admin-stat-card .stat-info {
-            flex: 1;
-        }
-        .admin-stat-card .stat-value {
-            font-size: 1rem;
-            font-weight: 900;
-            color: #0EA5E9;
-            display: block;
-        }
-        .admin-stat-card .stat-label {
-            font-size: 0.5rem;
-            color: #94A3B8;
-        }
+        .admin-stat-card .stat-icon { font-size: 1.3rem; }
+        .admin-stat-card .stat-info { flex: 1; }
+        .admin-stat-card .stat-value { font-size: 1rem; font-weight: 900; color: #0EA5E9; display: block; }
+        .admin-stat-card .stat-label { font-size: 0.5rem; color: #94A3B8; }
 
         .students-filters {
             display: flex;
@@ -1594,14 +1278,9 @@
             outline: none;
             font-family: 'Cairo', sans-serif;
         }
-        .students-filters select:focus {
-            border-color: #0EA5E9;
-        }
+        .students-filters select:focus { border-color: #0EA5E9; }
 
-        .students-table-wrapper {
-            overflow-x: auto;
-            margin-top: 0.2rem;
-        }
+        .students-table-wrapper { overflow-x: auto; margin-top: 0.2rem; }
         .students-table {
             width: 100%;
             min-width: 400px;
@@ -1622,9 +1301,7 @@
             font-size: 0.55rem;
             color: #0C4A6E;
         }
-        .students-table tr:hover td {
-            background: #F1F5F9;
-        }
+        .students-table tr:hover td { background: #F1F5F9; }
 
         .codes-stats {
             display: flex;
@@ -1639,9 +1316,7 @@
             font-weight: 600;
             color: #0C4A6E;
         }
-        .codes-table-wrapper {
-            overflow-x: auto;
-        }
+        .codes-table-wrapper { overflow-x: auto; }
         .codes-table {
             width: 100%;
             min-width: 300px;
@@ -1662,9 +1337,7 @@
             font-size: 0.5rem;
             color: #0C4A6E;
         }
-        .codes-table tr:hover td {
-            background: #F1F5F9;
-        }
+        .codes-table tr:hover td { background: #F1F5F9; }
         .codes-table code {
             font-family: monospace;
             background: #F1F5F9;
@@ -1681,21 +1354,14 @@
             border-radius: 6px;
             border: 1px solid #E2E8F0;
         }
-        .settings-group h4 {
-            color: #0C4A6E;
-            font-size: 0.7rem;
-            margin-bottom: 0.2rem;
-        }
+        .settings-group h4 { color: #0C4A6E; font-size: 0.7rem; margin-bottom: 0.2rem; }
         .setting-item {
             display: flex;
             align-items: center;
             gap: 0.4rem;
             padding: 0.15rem 0;
         }
-        .setting-item span {
-            font-size: 0.65rem;
-            color: #0C4A6E;
-        }
+        .setting-item span { font-size: 0.65rem; color: #0C4A6E; }
 
         .switch {
             position: relative;
@@ -1704,11 +1370,7 @@
             display: inline-block;
             flex-shrink: 0;
         }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .switch input { opacity: 0; width: 0; height: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
@@ -1731,12 +1393,8 @@
             transition: 0.3s ease;
             border-radius: 50%;
         }
-        .switch input:checked + .slider {
-            background: #0EA5E9;
-        }
-        .switch input:checked + .slider:before {
-            transform: translateX(16px);
-        }
+        .switch input:checked + .slider { background: #0EA5E9; }
+        .switch input:checked + .slider:before { transform: translateX(16px); }
 
         .banner-preview {
             width: 100%;
@@ -1750,11 +1408,7 @@
             justify-content: center;
             margin-bottom: 0.2rem;
         }
-        .banner-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .banner-preview img { width: 100%; height: 100%; object-fit: cover; }
         .banner-preview .banner-placeholder {
             display: flex;
             flex-direction: column;
@@ -1763,13 +1417,8 @@
             color: #94A3B8;
             gap: 0.1rem;
         }
-        .banner-preview .banner-placeholder i {
-            font-size: 1.5rem;
-            opacity: 0.3;
-        }
-        .banner-preview .banner-placeholder span {
-            font-size: 0.55rem;
-        }
+        .banner-preview .banner-placeholder i { font-size: 1.5rem; opacity: 0.3; }
+        .banner-preview .banner-placeholder span { font-size: 0.55rem; }
 
         .danger-zone {
             margin-top: 0.4rem;
@@ -1778,11 +1427,7 @@
             border-radius: 6px;
             background: rgba(239, 68, 68, 0.05);
         }
-        .danger-zone h4 {
-            color: #EF4444;
-            font-size: 0.7rem;
-            margin-bottom: 0.2rem;
-        }
+        .danger-zone h4 { color: #EF4444; font-size: 0.7rem; margin-bottom: 0.2rem; }
         .danger-zone .btn-danger {
             padding: 0.25rem;
             border: none;
@@ -1795,10 +1440,7 @@
             color: #FFFFFF;
             transition: all 0.3s ease;
         }
-        .danger-zone .btn-danger:hover {
-            background: #DC2626;
-            transform: translateY(-2px);
-        }
+        .danger-zone .btn-danger:hover { background: #DC2626; transform: translateY(-2px); }
 
         .admin-publish {
             margin-top: 0.5rem;
@@ -1858,9 +1500,7 @@
             font-size: 0.5rem;
             color: #0C4A6E;
         }
-        .admins-table tr:hover td {
-            background: #F1F5F9;
-        }
+        .admins-table tr:hover td { background: #F1F5F9; }
         .btn-delete-admin {
             background: #EF4444;
             color: #FFFFFF;
@@ -1871,35 +1511,16 @@
             font-size: 0.5rem;
             transition: all 0.3s ease;
         }
-        .btn-delete-admin:hover {
-            background: #DC2626;
-            transform: scale(1.05);
-        }
+        .btn-delete-admin:hover { background: #DC2626; transform: scale(1.05); }
 
         /* ===== ADMIN DARK MODE ===== */
-        body.dark-mode .admin-content {
-            background: #1E293B;
-        }
-        body.dark-mode .admin-header h2 {
-            color: #38BDF8;
-        }
-        body.dark-mode .admin-tabs .tab-btn {
-            color: #94A3B8;
-        }
-        body.dark-mode .admin-tabs .tab-btn:hover {
-            background: #334155;
-            color: #F1F5F9;
-        }
-        body.dark-mode .admin-tabs .tab-btn.active {
-            background: #0EA5E9;
-            color: #FFFFFF;
-        }
-        body.dark-mode .tab-content h3 {
-            color: #F1F5F9;
-        }
-        body.dark-mode .admin-form .form-group label {
-            color: #94A3B8;
-        }
+        body.dark-mode .admin-content { background: #1E293B; }
+        body.dark-mode .admin-header h2 { color: #38BDF8; }
+        body.dark-mode .admin-tabs .tab-btn { color: #94A3B8; }
+        body.dark-mode .admin-tabs .tab-btn:hover { background: #334155; color: #F1F5F9; }
+        body.dark-mode .admin-tabs .tab-btn.active { background: #0EA5E9; color: #FFFFFF; }
+        body.dark-mode .tab-content h3 { color: #F1F5F9; }
+        body.dark-mode .admin-form .form-group label { color: #94A3B8; }
         body.dark-mode .admin-form .form-group input,
         body.dark-mode .admin-form .form-group select {
             background: #334155;
@@ -1907,308 +1528,94 @@
             color: #F1F5F9;
         }
         body.dark-mode .admin-form .form-group input:focus,
-        body.dark-mode .admin-form .form-group select:focus {
-            border-color: #0EA5E9;
-        }
-        body.dark-mode .admin-stat-card {
-            background: #334155;
-            border-color: #475569;
-        }
-        body.dark-mode .admin-stat-card .stat-label {
-            color: #94A3B8;
-        }
-        body.dark-mode .students-table td {
-            color: #F1F5F9;
-        }
-        body.dark-mode .students-table tr:hover td {
-            background: #334155;
-        }
-        body.dark-mode .codes-table td {
-            color: #F1F5F9;
-        }
-        body.dark-mode .codes-table tr:hover td {
-            background: #334155;
-        }
-        body.dark-mode .codes-stats {
-            background: #334155;
-            color: #F1F5F9;
-        }
-        body.dark-mode .settings-group {
-            background: #334155;
-            border-color: #475569;
-        }
-        body.dark-mode .settings-group h4 {
-            color: #F1F5F9;
-        }
-        body.dark-mode .setting-item span {
-            color: #F1F5F9;
-        }
-        body.dark-mode .banner-preview {
-            background: #334155;
-            border-color: #475569;
-        }
-        body.dark-mode .banner-preview .banner-placeholder {
-            color: #94A3B8;
-        }
-        body.dark-mode .admins-table td {
-            color: #F1F5F9;
-        }
-        body.dark-mode .admins-table tr:hover td {
-            background: #334155;
-        }
-        body.dark-mode .admin-publish {
-            border-color: #475569;
-        }
-        body.dark-mode .admin-publish #pendingChanges {
-            background: #F59E0B;
-            color: #1E293B;
-        }
+        body.dark-mode .admin-form .form-group select:focus { border-color: #0EA5E9; }
+        body.dark-mode .admin-stat-card { background: #334155; border-color: #475569; }
+        body.dark-mode .admin-stat-card .stat-label { color: #94A3B8; }
+        body.dark-mode .students-table td { color: #F1F5F9; }
+        body.dark-mode .students-table tr:hover td { background: #334155; }
+        body.dark-mode .codes-table td { color: #F1F5F9; }
+        body.dark-mode .codes-table tr:hover td { background: #334155; }
+        body.dark-mode .codes-stats { background: #334155; color: #F1F5F9; }
+        body.dark-mode .settings-group { background: #334155; border-color: #475569; }
+        body.dark-mode .settings-group h4 { color: #F1F5F9; }
+        body.dark-mode .setting-item span { color: #F1F5F9; }
+        body.dark-mode .banner-preview { background: #334155; border-color: #475569; }
+        body.dark-mode .banner-preview .banner-placeholder { color: #94A3B8; }
+        body.dark-mode .admins-table td { color: #F1F5F9; }
+        body.dark-mode .admins-table tr:hover td { background: #334155; }
+        body.dark-mode .admin-publish { border-color: #475569; }
+        body.dark-mode .admin-publish #pendingChanges { background: #F59E0B; color: #1E293B; }
 
         /* ============================================================
            RESPONSIVE
            ============================================================ */
         @media (max-width: 768px) {
-            body {
-                padding-top: 56px;
-                padding-bottom: 56px;
-            }
-            .navbar {
-                padding: 0.15rem 0.6rem;
-                height: 56px;
-            }
-            .logo-text {
-                font-size: 0.85rem;
-            }
-            .nav-links {
-                display: none !important;
-            }
-            .search-box {
-                max-width: 100px;
-            }
-            .search-box input {
-                width: 50px;
-                font-size: 0.55rem;
-            }
-            .search-box input:focus {
-                width: 65px;
-            }
-            .search-box button {
-                padding: 0.1rem 0.35rem;
-                font-size: 0.5rem;
-            }
-            .user-profile-btn .user-name {
-                max-width: 40px;
-                font-size: 0.55rem;
-            }
-            .user-profile-btn .avatar {
-                width: 20px;
-                height: 20px;
-                font-size: 0.5rem;
-            }
-            .class-filter-select {
-                max-width: 75px;
-                font-size: 0.5rem;
-                padding: 0.1rem 0.3rem;
-            }
-            .theme-toggle {
-                width: 26px;
-                height: 26px;
-                font-size: 0.7rem;
-            }
-            .hero {
-                min-height: 90px;
-                padding: 0.6rem 0.8rem;
-                margin: 0 0.3rem 0.3rem;
-                border-radius: 10px;
-            }
-            .hero-title {
-                font-size: 1rem;
-            }
-            .hero-stats .stat-number {
-                font-size: 0.85rem;
-            }
-            .teachers-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.4rem;
-            }
-            .teacher-card .teacher-card-image {
-                width: 48px;
-                height: 48px;
-            }
-            .teacher-card .teacher-card-image .teacher-emoji {
-                font-size: 1.2rem;
-            }
-            .teacher-card .teacher-card-info h3 {
-                font-size: 0.6rem;
-            }
-            .my-courses-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.4rem;
-            }
-            .profile-stats {
-                grid-template-columns: 1fr 1fr;
-            }
-            .admin-panel {
-                max-width: 100%;
-            }
-            .admin-stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.3rem;
-            }
-            .feature-card {
-                padding: 0.4rem 0.2rem;
-            }
-            .feature-card .feature-icon {
-                font-size: 1.2rem;
-            }
-            .feature-card h4 {
-                font-size: 0.6rem;
-            }
-            .feature-card p {
-                font-size: 0.5rem;
-            }
-            .banner-container .banner-placeholder {
-                height: 60px;
-                font-size: 0.7rem;
-            }
+            body { padding-top: 56px; padding-bottom: 56px; }
+            .navbar { padding: 0.15rem 0.6rem; height: 56px; }
+            .logo-text { font-size: 0.85rem; }
+            .nav-links { display: none !important; }
+            .search-box { max-width: 100px; }
+            .search-box input { width: 50px; font-size: 0.55rem; }
+            .search-box input:focus { width: 65px; }
+            .search-box button { padding: 0.1rem 0.35rem; font-size: 0.5rem; }
+            .user-profile-btn .user-name { max-width: 40px; font-size: 0.55rem; }
+            .user-profile-btn .avatar { width: 20px; height: 20px; font-size: 0.5rem; }
+            .class-filter-select { max-width: 90px; font-size: 0.5rem; padding: 0.1rem 0.3rem; }
+            .theme-toggle { width: 26px; height: 26px; font-size: 0.7rem; }
+            .hero { min-height: 50px; padding: 0.4rem 0.8rem; margin: 0 0.3rem 0.3rem; border-radius: 10px; }
+            .hero-title { font-size: 0.8rem; }
+            .hero-stats .stat-number { font-size: 0.65rem; }
+            .banner-container .banner-placeholder { height: 60px; font-size: 0.7rem; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
+            .feature-card { padding: 0.3rem 0.15rem; }
+            .feature-card .feature-icon { font-size: 1rem; }
+            .feature-card h4 { font-size: 0.55rem; }
+            .feature-card p { font-size: 0.45rem; }
+            .teachers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+            .teacher-card .teacher-card-image { width: 48px; height: 48px; }
+            .teacher-card .teacher-card-image .teacher-emoji { font-size: 1.2rem; }
+            .teacher-card .teacher-card-info h3 { font-size: 0.6rem; }
+            .my-courses-grid { grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+            .profile-stats { grid-template-columns: 1fr 1fr; }
+            .admin-panel { max-width: 100%; }
+            .admin-stats-grid { grid-template-columns: 1fr 1fr; }
+            .students-table { min-width: 320px; font-size: 0.55rem; }
+            .codes-table { min-width: 260px; font-size: 0.5rem; }
         }
 
         @media (max-width: 480px) {
-            .hero-title {
-                font-size: 0.85rem;
-            }
-            .hero-desc {
-                font-size: 0.55rem;
-            }
-            .hero-stats .stat-number {
-                font-size: 0.7rem;
-            }
-            .teachers-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.3rem;
-            }
-            .teacher-card {
-                padding: 0.3rem 0.15rem;
-                border-radius: 10px;
-            }
-            .teacher-card .teacher-card-image {
-                width: 40px;
-                height: 40px;
-                border-width: 2px;
-            }
-            .teacher-card .teacher-card-image .teacher-emoji {
-                font-size: 1rem;
-            }
-            .teacher-card .teacher-card-info h3 {
-                font-size: 0.55rem;
-            }
-            .teacher-card .teacher-card-info .teacher-subject {
-                font-size: 0.45rem;
-            }
-            .teacher-card .teacher-card-info .teacher-stats {
-                font-size: 0.4rem;
-            }
-            .filter-btn {
-                font-size: 0.5rem;
-                padding: 0.1rem 0.4rem;
-            }
-            .my-courses-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.2rem;
-            }
-            .course-card-mini {
-                padding: 0.3rem;
-            }
-            .course-card-mini .course-avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 0.9rem;
-            }
-            .course-card-mini .course-name {
-                font-size: 0.6rem;
-            }
-            .profile-stats {
-                grid-template-columns: 1fr 1fr;
-            }
-            .stat-box .stat-number {
-                font-size: 0.85rem;
-            }
-            .bottom-nav .nav-item {
-                font-size: 0.35rem;
-                min-width: 30px;
-            }
-            .bottom-nav .nav-item i {
-                font-size: 0.75rem;
-            }
-            .admin-tabs .tab-btn {
-                font-size: 0.45rem;
-                padding: 0.12rem 0.25rem;
-                min-width: 24px;
-            }
-            .class-filter-select {
-                max-width: 60px;
-                font-size: 0.45rem;
-                padding: 0.05rem 0.2rem;
-            }
-            .search-box {
-                max-width: 80px;
-            }
-            .search-box input {
-                width: 40px;
-                font-size: 0.5rem;
-            }
-            .search-box input:focus {
-                width: 55px;
-            }
-            .search-box button {
-                padding: 0.08rem 0.25rem;
-                font-size: 0.45rem;
-            }
-            .user-profile-btn .user-name {
-                max-width: 30px;
-                font-size: 0.5rem;
-            }
-            .user-profile-btn .avatar {
-                width: 18px;
-                height: 18px;
-                font-size: 0.45rem;
-            }
-            .theme-toggle {
-                width: 22px;
-                height: 22px;
-                font-size: 0.6rem;
-            }
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 0.2rem;
-            }
-            .feature-card {
-                padding: 0.3rem 0.15rem;
-            }
-            .feature-card .feature-icon {
-                font-size: 1rem;
-            }
-            .feature-card h4 {
-                font-size: 0.55rem;
-            }
-            .feature-card p {
-                font-size: 0.45rem;
-            }
-            .banner-container .banner-placeholder {
-                height: 50px;
-                font-size: 0.6rem;
-            }
-            .students-table {
-                min-width: 280px;
-                font-size: 0.5rem;
-            }
-            .codes-table {
-                min-width: 240px;
-                font-size: 0.45rem;
-            }
+            .hero-title { font-size: 0.7rem; }
+            .hero-stats .stat-number { font-size: 0.55rem; }
+            .teachers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.3rem; }
+            .teacher-card { padding: 0.3rem 0.15rem; border-radius: 10px; }
+            .teacher-card .teacher-card-image { width: 40px; height: 40px; border-width: 2px; }
+            .teacher-card .teacher-card-image .teacher-emoji { font-size: 1rem; }
+            .teacher-card .teacher-card-info h3 { font-size: 0.55rem; }
+            .my-courses-grid { grid-template-columns: 1fr 1fr; gap: 0.2rem; }
+            .course-card-mini { padding: 0.3rem; }
+            .course-card-mini .course-avatar { width: 32px; height: 32px; font-size: 0.9rem; }
+            .course-card-mini .course-name { font-size: 0.6rem; }
+            .profile-stats { grid-template-columns: 1fr 1fr; }
+            .stat-box .stat-number { font-size: 0.85rem; }
+            .bottom-nav .nav-item { font-size: 0.35rem; min-width: 30px; }
+            .bottom-nav .nav-item i { font-size: 0.75rem; }
+            .admin-tabs .tab-btn { font-size: 0.45rem; padding: 0.12rem 0.25rem; min-width: 24px; }
+            .class-filter-select { max-width: 70px; font-size: 0.45rem; padding: 0.05rem 0.2rem; }
+            .search-box { max-width: 80px; }
+            .search-box input { width: 40px; font-size: 0.5rem; }
+            .search-box input:focus { width: 55px; }
+            .search-box button { padding: 0.08rem 0.25rem; font-size: 0.45rem; }
+            .user-profile-btn .user-name { max-width: 30px; font-size: 0.5rem; }
+            .user-profile-btn .avatar { width: 18px; height: 18px; font-size: 0.45rem; }
+            .theme-toggle { width: 22px; height: 22px; font-size: 0.6rem; }
+            .features-grid { grid-template-columns: 1fr 1fr; gap: 0.2rem; }
+            .feature-card { padding: 0.2rem 0.1rem; }
+            .feature-card .feature-icon { font-size: 0.9rem; }
+            .feature-card h4 { font-size: 0.5rem; }
+            .feature-card p { font-size: 0.4rem; }
+            .banner-container .banner-placeholder { height: 50px; font-size: 0.6rem; }
+            .students-table { min-width: 280px; font-size: 0.5rem; }
+            .codes-table { min-width: 220px; font-size: 0.45rem; }
         }
 
         /* ============================================================
@@ -2231,22 +1638,11 @@
         /* ============================================================
            أنماط إضافية
            ============================================================ */
-        .page-header {
-            text-align: center;
-            padding: 0.2rem 0 0.5rem;
-        }
-        .page-header h2 {
-            font-size: 1rem;
-            font-weight: 800;
-        }
-        .page-header p {
-            color: var(--text-light);
-            font-size: 0.7rem;
-        }
+        .page-header { text-align: center; padding: 0.2rem 0 0.5rem; }
+        .page-header h2 { font-size: 1rem; font-weight: 800; }
+        .page-header p { color: var(--text-light); font-size: 0.7rem; }
 
-        .progress-summary {
-            margin-bottom: 0.5rem;
-        }
+        .progress-summary { margin-bottom: 0.5rem; }
         .progress-card {
             background: var(--bg-card);
             border-radius: var(--radius-sm);
@@ -2257,39 +1653,12 @@
             gap: 0.6rem;
             box-shadow: var(--shadow-sm);
         }
-        .progress-icon {
-            font-size: 1.6rem;
-        }
-        .progress-info {
-            flex: 1;
-        }
-        .progress-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: var(--text-light);
-            display: block;
-            margin-bottom: 0.05rem;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 5px;
-            background: var(--bg);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 10px;
-            background: var(--primary-gradient);
-            transition: width 0.6s ease;
-        }
-        .progress-value {
-            font-size: 0.6rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-top: 0.05rem;
-            display: block;
-        }
+        .progress-icon { font-size: 1.6rem; }
+        .progress-info { flex: 1; }
+        .progress-label { font-size: 0.6rem; font-weight: 600; color: var(--text-light); display: block; margin-bottom: 0.05rem; }
+        .progress-bar { width: 100%; height: 5px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; background: var(--primary-gradient); transition: width 0.6s ease; }
+        .progress-value { font-size: 0.6rem; font-weight: 700; color: var(--primary); margin-top: 0.05rem; display: block; }
 
         .my-courses-section .section-header {
             display: flex;
@@ -2299,28 +1668,13 @@
             padding-bottom: 0.3rem;
             border-bottom: 1.5px solid var(--border);
         }
-        .my-courses-section .section-header h2 {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .my-courses-section .section-header h2 i {
-            color: var(--primary);
-            margin-left: 0.3rem;
-        }
-        .courses-count {
-            color: var(--text-light);
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
+        .my-courses-section .section-header h2 { font-size: 0.95rem; font-weight: 800; color: var(--text); }
+        .my-courses-section .section-header h2 i { color: var(--primary); margin-left: 0.3rem; }
+        .courses-count { color: var(--text-light); font-size: 0.7rem; font-weight: 600; }
 
-        .teachers-container {
-            padding: 0.3rem 0 80px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .teachers-container { padding: 0.3rem 0 80px; max-width: 1200px; margin: 0 auto; }
 
-        /* ===== تنسيقات التقدم - تتبع الطالب ===== */
+        /* ===== تنسيقات التقدم ===== */
         .progress-detail {
             background: var(--bg);
             border-radius: var(--radius-sm);
@@ -2335,18 +1689,10 @@
             border-bottom: 1px solid var(--border);
             font-size: 0.6rem;
         }
-        .progress-detail .progress-item:last-child {
-            border-bottom: none;
-        }
-        .progress-detail .progress-item .status-done {
-            color: var(--success);
-        }
-        .progress-detail .progress-item .status-pending {
-            color: var(--warning);
-        }
-        .progress-detail .progress-item .status-locked {
-            color: var(--danger);
-        }
+        .progress-detail .progress-item:last-child { border-bottom: none; }
+        .progress-detail .progress-item .status-done { color: var(--success); }
+        .progress-detail .progress-item .status-pending { color: var(--warning); }
+        .progress-detail .progress-item .status-locked { color: var(--danger); }
     </style>
 </head>
 <body>
@@ -2382,9 +1728,10 @@
                     </ul>
                 </div>
                 <div class="nav-right">
-                    <!-- ===== فلتر الصفوف - بجانب الملف الشخصي ===== -->
+
+                    <!-- ===== فلتر الصفوف - مميز ===== -->
                     <select class="class-filter-select" id="classFilterSelect" onchange="filterByClass()">
-                        <option value="all">🎯 جميع الصفوف</option>
+                        <option value="all" class="all-classes">🎯 جميع الصفوف</option>
                     </select>
 
                     <div class="search-box">
@@ -2409,12 +1756,11 @@
         ============================================================ -->
         <div id="page-home" class="page-content">
 
-            <!-- ===== HERO ===== -->
+            <!-- ===== HERO (بدون "تعلم بذكاء" والمربع) ===== -->
             <section class="hero" id="hero">
                 <div class="hero-content">
-                    <div class="hero-badge">🚀 منصة التعلم المتطورة</div>
-                    <h1 class="hero-title">تعلم <span>بذكاء</span> مع ديف أكاديمي</h1>
-                    <p class="hero-desc">اختر صفك وابدأ رحلة التعلم الآن!</p>
+                    <div class="hero-badge">📚 ديف أكاديمي</div>
+                    <h1 class="hero-title">منصة التعلم <span>المتطورة</span></h1>
                     <div class="hero-stats">
                         <div class="stat-item">
                             <span class="stat-number" id="totalTeachers">0</span>
@@ -2435,7 +1781,7 @@
             <!-- ===== BANNER ===== -->
             <div class="banner-section" id="bannerSection">
                 <div class="banner-container">
-                    <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:auto;max-height:150px;object-fit:cover;" />
+                    <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:auto;max-height:160px;object-fit:cover;" />
                     <div id="mainBannerPlaceholder" class="banner-placeholder">
                         📚 ديف أكاديمي - منصتك التعليمية
                     </div>
@@ -2475,6 +1821,7 @@
                     <span class="section-more" onclick="navigateTo('teachers')">عرض الكل <i class="fas fa-arrow-left"></i></span>
                 </div>
 
+                <!-- الفلتر مخفي تماماً -->
                 <div class="filter-section" id="sectionFilter"></div>
 
                 <div id="teachersGridContainer"></div>
@@ -2704,6 +2051,7 @@
                     <button class="tab-btn" data-tab="teachers" onclick="showAdminTab('teachers')">👨‍🏫</button>
                     <button class="tab-btn" data-tab="semesters" onclick="showAdminTab('semesters')">📀</button>
                     <button class="tab-btn" data-tab="lectures" onclick="showAdminTab('lectures')">🎥</button>
+                    <button class="tab-btn" data-tab="edit-lecture" onclick="showAdminTab('edit-lecture')">✏️</button>
                     <button class="tab-btn" data-tab="students" onclick="showAdminTab('students')">👥</button>
                     <button class="tab-btn" data-tab="codes" onclick="showAdminTab('codes')">🔑</button>
                     <button class="tab-btn" data-tab="admins" onclick="showAdminTab('admins')">👑</button>
@@ -2860,6 +2208,49 @@
                             <button type="submit" class="btn-submit"><i class="fas fa-plus"></i> إضافة محاضرة</button>
                         </form>
                         <div id="lecturesListAdmin"></div>
+                    </div>
+                </div>
+
+                <!-- ===== TAB: Edit Lecture ===== -->
+                <div class="tab-content" id="tab-edit-lecture">
+                    <div class="admin-edit-lecture">
+                        <h3>✏️ تعديل المحاضرة</h3>
+                        <form id="editLectureForm" class="admin-form" onsubmit="event.preventDefault(); editLecture();">
+                            <div class="form-group">
+                                <label>📚 القسم *</label>
+                                <select id="editLectureSection" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>👨‍🏫 المدرس *</label>
+                                <select id="editLectureTeacher" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>📀 الفصل *</label>
+                                <select id="editLectureSemester" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>🎥 المحاضرة *</label>
+                                <select id="editLectureSelect" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>📝 العنوان الجديد *</label>
+                                <input type="text" id="editLectureTitle" placeholder="العنوان الجديد" required />
+                            </div>
+                            <div class="form-group">
+                                <label>📹 رابط الفيديو الجديد *</label>
+                                <input type="url" id="editLectureUrl" placeholder="https://player.mediadelivery.net/play/..." required />
+                            </div>
+                            <div class="form-group">
+                                <label>🔒 الحالة</label>
+                                <select id="editLectureFree">
+                                    <option value="true">🆓 مجانية</option>
+                                    <option value="false">🔒 مقفلة</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                            <div id="editLectureMessage"></div>
+                        </form>
+                        <div id="editLectureListAdmin"></div>
                     </div>
                 </div>
 
