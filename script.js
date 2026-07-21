@@ -901,7 +901,7 @@
     }
 
     // ============================================================
-    // NAVIGATION
+    // NAVIGATION - مع إظهار البانر دائماً
     // ============================================================
     window.navigateTo = function(page) {
         if (!currentUser) {
@@ -930,23 +930,11 @@
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
-        // ===== إظهار البانر في الصفحة الرئيسية =====
-        setTimeout(function() {
-            var bannerSection = document.getElementById('bannerSection');
-            if (!bannerSection) return;
-            var pages = document.querySelectorAll('.page-content');
-            var currentPage = null;
-            pages.forEach(function(p) {
-                if (p.style.display !== 'none') {
-                    currentPage = p;
-                }
-            });
-            if (currentPage && currentPage.id === 'page-home') {
-                bannerSection.style.display = 'block';
-            } else {
-                bannerSection.style.display = 'none';
-            }
-        }, 100);
+        // ===== إظهار البانر دائماً (في جميع الصفحات) =====
+        var bannerSection = document.getElementById('bannerSection');
+        if (bannerSection) {
+            bannerSection.style.display = 'block';
+        }
     };
 
     // ============================================================
@@ -2234,7 +2222,7 @@
     });
 
     // ============================================================
-    // BANNER MANAGEMENT
+    // BANNER MANAGEMENT - سيظهر دائماً في الأعلى
     // ============================================================
     function updateBannerPreview() {
         var savedImage = localStorage.getItem('bannerImage');
@@ -2312,24 +2300,23 @@
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
 
-    // ===== تحميل الصورة المحفوظة =====
+    // ===== تحميل الصورة المحفوظة وإظهار البانر دائماً =====
     var savedBanner = localStorage.getItem('bannerImage');
     if (savedBanner) {
         setTimeout(function() {
             updateBannerPreview();
-            // إظهار البانر في الصفحة الرئيسية
+            // إظهار البانر دائماً
             var bannerSection = document.getElementById('bannerSection');
             if (bannerSection) {
-                var pages = document.querySelectorAll('.page-content');
-                var currentPage = null;
-                pages.forEach(function(p) {
-                    if (p.style.display !== 'none') {
-                        currentPage = p;
-                    }
-                });
-                if (currentPage && currentPage.id === 'page-home') {
-                    bannerSection.style.display = 'block';
-                }
+                bannerSection.style.display = 'block';
+            }
+        }, 100);
+    } else {
+        // إظهار البانر دائماً حتى لو لم توجد صورة
+        setTimeout(function() {
+            var bannerSection = document.getElementById('bannerSection');
+            if (bannerSection) {
+                bannerSection.style.display = 'block';
             }
         }, 100);
     }
@@ -2398,6 +2385,13 @@
         updateAllAdminSelects();
         loadAdminsList();
         updateBannerPreview();
+        
+        // إظهار البانر دائماً
+        var bannerSection = document.getElementById('bannerSection');
+        if (bannerSection) {
+            bannerSection.style.display = 'block';
+        }
+        
         console.log('📚 ديف أكاديمي - النظام جاهز');
     }
 
