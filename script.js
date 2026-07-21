@@ -135,7 +135,7 @@
     let editTarget = { sectionIndex: -1, teacherIndex: -1, semesterIndex: -1, lectureIndex: -1 };
 
     // ============================================================
-    // 🔥 دوال تشغيل الفيديو - دعم mediadelivery و YouTube
+    // دوال تشغيل الفيديو
     // ============================================================
 
     function extractVideoUrl(url) {
@@ -622,7 +622,6 @@
                     }
                 } catch (e) { console.warn('⚠️ بيانات localStorage تالفة'); }
             }
-            // بيانات افتراضية مع الأقسام
             data = { sections: JSON.parse(JSON.stringify(defaultSections)) };
             normalizeDataStructure(data);
             localStorage.setItem('academyData', JSON.stringify(data));
@@ -734,7 +733,6 @@
     window.setFilter = function(sectionId) {
         currentFilter = sectionId;
         renderAllData();
-        // تحديث الأزرار
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.section === sectionId);
         });
@@ -794,23 +792,16 @@
     function renderAllData() {
         const filteredTeachers = getFilteredTeachers();
 
-        // تحديث العداد
         if (teachersCount) teachersCount.textContent = filteredTeachers.length;
         if (teachersCount2) teachersCount2.textContent = filteredTeachers.length;
 
-        // عرض المدرسين
         renderTeachers(filteredTeachers, teachersGridContainer);
         renderTeachers(filteredTeachers, teachersGridContainer2);
 
-        // بناء أزرار الفلتر
         buildFilterButtons(sectionFilter, teachersCount);
         buildFilterButtons(sectionFilter2, teachersCount2);
         
-        // تحديث قائمة الصفوف في النافبار
         updateClassFilter();
-        
-        // إظهار الإعلانات في الصفحة الرئيسية فقط
-        showAnnouncementsOnHome();
     }
 
     // ===== OPEN TEACHER =====
@@ -1159,9 +1150,6 @@
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // إظهار الإعلانات في الصفحة الرئيسية فقط
-        setTimeout(showAnnouncementsOnHome, 100);
     };
 
     // ===== NAVIGATION EVENTS =====
@@ -1202,6 +1190,7 @@
                 updateAllAdminSelects();
                 updatePendingChanges();
                 loadAdminsList();
+                renderBannersAdmin();
                 showToast('success', '🔓 مرحباً بك في لوحة التحكم');
             } else {
                 showToast('error', '❌ غير مصرح لك بالدخول إلى لوحة التحكم');
@@ -1290,23 +1279,17 @@
     // دوال إدارة الأقسام والمدرسين في لوحة التحكم
     // ============================================================
 
-    // ===== تحديث جميع القوائم المنسدلة =====
     function updateAllAdminSelects() {
-        // تحديث جميع القوائم الأساسية
         updateBasicSelects();
-        // تحديث القوائم التابعة
         updateTeacherSelects();
         updateSemesterSelects();
         updateLectureSelects();
         updateDeleteSelects();
         updateEditSelects();
-        // تحديث قائمة الأكواد
         updateCodeSelects();
-        // تحديث الأكواد المعروضة
         updateCodesManagement();
     }
 
-    // ===== تحديث القوائم الأساسية =====
     function updateBasicSelects() {
         const selectIds = [
             'teacherSection', 'semesterSection', 'lectureSection',
@@ -1330,7 +1313,6 @@
         });
     }
 
-    // ===== تحديث قوائم المدرسين =====
     function updateTeacherSelects() {
         const teacherSelects = [
             { selectId: 'semesterTeacher', sectionId: 'semesterSection' },
@@ -1365,9 +1347,7 @@
         });
     }
 
-    // ===== تحديث قوائم الفصول =====
     function updateSemesterSelects() {
-        // للفصول في إضافة محاضرة
         const semesterSelects = [
             { selectId: 'lectureSemester', teacherId: 'lectureTeacher', sectionId: 'lectureSection' },
             { selectId: 'deleteSemesterSelect', teacherId: 'deleteSemesterTeacher', sectionId: 'deleteSemesterSection' },
@@ -1406,9 +1386,7 @@
         });
     }
 
-    // ===== تحديث قوائم المحاضرات =====
     function updateLectureSelects() {
-        // لمحاضرات التعديل والحذف
         const lectureSelects = [
             { selectId: 'editLectureSelect', semesterId: 'editLectureSemester', sectionId: 'editLectureSection', teacherId: 'editLectureTeacher' },
             { selectId: 'deleteLectureSelect', semesterId: 'deleteLectureSemester', sectionId: 'deleteLectureSection', teacherId: 'deleteLectureTeacher' }
@@ -1447,9 +1425,7 @@
         });
     }
 
-    // ===== تحديث قوائم الحذف =====
     function updateDeleteSelects() {
-        // تحديث قوائم الحذف بشكل خاص
         const deleteTeacherSelect = document.getElementById('deleteTeacherSelect');
         const deleteTeacherSection = document.getElementById('deleteTeacherSection');
         if (deleteTeacherSelect && deleteTeacherSection) {
@@ -1469,9 +1445,7 @@
         }
     }
 
-    // ===== تحديث قوائم التعديل =====
     function updateEditSelects() {
-        // تحديث قوائم تعديل المدرس
         const editTeacherSelect = document.getElementById('editTeacherSelect');
         const editTeacherSection = document.getElementById('editTeacherSection');
         if (editTeacherSelect && editTeacherSection) {
@@ -1488,12 +1462,10 @@
                 data.sections[sectionIndex]?.teachers[parseInt(currentValue)]) {
                 editTeacherSelect.value = currentValue;
             }
-            // تحديث بيانات المدرس
             updateEditTeacherData();
         }
     }
 
-    // ===== تحديث قوائم الأكواد =====
     function updateCodeSelects() {
         const sectionSelect = document.getElementById('codeSection');
         const teacherSelect = document.getElementById('codeTeacherSelect');
@@ -1516,7 +1488,6 @@
         }
     }
 
-    // ===== تحديث بيانات تعديل المدرس =====
     function updateEditTeacherData() {
         const sectionSelect = document.getElementById('editTeacherSection');
         const teacherSelect = document.getElementById('editTeacherSelect');
@@ -1543,22 +1514,19 @@
         document.getElementById('editTeacherMessage').innerHTML = '';
     }
 
-    // ===== تحديث عدد التغييرات =====
     function updatePendingChanges() {
         if (pendingChangesSpan) pendingChangesSpan.textContent = pendingChanges;
     }
 
-    // ============================================================
-    // ===== إضافة تغيير =====
-    // ============================================================
     function addChange() {
         pendingChanges++;
         updatePendingChanges();
     }
 
     // ============================================================
-    // ===== إضافة قسم =====
+    // دوال الإدارة
     // ============================================================
+
     addSectionForm?.addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('sectionName').value.trim();
@@ -1583,9 +1551,6 @@
         showToast('success', `✅ تم إضافة القسم "${name}" بنجاح`);
     });
 
-    // ============================================================
-    // ===== إضافة مدرس =====
-    // ============================================================
     addTeacherForm?.addEventListener('submit', function(e) {
         e.preventDefault();
         const sectionSelect = document.getElementById('teacherSection');
@@ -1626,9 +1591,6 @@
         showToast('success', `✅ تم إضافة المدرس "${name}" بنجاح`);
     });
 
-    // ============================================================
-    // ===== إضافة فصل =====
-    // ============================================================
     addSemesterForm?.addEventListener('submit', function(e) {
         e.preventDefault();
         const sectionSelect = document.getElementById('semesterSection');
@@ -1658,9 +1620,6 @@
         showToast('success', `✅ تم إضافة الفصل ${number} بنجاح`);
     });
 
-    // ============================================================
-    // ===== إضافة محاضرة =====
-    // ============================================================
     addLectureForm?.addEventListener('submit', function(e) {
         e.preventDefault();
         const sectionSelect = document.getElementById('lectureSection');
@@ -1703,8 +1662,9 @@
     });
 
     // ============================================================
-    // ===== إدارة الأكواد =====
+    // إدارة الأكواد
     // ============================================================
+
     window.addManualCode = function() {
         const sectionSelect = document.getElementById('codeSection');
         const teacherSelect = document.getElementById('codeTeacherSelect');
@@ -1937,7 +1897,7 @@
     };
 
     // ============================================================
-    // ===== EDIT TEACHER =====
+    // EDIT TEACHER
     // ============================================================
     document.getElementById('editTeacherSection')?.addEventListener('change', function() {
         updateAllAdminSelects();
@@ -2003,7 +1963,7 @@
     });
 
     // ============================================================
-    // ===== DELETE FUNCTIONS =====
+    // DELETE FUNCTIONS
     // ============================================================
 
     window.deleteSelectedSection = function() {
@@ -2157,7 +2117,7 @@
     };
 
     // ============================================================
-    // ===== EDIT LECTURE =====
+    // EDIT LECTURE
     // ============================================================
     function openEditLecture(sectionIndex, teacherIndex, semesterIndex, lectureIndex) {
         const section = data.sections[sectionIndex];
@@ -2304,7 +2264,7 @@
     });
 
     // ============================================================
-    // ===== ADMIN MANAGEMENT =====
+    // ADMIN MANAGEMENT
     // ============================================================
 
     window.addNewAdmin = async function() {
@@ -2566,7 +2526,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
     };
 
     // ============================================================
-    // ===== PUBLISH =====
+    // PUBLISH
     // ============================================================
     publishBtn?.addEventListener('click', async function() {
         if (pendingChanges === 0) {
@@ -2613,7 +2573,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
     });
 
     // ============================================================
-    // ===== USERS TABLE =====
+    // USERS TABLE
     // ============================================================
     function renderUsersTable() {
         const tbody = document.getElementById('usersTableBody');
@@ -2667,7 +2627,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
     }
 
     // ============================================================
-    // ===== TAB EVENTS =====
+    // TAB EVENTS
     // ============================================================
     tabBtns.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -2695,6 +2655,9 @@ grant execute on function add_user_and_admin(text) to authenticated;
             if (this.dataset.tab === 'edit-teacher') {
                 updateAllAdminSelects();
             }
+            if (this.dataset.tab === 'banners') {
+                renderBannersAdmin();
+            }
             if (this.dataset.tab === 'add-teacher' || this.dataset.tab === 'add-semester' ||
                 this.dataset.tab === 'add-lecture' || this.dataset.tab === 'add-section') {
                 updateAllAdminSelects();
@@ -2703,396 +2666,219 @@ grant execute on function add_user_and_admin(text) to authenticated;
     });
 
     // ============================================================
-    // ===== EVENT LISTENERS FOR DEPENDENT SELECTS =====
+    // 🆕 إدارة البانر (صور متحركة)
     // ============================================================
 
-    // تحديث القوائم عند تغيير القسم
-    document.getElementById('teacherSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
+    var banners = [];
+    var currentBannerIndex = 0;
+    var bannerInterval = null;
 
-    document.getElementById('semesterSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('lectureSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('codeSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('editTeacherSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('editLectureSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteTeacherSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteSemesterSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteLectureSection')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    // تحديث القوائم عند تغيير المدرس
-    document.getElementById('semesterTeacher')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('lectureTeacher')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('codeTeacherSelect')?.addEventListener('change', function() {
-        updateCodesManagement();
-    });
-
-    document.getElementById('editTeacherSelect')?.addEventListener('change', function() {
-        updateEditTeacherData();
-    });
-
-    document.getElementById('editLectureTeacher')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteSemesterTeacher')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteLectureTeacher')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    // تحديث القوائم عند تغيير الفصل
-    document.getElementById('lectureSemester')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('editLectureSemester')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteSemesterSelect')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    document.getElementById('deleteLectureSemester')?.addEventListener('change', function() {
-        updateAllAdminSelects();
-    });
-
-    // ============================================================
-    // ===== NAVBAR SCROLL =====
-    // ============================================================
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar?.classList.add('scrolled');
-        } else {
-            navbar?.classList.remove('scrolled');
-        }
-    });
-
-    // ============================================================
-    // 🆕 إدارة الإعلانات وتحديث البانر
-    // ============================================================
-
-    var announcements = [];
-    var currentAnnouncementIndex = 0;
-    var announcementInterval = null;
-
-    function loadAnnouncements() {
+    function loadBanners() {
         try {
-            var saved = localStorage.getItem('announcements');
+            var saved = localStorage.getItem('banners');
             if (saved) {
-                announcements = JSON.parse(saved);
+                banners = JSON.parse(saved);
             } else {
-                // إعلانات افتراضية مع صور
-                announcements = [
+                banners = [
                     { 
-                        id: 'ann-1', 
-                        text: '📢 انضم إلى دورة الرياضيات مع أ.حيدر طابور', 
-                        icon: '📐', 
-                        image: 'https://via.placeholder.com/80/0EA5E9/FFFFFF?text=رياضيات',
-                        badge: 'جديد', 
-                        time: new Date().toISOString() 
+                        id: 'banner-1', 
+                        image: 'https://via.placeholder.com/1200x300/0EA5E9/FFFFFF?text=ديف+أكاديمي',
+                        title: '📚 ديف أكاديمي',
+                        desc: 'منصتك التعليمية المتكاملة'
                     },
                     { 
-                        id: 'ann-2', 
-                        text: '📊 اختبارات دورية محاكية للوزاري', 
-                        icon: '📊', 
-                        image: 'https://via.placeholder.com/80/8B5CF6/FFFFFF?text=اختبارات',
-                        badge: 'قريباً', 
-                        time: new Date().toISOString() 
+                        id: 'banner-2', 
+                        image: 'https://via.placeholder.com/1200x300/8B5CF6/FFFFFF?text=تعلم+بذكاء',
+                        title: '🎯 تعلم بذكاء',
+                        desc: 'تميز بثقة مع أفضل المدرسين'
                     }
                 ];
-                saveAnnouncements();
+                saveBanners();
             }
         } catch (e) {
-            announcements = [];
+            banners = [];
         }
-        renderAnnouncements();
+        renderBanners();
     }
 
-    function saveAnnouncements() {
+    function saveBanners() {
         try {
-            localStorage.setItem('announcements', JSON.stringify(announcements));
+            localStorage.setItem('banners', JSON.stringify(banners));
         } catch (e) {}
     }
 
-    function renderAnnouncements() {
-        var slider = document.getElementById('announcementSlider');
-        var dots = document.getElementById('announcementDots');
+    function renderBanners() {
+        var slider = document.getElementById('bannerSlider');
+        var dots = document.getElementById('bannerDots');
         if (!slider) return;
 
-        if (announcements.length === 0) {
-            slider.innerHTML = '<div class="announcement-item"><span class="announcement-icon">📢</span><span class="announcement-text">لا توجد إعلانات حالياً</span></div>';
+        if (banners.length === 0) {
+            slider.innerHTML = '<div class="banner-placeholder">📚 ديف أكاديمي - منصتك التعليمية</div>';
             if (dots) dots.innerHTML = '';
             return;
         }
 
         var html = '';
-        announcements.forEach(function(ann, index) {
-            var timeAgo = getTimeAgo(ann.time);
-            // استخدام الصورة إذا وجدت وإلا استخدم الأيقونة
-            var imageHtml = ann.image ? 
-                '<img src="' + ann.image + '" class="announcement-image" alt="إعلان" onerror="this.style.display=\'none\'; this.parentElement.querySelector(\'.announcement-icon\').style.display=\'block\';">' : 
-                '<span class="announcement-icon">' + (ann.icon || '📢') + '</span>';
-            
-            html +=
-                '<div class="announcement-item" data-index="' + index + '">' +
-                imageHtml +
-                '<span class="announcement-text">' + ann.text + '</span>' +
-                (ann.badge ? '<span class="announcement-badge">' + ann.badge + '</span>' : '') +
-                '<span class="announcement-time">' + timeAgo + '</span>' +
-                '</div>';
+        banners.forEach(function(banner, index) {
+            html += `
+                <div class="banner-slide" data-index="${index}">
+                    <img src="${banner.image}" alt="${banner.title || 'بانر'}" onerror="this.parentElement.innerHTML='<div class=\\"banner-placeholder\\" style=\\"height:120px;background:linear-gradient(135deg,#0EA5E9,#38BDF8,#7DD3FC);display:flex;align-items:center;justify-content:center;color:white;font-size:1rem;font-weight:700;border-radius:16px;\\">📚 ${banner.title || 'ديف أكاديمي'}</div>'">
+                    ${banner.title || banner.desc ? `
+                        <div class="banner-overlay">
+                            ${banner.title ? `<div class="banner-title">${banner.title}</div>` : ''}
+                            ${banner.desc ? `<div class="banner-desc">${banner.desc}</div>` : ''}
+                        </div>
+                    ` : ''}
+                    <span class="banner-badge">${index + 1}/${banners.length}</span>
+                </div>
+            `;
         });
         slider.innerHTML = html;
 
         if (dots) {
             var dotsHtml = '';
-            announcements.forEach(function(_, i) {
-                dotsHtml += '<span class="dot ' + (i === currentAnnouncementIndex ? 'active' : '') + '" onclick="goToAnnouncement(' + i + ')"></span>';
+            banners.forEach(function(_, i) {
+                dotsHtml += `<span class="dot ${i === currentBannerIndex ? 'active' : ''}" onclick="goToBanner(${i})"></span>`;
             });
             dots.innerHTML = dotsHtml;
         }
 
-        updateAnnouncementSlider();
-        startAnnouncementAutoPlay();
+        updateBannerSlider();
+        startBannerAutoPlay();
     }
 
-    function updateAnnouncementSlider() {
-        var slider = document.getElementById('announcementSlider');
+    function updateBannerSlider() {
+        var slider = document.getElementById('bannerSlider');
         if (!slider) return;
-        var items = slider.querySelectorAll('.announcement-item');
+        var items = slider.querySelectorAll('.banner-slide');
         if (items.length === 0) return;
-        if (currentAnnouncementIndex >= items.length) {
-            currentAnnouncementIndex = 0;
+        if (currentBannerIndex >= items.length) {
+            currentBannerIndex = 0;
         }
-        slider.style.transform = 'translateX(-' + currentAnnouncementIndex * 100 + '%)';
-        var dots = document.querySelectorAll('.announcement-dots .dot');
+        slider.style.transform = 'translateX(-' + currentBannerIndex * 100 + '%)';
+        var dots = document.querySelectorAll('.banner-dots .dot');
         dots.forEach(function(dot, i) {
-            dot.classList.toggle('active', i === currentAnnouncementIndex);
+            dot.classList.toggle('active', i === currentBannerIndex);
         });
     }
 
-    window.goToAnnouncement = function(index) {
-        currentAnnouncementIndex = index;
-        updateAnnouncementSlider();
-        resetAnnouncementAutoPlay();
+    window.goToBanner = function(index) {
+        currentBannerIndex = index;
+        updateBannerSlider();
+        resetBannerAutoPlay();
     };
 
-    window.nextAnnouncement = function() {
-        if (announcements.length === 0) return;
-        currentAnnouncementIndex = (currentAnnouncementIndex + 1) % announcements.length;
-        updateAnnouncementSlider();
-        resetAnnouncementAutoPlay();
+    window.nextBanner = function() {
+        if (banners.length === 0) return;
+        currentBannerIndex = (currentBannerIndex + 1) % banners.length;
+        updateBannerSlider();
+        resetBannerAutoPlay();
     };
 
-    window.prevAnnouncement = function() {
-        if (announcements.length === 0) return;
-        currentAnnouncementIndex = (currentAnnouncementIndex - 1 + announcements.length) % announcements.length;
-        updateAnnouncementSlider();
-        resetAnnouncementAutoPlay();
+    window.prevBanner = function() {
+        if (banners.length === 0) return;
+        currentBannerIndex = (currentBannerIndex - 1 + banners.length) % banners.length;
+        updateBannerSlider();
+        resetBannerAutoPlay();
     };
 
-    function startAnnouncementAutoPlay() {
-        stopAnnouncementAutoPlay();
-        if (announcements.length > 1) {
-            announcementInterval = setInterval(function() {
-                nextAnnouncement();
-            }, 5000);
+    function startBannerAutoPlay() {
+        stopBannerAutoPlay();
+        if (banners.length > 1) {
+            bannerInterval = setInterval(function() {
+                nextBanner();
+            }, 4000);
         }
     }
 
-    function stopAnnouncementAutoPlay() {
-        if (announcementInterval) {
-            clearInterval(announcementInterval);
-            announcementInterval = null;
+    function stopBannerAutoPlay() {
+        if (bannerInterval) {
+            clearInterval(bannerInterval);
+            bannerInterval = null;
         }
     }
 
-    function resetAnnouncementAutoPlay() {
-        startAnnouncementAutoPlay();
+    function resetBannerAutoPlay() {
+        startBannerAutoPlay();
     }
 
-    function getTimeAgo(dateString) {
-        try {
-            var date = new Date(dateString);
-            var now = new Date();
-            var diff = Math.floor((now - date) / 1000);
-            if (diff < 60) return 'الآن';
-            if (diff < 3600) return Math.floor(diff / 60) + ' د';
-            if (diff < 86400) return Math.floor(diff / 3600) + ' س';
-            if (diff < 604800) return Math.floor(diff / 86400) + ' ي';
-            return date.toLocaleDateString('ar');
-        } catch (e) {
-            return 'منذ وقت';
-        }
-    }
-
-    function renderAdminAnnouncements() {
-        var container = document.getElementById('adminAnnouncementsList');
+    function renderBannersAdmin() {
+        var container = document.getElementById('adminBannersList');
         if (!container) return;
 
-        if (announcements.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:0.3rem 0;font-size:.8rem;">لا توجد إعلانات</p>';
+        if (banners.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:0.5rem 0;font-size:.8rem;">لا توجد صور بانر</p>';
             return;
         }
 
         var html = '';
-        announcements.forEach(function(ann, index) {
-            var timeAgo = getTimeAgo(ann.time);
-            var imagePreview = ann.image ? '<img src="' + ann.image + '" style="width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display=\'none\';">' : '';
-            html +=
-                '<div class="announcement-list-item">' +
-                '<div class="ann-content">' +
-                (imagePreview || '<span class="ann-icon">' + (ann.icon || '📢') + '</span>') +
-                '<span class="ann-text">' + ann.text + '</span>' +
-                (ann.badge ? '<span class="ann-badge">' + ann.badge + '</span>' : '') +
-                '<span class="ann-time">' + timeAgo + '</span>' +
-                '</div>' +
-                '<button class="ann-delete-btn" onclick="deleteAnnouncement(' + index + ')">🗑️ حذف</button>' +
-                '</div>';
+        banners.forEach(function(banner, index) {
+            html += `
+                <div class="banner-list-item">
+                    <div class="banner-content">
+                        <img src="${banner.image}" class="banner-preview" alt="بانر" onerror="this.style.display='none'">
+                        <span class="banner-text">${banner.title || 'بانر ' + (index + 1)}</span>
+                    </div>
+                    <button class="banner-delete-btn" onclick="deleteBanner(${index})">🗑️ حذف</button>
+                </div>
+            `;
         });
         container.innerHTML = html;
     }
 
-    window.addAnnouncement = function() {
-        var textInput = document.getElementById('announcementText');
-        var imageInput = document.getElementById('announcementImage');
-        var iconInput = document.getElementById('announcementIcon');
-        var badgeInput = document.getElementById('announcementBadge');
+    window.addBanner = function() {
+        var imageInput = document.getElementById('bannerImageInput');
+        var titleInput = document.getElementById('bannerTitleInput');
+        var descInput = document.getElementById('bannerDescInput');
+        var messageEl = document.getElementById('addBannerMessage');
 
-        var text = textInput.value.trim();
-        if (!text) {
-            document.getElementById('addAnnouncementMessage').innerHTML = '⚠️ يرجى إدخال نص الإعلان';
-            document.getElementById('addAnnouncementMessage').style.color = '#f59e0b';
-            return;
-        }
-
-        var newAnn = {
-            id: 'ann-' + Date.now(),
-            text: text,
-            image: imageInput.value.trim() || '',
-            icon: iconInput.value.trim() || '📢',
-            badge: badgeInput.value.trim() || '',
-            time: new Date().toISOString()
-        };
-
-        announcements.push(newAnn);
-        saveAnnouncements();
-        renderAnnouncements();
-        renderAdminAnnouncements();
-
-        textInput.value = '';
-        imageInput.value = '';
-        iconInput.value = '';
-        badgeInput.value = '';
-        document.getElementById('addAnnouncementMessage').innerHTML = '✅ تم إضافة الإعلان بنجاح';
-        document.getElementById('addAnnouncementMessage').style.color = '#22c55e';
-        showToast('success', '✅ تم إضافة الإعلان بنجاح');
-    };
-
-    window.deleteAnnouncement = function(index) {
-        if (!confirm('⚠️ هل أنت متأكد من حذف هذا الإعلان؟')) return;
-        announcements.splice(index, 1);
-        saveAnnouncements();
-        renderAnnouncements();
-        renderAdminAnnouncements();
-        showToast('success', '✅ تم حذف الإعلان بنجاح');
-    };
-
-    // ===== تحديث صورة البانر =====
-    window.updateBanner = function() {
-        var urlInput = document.getElementById('bannerUrlInput');
-        var message = document.getElementById('bannerMessage');
-        var url = urlInput.value.trim();
-
-        if (!url) {
-            message.innerHTML = '⚠️ يرجى إدخال رابط الصورة';
-            message.style.color = '#f59e0b';
+        var image = imageInput.value.trim();
+        if (!image) {
+            messageEl.innerHTML = '⚠️ يرجى إدخال رابط الصورة';
+            messageEl.style.color = '#f59e0b';
             return;
         }
 
         try {
-            new URL(url);
+            new URL(image);
         } catch (e) {
-            message.innerHTML = '⚠️ الرابط غير صحيح';
-            message.style.color = '#f59e0b';
+            messageEl.innerHTML = '⚠️ الرابط غير صحيح';
+            messageEl.style.color = '#f59e0b';
             return;
         }
 
-        localStorage.setItem('bannerImage', url);
-        
-        var mainBanner = document.getElementById('mainBannerImage');
-        var mainPlaceholder = document.getElementById('mainBannerPlaceholder');
-        if (mainBanner) {
-            mainBanner.src = url;
-            mainBanner.style.display = 'block';
-        }
-        if (mainPlaceholder) mainPlaceholder.style.display = 'none';
+        var newBanner = {
+            id: 'banner-' + Date.now(),
+            image: image,
+            title: titleInput.value.trim() || '',
+            desc: descInput.value.trim() || ''
+        };
 
-        message.innerHTML = '✅ تم تحديث صورة الإعلان بنجاح';
-        message.style.color = '#22c55e';
-        showToast('success', '✅ تم تحديث صورة الإعلان');
+        banners.push(newBanner);
+        saveBanners();
+        renderBanners();
+        renderBannersAdmin();
+
+        imageInput.value = '';
+        titleInput.value = '';
+        descInput.value = '';
+        messageEl.innerHTML = '✅ تم إضافة صورة البانر بنجاح';
+        messageEl.style.color = '#22c55e';
+        showToast('success', '✅ تم إضافة صورة البانر بنجاح');
     };
 
-    // ===== تحميل الصورة المحفوظة =====
-    var savedBanner = localStorage.getItem('bannerImage');
-    if (savedBanner) {
-        var mainBanner = document.getElementById('mainBannerImage');
-        var mainPlaceholder = document.getElementById('mainBannerPlaceholder');
-        if (mainBanner) {
-            mainBanner.src = savedBanner;
-            mainBanner.style.display = 'block';
-        }
-        if (mainPlaceholder) mainPlaceholder.style.display = 'none';
-    }
+    window.deleteBanner = function(index) {
+        if (!confirm('⚠️ هل أنت متأكد من حذف هذه الصورة؟')) return;
+        banners.splice(index, 1);
+        saveBanners();
+        renderBanners();
+        renderBannersAdmin();
+        showToast('success', '✅ تم حذف الصورة بنجاح');
+    };
 
-    // ===== إظهار الإعلانات في الصفحة الرئيسية فقط =====
-    function showAnnouncementsOnHome() {
-        var announcementBar = document.getElementById('announcementBar');
-        var bannerSection = document.getElementById('bannerSection');
-        var currentPage = document.querySelector('.page-content:not([style*="display:none"])');
-        
-        if (currentPage && currentPage.id === 'page-home') {
-            if (announcementBar) announcementBar.style.display = 'flex';
-            if (bannerSection) bannerSection.style.display = 'block';
-        } else {
-            if (announcementBar) announcementBar.style.display = 'none';
-            if (bannerSection) bannerSection.style.display = 'none';
-        }
-    }
-
-    // ===== دالة تحديث الصفوف =====
+    // ============================================================
+    // تحديث الصفوف في النافبار
+    // ============================================================
     function updateClassFilter() {
         var classFilterSelect = document.getElementById('classFilterSelect');
         if (!classFilterSelect) return;
@@ -3113,8 +2899,27 @@ grant execute on function add_user_and_admin(text) to authenticated;
         }
     }
 
+    // دالة filterByClass
+    window.filterByClass = function() {
+        var select = document.getElementById('classFilterSelect');
+        if (!select) return;
+        currentFilter = select.value;
+        renderAllData();
+    };
+
     // ============================================================
-    // ===== INIT =====
+    // NAVBAR SCROLL
+    // ============================================================
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            navbar?.classList.add('scrolled');
+        } else {
+            navbar?.classList.remove('scrolled');
+        }
+    });
+
+    // ============================================================
+    // INIT
     // ============================================================
     const savedTheme = localStorage.getItem('devAcademicTheme');
     if (savedTheme === 'dark') {
@@ -3123,8 +2928,8 @@ grant execute on function add_user_and_admin(text) to authenticated;
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
 
-    // تحميل الإعلانات
-    loadAnnouncements();
+    // تحميل البانر
+    loadBanners();
 
     async function init() {
         if (supabaseClient) {
@@ -3193,10 +2998,11 @@ grant execute on function add_user_and_admin(text) to authenticated;
         renderUsersTable();
         updateAllAdminSelects();
         loadAdminsList();
+        renderBannersAdmin();
         console.log('📚 ديف أكاديمي - النظام جاهز مع الأقسام والفلتر');
         console.log('🔒 جميع الميزات محمية وآمنة');
         console.log('🎥 دعم منصة mediadelivery للتشغيل');
-        console.log('👑 قسم إدارة المشرفين مفعل مع دالة RPC');
+        console.log('🖼️ البانر المتحرك يعمل مع ' + banners.length + ' صور');
     }
 
     loadData().then(init).catch((error) => {

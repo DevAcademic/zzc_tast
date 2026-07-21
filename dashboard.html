@@ -10,106 +10,88 @@
     <style>
         /* ===== إخفاء الهيرو القديم ===== */
         .hero { display: none !important; }
-
-        /* ===== حذف الفلتر القديم ===== */
         .filter-section { display: none !important; }
 
         /* ============================================================
-           شريط الإعلانات المتحرك مع صور
+           شريط الإعلانات المتحرك (بانر) - فوق المدرسين
            ============================================================ */
-        .announcement-bar {
-            background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
-            padding: 0.4rem 0.8rem;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 2px 20px rgba(14,165,233,0.25);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-        }
-        body.dark-mode .announcement-bar {
-            background: linear-gradient(135deg, #0C4A6E, #0284C7, #0EA5E9);
-        }
-
-        .announcement-container {
+        .banner-slider-section {
+            padding: 0.5rem 0.5rem 0.3rem;
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            width: 100%;
-            min-height: 50px;
         }
 
-        .announcement-slider {
+        .banner-slider-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            background: #000;
+            min-height: 120px;
+        }
+
+        .banner-slider {
             display: flex;
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
-            overflow: hidden;
-            border-radius: 12px;
         }
 
-        .announcement-item {
+        .banner-slide {
             min-width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            padding: 0.3rem 2rem;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-align: center;
-            background: rgba(255,255,255,0.08);
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
+            position: relative;
+            aspect-ratio: 16/6;
+            max-height: 160px;
         }
 
-        .announcement-item .announcement-image {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+        .banner-slide img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border: 2px solid rgba(255,255,255,0.3);
-            flex-shrink: 0;
+            display: block;
         }
 
-        .announcement-item .announcement-icon {
-            font-size: 1.8rem;
-            flex-shrink: 0;
+        .banner-slide .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+            color: white;
         }
 
-        .announcement-item .announcement-text {
-            flex: 1;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .announcement-item .announcement-badge {
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(10px);
-            padding: 0.1rem 0.7rem;
-            border-radius: 20px;
-            font-size: 0.6rem;
+        .banner-slide .banner-overlay .banner-title {
+            font-size: 0.8rem;
             font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.2);
-            flex-shrink: 0;
         }
 
-        .announcement-item .announcement-time {
+        .banner-slide .banner-overlay .banner-desc {
+            font-size: 0.6rem;
+            opacity: 0.8;
+        }
+
+        .banner-slide .banner-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(239,68,68,0.9);
+            color: white;
+            padding: 0.1rem 0.6rem;
+            border-radius: 20px;
             font-size: 0.55rem;
-            opacity: 0.7;
-            font-weight: 400;
-            flex-shrink: 0;
+            font-weight: 700;
         }
 
-        .announcement-nav {
+        .banner-slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
             background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
             border: none;
             color: white;
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -117,76 +99,50 @@
             align-items: center;
             justify-content: center;
             font-size: 0.8rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.15);
-            flex-shrink: 0;
-            position: absolute;
-            z-index: 2;
+            z-index: 5;
         }
 
-        .announcement-nav:hover {
-            background: rgba(255,255,255,0.35);
-            transform: scale(1.1);
+        .banner-slider-btn:hover {
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-50%) scale(1.1);
         }
 
-        .announcement-nav.prev { left: 2px; }
-        .announcement-nav.next { right: 2px; }
+        .banner-slider-btn.prev { left: 6px; }
+        .banner-slider-btn.next { right: 6px; }
 
-        .announcement-dots {
+        .banner-dots {
             display: flex;
             gap: 0.3rem;
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            justify-content: center;
+            padding: 0.4rem 0 0.1rem;
         }
 
-        .announcement-dots .dot {
-            width: 6px;
-            height: 6px;
+        .banner-dots .dot {
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.3);
+            background: var(--border);
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .announcement-dots .dot.active {
-            background: white;
-            width: 18px;
+        .banner-dots .dot.active {
+            background: var(--primary);
+            width: 20px;
             border-radius: 4px;
         }
 
-        /* ============================================================
-           البانر (بدلاً من الهيرو)
-           ============================================================ */
-        .banner-section {
-            padding: 0.3rem 0.5rem 0.2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .banner-container {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        }
-        .banner-container img {
+        .banner-placeholder {
             width: 100%;
-            height: auto;
-            max-height: 150px;
-            object-fit: cover;
-            display: block;
-        }
-        .banner-container .banner-placeholder {
-            width: 100%;
-            height: 80px;
+            height: 120px;
             background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
-            border-radius: 12px;
+            border-radius: 16px;
         }
 
         /* ============================================================
@@ -366,10 +322,10 @@
         }
 
         /* ============================================================
-           عرض المدرسين - إزالة العلامة الخضراء
+           عرض المدرسين
            ============================================================ */
         .teachers-container {
-            padding: 0.5rem 1rem 80px;
+            padding: 0.3rem 1rem 80px;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -492,95 +448,6 @@
         .empty-teachers .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 0.3rem; opacity: 0.4; }
         .empty-teachers h3 { font-size: 0.9rem; color: var(--text); }
         .empty-teachers p { font-size: 0.7rem; }
-
-        /* ============================================================
-           إدارة الإعلانات في لوحة التحكم
-           ============================================================ */
-        .announcement-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.3rem 0.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-        .announcement-list-item .ann-content {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            flex: 1;
-            min-width: 0;
-        }
-        .announcement-list-item .ann-content .ann-icon { font-size: 1rem; flex-shrink: 0; }
-        .announcement-list-item .ann-content .ann-text {
-            font-size: 0.75rem;
-            font-weight: 500;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .announcement-list-item .ann-content .ann-badge {
-            background: var(--primary);
-            color: white;
-            padding: 0.05rem 0.4rem;
-            border-radius: 12px;
-            font-size: 0.5rem;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        .announcement-list-item .ann-content .ann-time {
-            font-size: 0.5rem;
-            color: var(--text-light);
-            flex-shrink: 0;
-        }
-        .announcement-list-item .ann-delete-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 0.05rem 0.4rem;
-            cursor: pointer;
-            font-size: 0.55rem;
-            flex-shrink: 0;
-        }
-        .announcement-list-item .ann-delete-btn:hover { background: #dc2626; }
-
-        /* ============================================================
-           زر إضافة رابط البانر
-           ============================================================ */
-        .banner-url-input-group {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-            margin-top: 0.3rem;
-        }
-        .banner-url-input-group input {
-            flex: 1;
-            min-width: 120px;
-            padding: 0.3rem 0.5rem;
-            border: 1.5px solid var(--border);
-            border-radius: 6px;
-            background: var(--bg);
-            color: var(--text);
-            font-size: 0.7rem;
-            outline: none;
-        }
-        .banner-url-input-group input:focus {
-            border-color: var(--primary);
-        }
-        .banner-url-input-group button {
-            padding: 0.3rem 0.8rem;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .banner-url-input-group button:hover {
-            transform: scale(1.05);
-        }
 
         /* ============================================================
            باقي الأنماط الأساسية
@@ -946,6 +813,85 @@
             to { transform: translateX(100%) scale(0.9); opacity: 0; }
         }
 
+        /* ============================================================
+           إدارة الإعلانات في لوحة التحكم
+           ============================================================ */
+        .banner-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.3rem 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .banner-list-item .banner-content {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex: 1;
+            min-width: 0;
+        }
+        .banner-list-item .banner-content .banner-preview {
+            width: 50px;
+            height: 35px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+        }
+        .banner-list-item .banner-content .banner-text {
+            font-size: 0.7rem;
+            font-weight: 500;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .banner-list-item .banner-delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.05rem 0.4rem;
+            cursor: pointer;
+            font-size: 0.55rem;
+            flex-shrink: 0;
+        }
+        .banner-list-item .banner-delete-btn:hover { background: #dc2626; }
+
+        .banner-url-input-group {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            margin-top: 0.3rem;
+        }
+        .banner-url-input-group input {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.3rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.7rem;
+            outline: none;
+        }
+        .banner-url-input-group input:focus {
+            border-color: var(--primary);
+        }
+        .banner-url-input-group button {
+            padding: 0.3rem 0.8rem;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .banner-url-input-group button:hover {
+            transform: scale(1.05);
+        }
+
         @media (max-width: 480px) {
             .logo-text { font-size: 0.7rem; }
             .class-filter-select { max-width: 80px; min-width: 55px; font-size: 0.45rem; height: 24px; }
@@ -957,11 +903,11 @@
             .user-profile-btn .user-name { max-width: 30px; font-size: 0.45rem; }
             .user-profile-btn .avatar { width: 16px; height: 16px; font-size: 0.4rem; }
             .theme-toggle { width: 22px; height: 22px; font-size: 0.6rem; }
-            .announcement-item { font-size: 0.6rem; padding: 0.2rem 0.8rem; }
-            .announcement-item .announcement-icon { font-size: 1.2rem; }
-            .announcement-item .announcement-image { width: 32px; height: 32px; }
-            .announcement-nav { width: 26px; height: 26px; font-size: 0.6rem; }
-            .banner-container .banner-placeholder { height: 50px; font-size: 0.6rem; }
+            .banner-slide { max-height: 100px; }
+            .banner-slider-btn { width: 26px; height: 26px; font-size: 0.6rem; }
+            .banner-slide .banner-overlay .banner-title { font-size: 0.6rem; }
+            .banner-slide .banner-overlay .banner-desc { font-size: 0.5rem; }
+            .banner-placeholder { height: 80px; font-size: 0.7rem; }
             .teachers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
             .teacher-card .teacher-card-image { width: 45px; height: 45px; }
             .teacher-card .teacher-card-image .teacher-emoji { font-size: 1.4rem; }
@@ -1012,33 +958,22 @@
     </nav>
 
     <!-- ============================================================
-    شريط الإعلانات المتحرك مع صور
+    🆕 شريط البانر المتحرك (صور متحركة)
     ============================================================ -->
-    <div class="announcement-bar" id="announcementBar" style="display:none;">
-        <div class="announcement-container">
-            <button class="announcement-nav prev" onclick="prevAnnouncement()">
+    <div class="banner-slider-section" id="bannerSliderSection">
+        <div class="banner-slider-container">
+            <div class="banner-slider" id="bannerSlider">
+                <!-- يتم إضافة الصور بواسطة JavaScript -->
+                <div class="banner-placeholder">📚 ديف أكاديمي - منصتك التعليمية</div>
+            </div>
+            <button class="banner-slider-btn prev" onclick="prevBanner()">
                 <i class="fas fa-chevron-right"></i>
             </button>
-            <div class="announcement-slider" id="announcementSlider">
-                <!-- يتم إضافة الإعلانات بواسطة JavaScript -->
-            </div>
-            <button class="announcement-nav next" onclick="nextAnnouncement()">
+            <button class="banner-slider-btn next" onclick="nextBanner()">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <div class="announcement-dots" id="announcementDots"></div>
         </div>
-    </div>
-
-    <!-- ============================================================
-    البانر (بدلاً من الهيرو)
-    ============================================================ -->
-    <div class="banner-section" id="bannerSection" style="display:none;">
-        <div class="banner-container">
-            <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:auto;max-height:150px;object-fit:cover;" />
-            <div id="mainBannerPlaceholder" class="banner-placeholder">
-                📚 ديف أكاديمي - منصتك التعليمية
-            </div>
-        </div>
+        <div class="banner-dots" id="bannerDots"></div>
     </div>
 
     <!-- ============================================================
@@ -1189,7 +1124,7 @@
                 <button class="tab-btn" data-tab="delete">🗑️ حذف</button>
                 <button class="tab-btn" data-tab="users">👥 مستخدمين</button>
                 <button class="tab-btn" data-tab="add-admin">👑 أدمن</button>
-                <button class="tab-btn" data-tab="announcements">📢 إعلانات</button>
+                <button class="tab-btn" data-tab="banners">🖼️ بانر</button>
                 <button class="tab-btn" data-tab="publish">📤 نشر</button>
             </div>
 
@@ -1550,50 +1485,35 @@
             </div>
 
             <!-- ============================================================
-            🆕 TAB: ANNOUNCEMENTS
+            🆕 TAB: BANNERS (إدارة صور البانر)
             ============================================================ -->
-            <div class="tab-content" id="tab-announcements">
-                <div class="announcements-admin">
-                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">📢 إدارة الإعلانات</h3>
-                    <p style="color:var(--text-light);font-size:.75rem;margin-bottom:0.5rem;">أضف أو احذف الإعلانات التي تظهر في أعلى الصفحة</p>
+            <div class="tab-content" id="tab-banners">
+                <div class="banners-admin">
+                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">🖼️ إدارة صور البانر</h3>
+                    <p style="color:var(--text-light);font-size:.75rem;margin-bottom:0.5rem;">أضف أو احذف صور البانر المتحركة</p>
 
-                    <form id="addAnnouncementForm" class="admin-form" onsubmit="event.preventDefault(); addAnnouncement();">
+                    <form id="addBannerForm" class="admin-form" onsubmit="event.preventDefault(); addBanner();">
                         <div class="form-group">
-                            <label>📝 نص الإعلان *</label>
-                            <input type="text" id="announcementText" placeholder="نص الإعلان..." required />
+                            <label>🖼️ رابط الصورة *</label>
+                            <input type="url" id="bannerImageInput" placeholder="https://example.com/image.jpg" required />
+                            <small style="color:var(--text-light);font-size:.6rem;display:block;margin-top:2px;">أضف رابط صورة البانر (يفضل عرض 1200×300)</small>
                         </div>
                         <div class="form-group">
-                            <label>🖼️ رابط الصورة (اختياري)</label>
-                            <input type="url" id="announcementImage" placeholder="https://example.com/image.jpg" />
-                            <small style="color:var(--text-light);font-size:.6rem;display:block;margin-top:2px;">أضف رابط صورة لتظهر في الإعلان</small>
+                            <label>📝 عنوان (اختياري)</label>
+                            <input type="text" id="bannerTitleInput" placeholder="عنوان الإعلان" />
                         </div>
                         <div class="form-group">
-                            <label>🎨 أيقونة (إذا لم توجد صورة)</label>
-                            <input type="text" id="announcementIcon" placeholder="📢" maxlength="2" value="📢" />
+                            <label>📄 وصف (اختياري)</label>
+                            <input type="text" id="bannerDescInput" placeholder="وصف الإعلان" />
                         </div>
-                        <div class="form-group">
-                            <label>🏷️ علامة مميزة (اختياري)</label>
-                            <input type="text" id="announcementBadge" placeholder="جديد / عرض / مهم" />
-                        </div>
-                        <button type="submit" class="btn-submit"><i class="fas fa-plus-circle"></i> إضافة إعلان</button>
-                        <div id="addAnnouncementMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-plus-circle"></i> إضافة صورة</button>
+                        <div id="addBannerMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
                     </form>
 
                     <hr style="margin:1rem 0;border-color:var(--border);">
 
-                    <!-- 🆕 إضافة رابط صورة البانر -->
-                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">🖼️ صورة الإعلان الرئيسية</h3>
-                    <p style="color:var(--text-light);font-size:.75rem;margin-bottom:0.3rem;">أضف رابط الصورة التي تظهر في أعلى الصفحة</p>
-                    <div class="banner-url-input-group">
-                        <input type="url" id="bannerUrlInput" placeholder="https://example.com/image.jpg" />
-                        <button onclick="updateBanner()"><i class="fas fa-save"></i> حفظ</button>
-                    </div>
-                    <div id="bannerMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
-
-                    <hr style="margin:1rem 0;border-color:var(--border);">
-
-                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">📋 الإعلانات الحالية</h3>
-                    <div id="adminAnnouncementsList">
+                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">📋 صور البانر الحالية</h3>
+                    <div id="adminBannersList">
                         <p style="color:var(--text-light);text-align:center;padding:0.5rem 0;font-size:.8rem;">جاري التحميل...</p>
                     </div>
                 </div>
