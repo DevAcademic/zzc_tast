@@ -8,19 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <style>
-        /* ===== إخفاء الهيرو القديم ===== */
         .hero { display: none !important; }
         .filter-section { display: none !important; }
 
-        /* ============================================================
-           البانر - بحجم الصورة الزرقاء (80px)
-           ============================================================ */
         .banner-section {
             padding: 0.3rem 0.5rem 0.2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .banner-container {
             border-radius: 12px;
             overflow: hidden;
@@ -29,14 +24,12 @@
             height: 80px;
             position: relative;
         }
-
         .banner-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
-
         .banner-container .banner-placeholder {
             width: 100%;
             height: 80px;
@@ -50,9 +43,6 @@
             border-radius: 12px;
         }
 
-        /* ============================================================
-           شريط الصفوف
-           ============================================================ */
         .class-filter-select {
             padding: 0.15rem 0.4rem;
             border: 1.5px solid var(--border);
@@ -79,9 +69,6 @@
             color: var(--text);
         }
 
-        /* ============================================================
-           شريط البحث
-           ============================================================ */
         .search-box {
             display: flex;
             align-items: center;
@@ -131,9 +118,6 @@
         }
         .search-box button:hover { transform: scale(1.05); }
 
-        /* ============================================================
-           المستخدم
-           ============================================================ */
         .user-profile-btn {
             display: flex;
             align-items: center;
@@ -195,9 +179,6 @@
         body:not(.dark-mode) .theme-toggle .fa-sun { display: none; }
         body.dark-mode .theme-toggle .fa-moon { display: none; }
 
-        /* ============================================================
-           NAVBAR
-           ============================================================ */
         .navbar .nav-container {
             display: flex;
             align-items: center;
@@ -226,9 +207,6 @@
             flex-shrink: 0;
         }
 
-        /* ============================================================
-           عرض المدرسين
-           ============================================================ */
         .teachers-container {
             padding: 0.3rem 1rem 80px;
             max-width: 1200px;
@@ -354,9 +332,6 @@
         .empty-teachers h3 { font-size: 0.9rem; color: var(--text); }
         .empty-teachers p { font-size: 0.7rem; }
 
-        /* ============================================================
-           باقي الأنماط الأساسية
-           ============================================================ */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -718,9 +693,6 @@
             to { transform: translateX(100%) scale(0.9); opacity: 0; }
         }
 
-        /* ============================================================
-           إدارة البانر في لوحة التحكم
-           ============================================================ */
         .banner-url-input-group {
             display: flex;
             gap: 0.3rem;
@@ -767,13 +739,11 @@
             justify-content: center;
             margin-top: 0.3rem;
         }
-
         .banner-preview-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .banner-preview-box .no-image {
             color: var(--text-light);
             font-size: 0.7rem;
@@ -818,7 +788,6 @@
                 <span class="logo-text" onclick="navigateTo('home')">ديف <span>أكاديمي</span></span>
             </div>
 
-            <!-- ===== شريط الصفوف + البحث (صف واحد) ===== -->
             <div class="nav-center">
                 <select class="class-filter-select" id="classFilterSelect" onchange="filterByClass()">
                     <option value="all">🎯 جميع الصفوف</option>
@@ -842,10 +811,8 @@
         </div>
     </nav>
 
-    <!-- ============================================================
-    البانر - بحجم الصورة الزرقاء (يظهر فقط في الصفحة الرئيسية)
-    ============================================================ -->
-    <div class="banner-section" id="bannerSection" style="display:block;">
+    <!-- ===== البانر - يظهر في الصفحة الرئيسية فقط ===== -->
+    <div class="banner-section" id="bannerSection">
         <div class="banner-container" id="bannerContainer">
             <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:100%;object-fit:cover;" />
             <div id="mainBannerPlaceholder" class="banner-placeholder">
@@ -854,9 +821,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    PAGE HOME (الصفحة الرئيسية)
-    ============================================================ -->
+    <!-- ===== PAGE HOME ===== -->
     <div id="page-home" style="display:none;">
         <div class="teachers-container" id="teachersContainer">
             <div id="teachersGridContainer"></div>
@@ -982,9 +947,7 @@
 
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- ============================================================
-    ADMIN PANEL
-    ============================================================ -->
+    <!-- ===== ADMIN PANEL ===== -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-content">
             <div class="admin-header">
@@ -1362,9 +1325,7 @@
                 </div>
             </div>
 
-            <!-- ============================================================
-            🆕 TAB: BANNER (إدارة صورة البانر)
-            ============================================================ -->
+            <!-- ===== TAB: BANNER ===== -->
             <div class="tab-content" id="tab-banner">
                 <div class="banner-admin">
                     <h3 style="font-size:.9rem;margin-bottom:0.3rem;">🖼️ إدارة صورة البانر</h3>
