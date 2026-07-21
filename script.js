@@ -300,32 +300,67 @@
         });
     }
 
+    // ===== دالة loadData المعدلة نهائياً =====
     async function loadData() {
         try {
-            if (supabaseClient) {
-                const remoteData = await getSupabaseAcademyData();
-                if (remoteData && remoteData.sections && Array.isArray(remoteData.sections)) {
-                    data = remoteData;
-                    normalizeDataStructure(data);
-                    localStorage.setItem('academyData', JSON.stringify(data));
-                    return;
-                }
-            }
+            // أولاً: نحاول نجيب البيانات من localStorage
             const savedData = localStorage.getItem('academyData');
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
-                    if (parsed && parsed.sections && Array.isArray(parsed.sections)) {
+                    if (parsed && parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
                         data = parsed;
                         normalizeDataStructure(data);
+                        console.log('✅ تم تحميل البيانات من localStorage:', data.sections.length, 'أقسام');
+                        // محاولة جلب البيانات من Supabase في الخلفية
+                        if (supabaseClient) {
+                            try {
+                                const remoteData = await getSupabaseAcademyData();
+                                if (remoteData && remoteData.sections && Array.isArray(remoteData.sections) && remoteData.sections.length > 0) {
+                                    data = remoteData;
+                                    normalizeDataStructure(data);
+                                    localStorage.setItem('academyData', JSON.stringify(data));
+                                    console.log('✅ تم تحديث البيانات من Supabase:', data.sections.length, 'أقسام');
+                                }
+                            } catch (e) {}
+                        }
                         return;
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.warn('⚠️ البيانات في localStorage فاسدة، سيتم إعادة إنشائها');
+                }
             }
+            
+            // محاولة جلب البيانات من Supabase أولاً
+            if (supabaseClient) {
+                try {
+                    const remoteData = await getSupabaseAcademyData();
+                    if (remoteData && remoteData.sections && Array.isArray(remoteData.sections) && remoteData.sections.length > 0) {
+                        data = remoteData;
+                        normalizeDataStructure(data);
+                        localStorage.setItem('academyData', JSON.stringify(data));
+                        console.log('✅ تم تحميل البيانات من Supabase:', data.sections.length, 'أقسام');
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('⚠️ فشل تحميل البيانات من Supabase');
+                }
+            }
+            
+            // إذا ما فيه بيانات صالحة، نستخدم الأقسام الافتراضية
+            console.log('📚 لا توجد بيانات صالحة، جاري إنشاء الأقسام الافتراضية...');
             data = { sections: JSON.parse(JSON.stringify(defaultSections)) };
             normalizeDataStructure(data);
             localStorage.setItem('academyData', JSON.stringify(data));
-        } catch (error) {}
+            console.log('✅ تم إنشاء الأقسام الافتراضية:', data.sections.length, 'أقسام');
+            
+        } catch (error) {
+            console.error('❌ خطأ في تحميل البيانات:', error);
+            // في حالة أي خطأ، نستخدم الأقسام الافتراضية
+            data = { sections: JSON.parse(JSON.stringify(defaultSections)) };
+            normalizeDataStructure(data);
+            localStorage.setItem('academyData', JSON.stringify(data));
+        }
     }
 
     function saveData() {
