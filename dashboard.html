@@ -13,13 +13,13 @@
         .filter-section { display: none !important; }
 
         /* ============================================================
-           البانر - بحجم الصورة الزرقاء (80px)
+           البانر - يظهر فقط في الصفحة الرئيسية
            ============================================================ */
         .banner-section {
             padding: 0.3rem 0.5rem 0.2rem;
             max-width: 1200px;
             margin: 0 auto;
-            display: block !important;
+            display: none;
         }
 
         .banner-container {
@@ -49,6 +49,11 @@
             font-size: 0.9rem;
             font-weight: 700;
             border-radius: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .banner-container { height: 60px; }
+            .banner-container .banner-placeholder { height: 60px; font-size: 0.6rem; }
         }
 
         /* ============================================================
@@ -838,7 +843,7 @@
     </nav>
 
     <!-- ============================================================
-    البانر - بحجم الصورة الزرقاء (يظهر دائماً في الأعلى)
+    البانر - يظهر فقط في الصفحة الرئيسية
     ============================================================ -->
     <div class="banner-section" id="bannerSection">
         <div class="banner-container" id="bannerContainer">

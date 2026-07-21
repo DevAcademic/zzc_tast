@@ -901,7 +901,7 @@
     }
 
     // ============================================================
-    // NAVIGATION - مع إظهار البانر دائماً
+    // NAVIGATION - البانر يظهر فقط في الصفحة الرئيسية
     // ============================================================
     window.navigateTo = function(page) {
         if (!currentUser) {
@@ -930,10 +930,14 @@
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
-        // ===== إظهار البانر دائماً (في جميع الصفحات) =====
+        // ===== إظهار البانر فقط في الصفحة الرئيسية =====
         var bannerSection = document.getElementById('bannerSection');
         if (bannerSection) {
-            bannerSection.style.display = 'block';
+            if (page === 'home') {
+                bannerSection.style.display = 'block';
+            } else {
+                bannerSection.style.display = 'none';
+            }
         }
     };
 
@@ -2222,7 +2226,7 @@
     });
 
     // ============================================================
-    // BANNER MANAGEMENT - سيظهر دائماً في الأعلى
+    // BANNER MANAGEMENT - يظهر فقط في الصفحة الرئيسية
     // ============================================================
     function updateBannerPreview() {
         var savedImage = localStorage.getItem('bannerImage');
@@ -2300,24 +2304,11 @@
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
 
-    // ===== تحميل الصورة المحفوظة وإظهار البانر دائماً =====
+    // ===== تحميل الصورة المحفوظة =====
     var savedBanner = localStorage.getItem('bannerImage');
     if (savedBanner) {
         setTimeout(function() {
             updateBannerPreview();
-            // إظهار البانر دائماً
-            var bannerSection = document.getElementById('bannerSection');
-            if (bannerSection) {
-                bannerSection.style.display = 'block';
-            }
-        }, 100);
-    } else {
-        // إظهار البانر دائماً حتى لو لم توجد صورة
-        setTimeout(function() {
-            var bannerSection = document.getElementById('bannerSection');
-            if (bannerSection) {
-                bannerSection.style.display = 'block';
-            }
         }, 100);
     }
 
@@ -2385,13 +2376,7 @@
         updateAllAdminSelects();
         loadAdminsList();
         updateBannerPreview();
-        
-        // إظهار البانر دائماً
-        var bannerSection = document.getElementById('bannerSection');
-        if (bannerSection) {
-            bannerSection.style.display = 'block';
-        }
-        
+
         console.log('📚 ديف أكاديمي - النظام جاهز');
     }
 
