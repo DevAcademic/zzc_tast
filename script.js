@@ -61,15 +61,13 @@
 
     // ===== DOM =====
     const loadingScreen = document.getElementById('loadingScreen');
-    const navbar = document.getElementById('navbar');
+    const topBar = document.getElementById('topBar');
     const bottomNav = document.getElementById('bottomNav');
     const footer = document.getElementById('footer');
     const teachersGridContainer = document.getElementById('teachersGridContainer');
     const teachersGridContainer2 = document.getElementById('teachersGridContainer2');
     const sectionFilter = document.getElementById('sectionFilter');
     const sectionFilter2 = document.getElementById('sectionFilter2');
-    const teachersCount = document.getElementById('teachersCount');
-    const teachersCount2 = document.getElementById('teachersCount2');
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
     const videoPlayer = document.getElementById('videoPlayer');
@@ -114,9 +112,11 @@
     const accountName = document.getElementById('accountName');
     const accountEmail = document.getElementById('accountEmail');
     const accountAvatar = document.getElementById('accountAvatar');
+    const accountPhone = document.getElementById('accountPhone');
     const accountRegistered = document.getElementById('accountRegistered');
     const accountCourses = document.getElementById('accountCourses');
     const accountCodes = document.getElementById('accountCodes');
+    const accountTeachersCount = document.getElementById('accountTeachersCount');
     const logoutAccountBtn = document.getElementById('logoutAccountBtn');
     const adminPanelBtn = document.getElementById('adminPanelBtn');
     const coursesBadge = document.getElementById('coursesBadge');
@@ -215,6 +215,8 @@
         codeData.deviceId = userDeviceId;
         codeData.userId = currentUser.id;
         codeData.userEmail = currentUser.email;
+        codeData.userName = currentUser.user_metadata?.full_name || null;
+        codeData.userPhone = currentUser.user_metadata?.phone || null;
         codeData.usedAt = new Date().toISOString();
         saveData();
 
@@ -286,6 +288,8 @@
                     if (!('usedAt' in c)) c.usedAt = null;
                     if (!('userId' in c)) c.userId = null;
                     if (!('userEmail' in c)) c.userEmail = null;
+                    if (!('userName' in c)) c.userName = null;
+                    if (!('userPhone' in c)) c.userPhone = null;
                 });
                 teacher.semesters.forEach(semester => {
                     if (!Array.isArray(semester.lectures)) { semester.lectures = []; }
@@ -393,7 +397,7 @@
         return getTeachersBySection(currentFilter);
     }
 
-    function buildFilterButtons(container, countContainer) {
+    function buildFilterButtons(container) {
         if (!container) return;
         let html = `<button class="filter-btn active" data-section="all" onclick="setFilter('all')">
             <span class="btn-icon">🏫</span> الكل
@@ -408,9 +412,6 @@
             </button>`;
         });
         container.innerHTML = html;
-        if (countContainer) {
-            countContainer.textContent = getFilteredTeachers().length;
-        }
     }
 
     window.setFilter = function(sectionId) {
@@ -419,6 +420,9 @@
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.section === sectionId);
         });
+        // تحديث الـ select
+        const select = document.getElementById('classFilterSelect');
+        if (select) select.value = sectionId;
     };
 
     function renderTeachers(teachers, container) {
@@ -467,12 +471,10 @@
 
     function renderAllData() {
         const filteredTeachers = getFilteredTeachers();
-        if (teachersCount) teachersCount.textContent = filteredTeachers.length;
-        if (teachersCount2) teachersCount2.textContent = filteredTeachers.length;
         renderTeachers(filteredTeachers, teachersGridContainer);
         renderTeachers(filteredTeachers, teachersGridContainer2);
-        buildFilterButtons(sectionFilter, teachersCount);
-        buildFilterButtons(sectionFilter2, teachersCount2);
+        buildFilterButtons(sectionFilter);
+        buildFilterButtons(sectionFilter2);
         updateClassFilter();
     }
 
@@ -501,6 +503,9 @@
         if (!select) return;
         currentFilter = select.value;
         renderAllData();
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.section === currentFilter);
+        });
     };
 
     // ============================================================
@@ -807,9 +812,11 @@
             accountName.textContent = 'غير مسجل';
             accountEmail.textContent = 'يرجى تسجيل الدخول';
             accountAvatar.textContent = '👤';
+            if (accountPhone) accountPhone.style.display = 'none';
             accountRegistered.textContent = '--';
             accountCourses.textContent = '0';
             accountCodes.textContent = '0';
+            if (accountTeachersCount) accountTeachersCount.textContent = '0';
             adminPanelBtn.style.display = 'none';
             return;
         }
@@ -820,25 +827,16 @@
         accountEmail.textContent = currentUser.email;
         accountAvatar.textContent = name.charAt(0).toUpperCase();
 
+        if (accountPhone) {
+            accountPhone.textContent = '📱 ' + phone;
+            accountPhone.style.display = 'block';
+        }
+
         const registered = currentUser.created_at ? new Date(currentUser.created_at).toLocaleDateString('ar') : 'غير معروف';
         accountRegistered.textContent = 'مسجل منذ: ' + registered;
 
         const courses = getMyCourses();
         accountCourses.textContent = courses.length;
-        
-        // عرض عدد المدرسين
-        const teachersCount = getUserTeachersCount();
-        const teachersCountEl = document.getElementById('accountTeachersCount');
-        if (teachersCountEl) {
-            teachersCountEl.textContent = teachersCount;
-        }
-
-        // عرض رقم الهاتف
-        const phoneEl = document.getElementById('accountPhone');
-        if (phoneEl) {
-            phoneEl.textContent = '📱 ' + phone;
-            phoneEl.style.display = 'block';
-        }
 
         let codesCount = 0;
         data.sections.forEach(section => {
@@ -849,6 +847,9 @@
             });
         });
         accountCodes.textContent = codesCount;
+
+        const teachersCount = getUserTeachersCount();
+        if (accountTeachersCount) accountTeachersCount.textContent = teachersCount;
 
         isUserAdmin(currentUser.email).then(isAdmin => {
             if (isAdmin) {
@@ -897,7 +898,7 @@
     // ============================================================
     function getAllStudents() {
         const studentsMap = new Map();
-        
+
         data.sections.forEach(section => {
             section.teachers.forEach(teacher => {
                 if (teacher.codes) {
@@ -927,7 +928,7 @@
                 }
             });
         });
-        
+
         return studentsMap;
     }
 
@@ -936,7 +937,7 @@
         if (!tbody) return;
 
         const students = getAllStudents();
-        
+
         if (students.size === 0) {
             tbody.innerHTML = `
                 <tr>
@@ -950,11 +951,11 @@
 
         let html = '';
         let index = 1;
-        
+
         students.forEach((student, email) => {
             const teachersCount = student.teachers.length;
             const registeredDate = student.registeredAt ? new Date(student.registeredAt).toLocaleDateString('ar') : 'غير معروف';
-            
+
             html += `
                 <tr>
                     <td>${index++}</td>
@@ -1045,7 +1046,7 @@
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+
         // ===== إظهار البانر فقط في الصفحة الرئيسية =====
         var bannerSection = document.getElementById('bannerSection');
         if (bannerSection) {
@@ -1532,7 +1533,55 @@
         addChange();
         addLectureForm.reset();
         showToast('success', `✅ تم إضافة المحاضرة "${title}" بنجاح`);
+
+        // ===== إشعار للمدرسين المسجلين =====
+        sendNotificationToStudents(teacherIndex, sectionIndex, title);
     });
+
+    // ===== دالة إرسال الإشعارات =====
+    function sendNotificationToStudents(teacherIndex, sectionIndex, lectureTitle) {
+        const teacher = data.sections[sectionIndex]?.teachers[teacherIndex];
+        if (!teacher) return;
+
+        // جلب الطلاب المسجلين عند هذا المدرس
+        const students = [];
+        teacher.codes.forEach(c => {
+            if (c.used && c.userEmail) {
+                students.push({
+                    email: c.userEmail,
+                    name: c.userName || 'طالب',
+                    phone: c.userPhone || ''
+                });
+            }
+        });
+
+        if (students.length === 0) return;
+
+        // إشعار لكل طالب
+        students.forEach(student => {
+            // تخزين الإشعار في localStorage مؤقتاً
+            const notifications = JSON.parse(localStorage.getItem('notifications_' + student.email) || '[]');
+            notifications.push({
+                id: Date.now(),
+                teacherName: teacher.name,
+                lectureTitle: lectureTitle,
+                sectionName: data.sections[sectionIndex]?.name || '',
+                date: new Date().toLocaleString('ar'),
+                read: false
+            });
+            localStorage.setItem('notifications_' + student.email, JSON.stringify(notifications));
+        });
+
+        showToast('info', `📢 تم إرسال إشعار لـ ${students.length} طالب مسجل`);
+        console.log(`✅ تم إرسال إشعار لـ ${students.length} طالب: ${teacher.name} - ${lectureTitle}`);
+    }
+
+    // ===== دالة جلب الإشعارات للمستخدم الحالي =====
+    function getUserNotifications() {
+        if (!currentUser) return [];
+        const notifications = JSON.parse(localStorage.getItem('notifications_' + currentUser.email) || '[]');
+        return notifications;
+    }
 
     // ============================================================
     // CODES MANAGEMENT
@@ -1585,6 +1634,8 @@
             deviceId: null,
             userId: null,
             userEmail: null,
+            userName: null,
+            userPhone: null,
             usedAt: null
         });
         saveData();
@@ -1629,6 +1680,8 @@
                 deviceId: null,
                 userId: null,
                 userEmail: null,
+                userName: null,
+                userPhone: null,
                 usedAt: null
             });
             newCodes.push(newCode);
@@ -1669,18 +1722,19 @@
             </div>
             <div class="codes-table-wrapper">
                 <table class="codes-table">
-                    <thead><tr><th>#</th><th>الكود</th><th>الحالة</th><th>تاريخ الاستخدام</th><th>الإجراءات</th></tr></thead>
+                    <thead><tr><th>#</th><th>الكود</th><th>الحالة</th><th>المستخدم</th><th>تاريخ الاستخدام</th><th>الإجراءات</th></tr></thead>
                     <tbody>
         `;
         if (teacher.codes && teacher.codes.length > 0) {
             teacher.codes.forEach((c, index) => {
                 const isUsed = c.used;
                 const isLocked = c.locked || false;
-                let statusText = '', statusColor = '#22c55e', usedAtDisplay = '—';
+                let statusText = '', statusColor = '#22c55e', usedAtDisplay = '—', userDisplay = '—';
                 if (isLocked) { statusText = '🔒 مقفل';
                     statusColor = '#f59e0b'; } else if (isUsed) {
-                    statusText = '❌ مستخدم';
-                    statusColor = '#ef4444';
+                    statusText = '✅ مستخدم';
+                    statusColor = '#22c55e';
+                    userDisplay = c.userName || c.userEmail || 'غير معروف';
                     usedAtDisplay = c.usedAt ? new Date(c.usedAt).toLocaleString('ar') : 'غير معروف';
                 } else { statusText = '🟢 متاح';
                     statusColor = '#22c55e'; }
@@ -1689,6 +1743,7 @@
                         <td>${index + 1}</td>
                         <td><code style="font-weight:700;color:${statusColor};">${c.code}</code></td>
                         <td><span style="color:${statusColor};">${statusText}</span></td>
+                        <td style="font-size:0.7rem;color:var(--text-light);">${userDisplay}</td>
                         <td style="font-size:0.7rem;color:var(--text-light);">${usedAtDisplay}</td>
                         <td>
                             <button onclick="toggleCodeLock('${sectionIndex}', '${teacherIndex}', '${c.code}')" style="background:${isLocked ? '#22c55e' : '#f59e0b'};color:white;border:none;border-radius:4px;padding:0.15rem 0.5rem;cursor:pointer;font-size:0.7rem;">
@@ -1700,7 +1755,7 @@
                 `;
             });
         } else {
-            html += `<tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:1rem 0;">لا توجد أكواد</td></tr>`;
+            html += `<tr><td colspan="6" style="text-align:center;color:var(--text-light);padding:1rem 0;">لا توجد أكواد</td></tr>`;
         }
         html += `</tbody></table></div>`;
         container.innerHTML = html;
@@ -2354,11 +2409,7 @@
     // SCROLL
     // ============================================================
     window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-            navbar?.classList.add('scrolled');
-        } else {
-            navbar?.classList.remove('scrolled');
-        }
+        // تم إزالة تأثير الـ navbar لأنه صار top-bar
     });
 
     // ============================================================
@@ -2396,7 +2447,7 @@
                     updateBadge();
 
                     loadingScreen.style.display = 'none';
-                    navbar.style.display = 'flex';
+                    topBar.style.display = 'flex';
                     bottomNav.style.display = 'flex';
                     footer.style.display = 'block';
 
@@ -2445,6 +2496,8 @@
         updateBannerPreview();
 
         console.log('📚 ديف أكاديمي - النظام جاهز');
+        console.log('📢 نظام الإشعارات مفعل');
+        console.log('📱 يتم حفظ بيانات الطلاب مع رقم الهاتف');
     }
 
     loadData().then(init).catch((error) => {
