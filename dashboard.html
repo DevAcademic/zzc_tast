@@ -13,136 +13,41 @@
         .filter-section { display: none !important; }
 
         /* ============================================================
-           شريط الإعلانات المتحرك (بانر) - فوق المدرسين
+           البانر - بحجم الصورة الزرقاء (80px)
            ============================================================ */
-        .banner-slider-section {
-            padding: 0.5rem 0.5rem 0.3rem;
+        .banner-section {
+            padding: 0.3rem 0.5rem 0.2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .banner-slider-container {
-            position: relative;
-            border-radius: 16px;
+        .banner-container {
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
             background: #000;
-            min-height: 120px;
-        }
-
-        .banner-slider {
-            display: flex;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
-        }
-
-        .banner-slide {
-            min-width: 100%;
+            height: 80px;
             position: relative;
-            aspect-ratio: 16/6;
-            max-height: 160px;
         }
 
-        .banner-slide img {
+        .banner-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
 
-        .banner-slide .banner-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 0.5rem 1rem;
-            background: linear-gradient(transparent, rgba(0,0,0,0.6));
-            color: white;
-        }
-
-        .banner-slide .banner-overlay .banner-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .banner-slide .banner-overlay .banner-desc {
-            font-size: 0.6rem;
-            opacity: 0.8;
-        }
-
-        .banner-slide .banner-badge {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(239,68,68,0.9);
-            color: white;
-            padding: 0.1rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.55rem;
-            font-weight: 700;
-        }
-
-        .banner-slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(8px);
-            border: none;
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            z-index: 5;
-        }
-
-        .banner-slider-btn:hover {
-            background: rgba(255,255,255,0.4);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .banner-slider-btn.prev { left: 6px; }
-        .banner-slider-btn.next { right: 6px; }
-
-        .banner-dots {
-            display: flex;
-            gap: 0.3rem;
-            justify-content: center;
-            padding: 0.4rem 0 0.1rem;
-        }
-
-        .banner-dots .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--border);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .banner-dots .dot.active {
-            background: var(--primary);
-            width: 20px;
-            border-radius: 4px;
-        }
-
-        .banner-placeholder {
+        .banner-container .banner-placeholder {
             width: 100%;
-            height: 120px;
+            height: 80px;
             background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
-            border-radius: 16px;
+            border-radius: 12px;
         }
 
         /* ============================================================
@@ -814,50 +719,8 @@
         }
 
         /* ============================================================
-           إدارة الإعلانات في لوحة التحكم
+           إدارة البانر في لوحة التحكم
            ============================================================ */
-        .banner-list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.3rem 0.5rem;
-            border-bottom: 1px solid var(--border);
-        }
-        .banner-list-item .banner-content {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            flex: 1;
-            min-width: 0;
-        }
-        .banner-list-item .banner-content .banner-preview {
-            width: 50px;
-            height: 35px;
-            border-radius: 6px;
-            object-fit: cover;
-            flex-shrink: 0;
-            border: 1px solid var(--border);
-        }
-        .banner-list-item .banner-content .banner-text {
-            font-size: 0.7rem;
-            font-weight: 500;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .banner-list-item .banner-delete-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 0.05rem 0.4rem;
-            cursor: pointer;
-            font-size: 0.55rem;
-            flex-shrink: 0;
-        }
-        .banner-list-item .banner-delete-btn:hover { background: #dc2626; }
-
         .banner-url-input-group {
             display: flex;
             gap: 0.3rem;
@@ -892,6 +755,30 @@
             transform: scale(1.05);
         }
 
+        .banner-preview-box {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 0.3rem;
+        }
+
+        .banner-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .banner-preview-box .no-image {
+            color: var(--text-light);
+            font-size: 0.7rem;
+        }
+
         @media (max-width: 480px) {
             .logo-text { font-size: 0.7rem; }
             .class-filter-select { max-width: 80px; min-width: 55px; font-size: 0.45rem; height: 24px; }
@@ -903,11 +790,9 @@
             .user-profile-btn .user-name { max-width: 30px; font-size: 0.45rem; }
             .user-profile-btn .avatar { width: 16px; height: 16px; font-size: 0.4rem; }
             .theme-toggle { width: 22px; height: 22px; font-size: 0.6rem; }
-            .banner-slide { max-height: 100px; }
-            .banner-slider-btn { width: 26px; height: 26px; font-size: 0.6rem; }
-            .banner-slide .banner-overlay .banner-title { font-size: 0.6rem; }
-            .banner-slide .banner-overlay .banner-desc { font-size: 0.5rem; }
-            .banner-placeholder { height: 80px; font-size: 0.7rem; }
+            .banner-container { height: 60px; }
+            .banner-container .banner-placeholder { height: 60px; font-size: 0.6rem; }
+            .banner-preview-box { height: 60px; }
             .teachers-grid { grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
             .teacher-card .teacher-card-image { width: 45px; height: 45px; }
             .teacher-card .teacher-card-image .teacher-emoji { font-size: 1.4rem; }
@@ -958,22 +843,15 @@
     </nav>
 
     <!-- ============================================================
-    🆕 شريط البانر المتحرك (صور متحركة)
+    البانر - بحجم الصورة الزرقاء (80px)
     ============================================================ -->
-    <div class="banner-slider-section" id="bannerSliderSection">
-        <div class="banner-slider-container">
-            <div class="banner-slider" id="bannerSlider">
-                <!-- يتم إضافة الصور بواسطة JavaScript -->
-                <div class="banner-placeholder">📚 ديف أكاديمي - منصتك التعليمية</div>
+    <div class="banner-section" id="bannerSection">
+        <div class="banner-container" id="bannerContainer">
+            <img id="mainBannerImage" src="" alt="صورة الإعلان" style="display:none;width:100%;height:100%;object-fit:cover;" />
+            <div id="mainBannerPlaceholder" class="banner-placeholder">
+                📚 ديف أكاديمي - منصتك التعليمية
             </div>
-            <button class="banner-slider-btn prev" onclick="prevBanner()">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-            <button class="banner-slider-btn next" onclick="nextBanner()">
-                <i class="fas fa-chevron-left"></i>
-            </button>
         </div>
-        <div class="banner-dots" id="bannerDots"></div>
     </div>
 
     <!-- ============================================================
@@ -1124,7 +1002,7 @@
                 <button class="tab-btn" data-tab="delete">🗑️ حذف</button>
                 <button class="tab-btn" data-tab="users">👥 مستخدمين</button>
                 <button class="tab-btn" data-tab="add-admin">👑 أدمن</button>
-                <button class="tab-btn" data-tab="banners">🖼️ بانر</button>
+                <button class="tab-btn" data-tab="banner">🖼️ بانر</button>
                 <button class="tab-btn" data-tab="publish">📤 نشر</button>
             </div>
 
@@ -1485,37 +1363,29 @@
             </div>
 
             <!-- ============================================================
-            🆕 TAB: BANNERS (إدارة صور البانر)
+            🆕 TAB: BANNER (إدارة صورة البانر)
             ============================================================ -->
-            <div class="tab-content" id="tab-banners">
-                <div class="banners-admin">
-                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">🖼️ إدارة صور البانر</h3>
-                    <p style="color:var(--text-light);font-size:.75rem;margin-bottom:0.5rem;">أضف أو احذف صور البانر المتحركة</p>
+            <div class="tab-content" id="tab-banner">
+                <div class="banner-admin">
+                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">🖼️ إدارة صورة البانر</h3>
+                    <p style="color:var(--text-light);font-size:.75rem;margin-bottom:0.5rem;">أضف أو غيّر صورة البانر</p>
 
-                    <form id="addBannerForm" class="admin-form" onsubmit="event.preventDefault(); addBanner();">
-                        <div class="form-group">
-                            <label>🖼️ رابط الصورة *</label>
-                            <input type="url" id="bannerImageInput" placeholder="https://example.com/image.jpg" required />
-                            <small style="color:var(--text-light);font-size:.6rem;display:block;margin-top:2px;">أضف رابط صورة البانر (يفضل عرض 1200×300)</small>
-                        </div>
-                        <div class="form-group">
-                            <label>📝 عنوان (اختياري)</label>
-                            <input type="text" id="bannerTitleInput" placeholder="عنوان الإعلان" />
-                        </div>
-                        <div class="form-group">
-                            <label>📄 وصف (اختياري)</label>
-                            <input type="text" id="bannerDescInput" placeholder="وصف الإعلان" />
-                        </div>
-                        <button type="submit" class="btn-submit"><i class="fas fa-plus-circle"></i> إضافة صورة</button>
-                        <div id="addBannerMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
-                    </form>
+                    <div class="banner-url-input-group">
+                        <input type="url" id="bannerImageInput" placeholder="https://example.com/image.jpg" />
+                        <button onclick="updateBannerImage()"><i class="fas fa-save"></i> حفظ</button>
+                    </div>
+                    <div id="bannerMessage" style="text-align:center;font-weight:600;margin-top:0.3rem;font-size:.8rem;"></div>
 
                     <hr style="margin:1rem 0;border-color:var(--border);">
 
-                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">📋 صور البانر الحالية</h3>
-                    <div id="adminBannersList">
-                        <p style="color:var(--text-light);text-align:center;padding:0.5rem 0;font-size:.8rem;">جاري التحميل...</p>
+                    <h3 style="font-size:.9rem;margin-bottom:0.3rem;">📋 معاينة الصورة</h3>
+                    <div class="banner-preview-box" id="bannerPreviewBox">
+                        <img id="adminBannerImage" src="" alt="صورة البانر" style="display:none;" />
+                        <span class="no-image" id="adminBannerPlaceholder">لا توجد صورة</span>
                     </div>
+                    <button onclick="removeBannerImage()" style="margin-top:0.5rem;padding:0.2rem 0.8rem;background:#ef4444;color:white;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:0.65rem;">
+                        <i class="fas fa-trash"></i> حذف الصورة
+                    </button>
                 </div>
             </div>
 

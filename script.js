@@ -1190,7 +1190,7 @@
                 updateAllAdminSelects();
                 updatePendingChanges();
                 loadAdminsList();
-                renderBannersAdmin();
+                updateBannerPreview();
                 showToast('success', '🔓 مرحباً بك في لوحة التحكم');
             } else {
                 showToast('error', '❌ غير مصرح لك بالدخول إلى لوحة التحكم');
@@ -2655,8 +2655,8 @@ grant execute on function add_user_and_admin(text) to authenticated;
             if (this.dataset.tab === 'edit-teacher') {
                 updateAllAdminSelects();
             }
-            if (this.dataset.tab === 'banners') {
-                renderBannersAdmin();
+            if (this.dataset.tab === 'banner') {
+                updateBannerPreview();
             }
             if (this.dataset.tab === 'add-teacher' || this.dataset.tab === 'add-semester' ||
                 this.dataset.tab === 'add-lecture' || this.dataset.tab === 'add-section') {
@@ -2666,214 +2666,67 @@ grant execute on function add_user_and_admin(text) to authenticated;
     });
 
     // ============================================================
-    // 🆕 إدارة البانر (صور متحركة)
+    // 🆕 إدارة البانر (صورة واحدة)
     // ============================================================
 
-    var banners = [];
-    var currentBannerIndex = 0;
-    var bannerInterval = null;
+    function updateBannerPreview() {
+        var savedImage = localStorage.getItem('bannerImage');
+        var img = document.getElementById('adminBannerImage');
+        var placeholder = document.getElementById('adminBannerPlaceholder');
+        var mainImg = document.getElementById('mainBannerImage');
+        var mainPlaceholder = document.getElementById('mainBannerPlaceholder');
 
-    function loadBanners() {
-        try {
-            var saved = localStorage.getItem('banners');
-            if (saved) {
-                banners = JSON.parse(saved);
-            } else {
-                banners = [
-                    { 
-                        id: 'banner-1', 
-                        image: 'https://via.placeholder.com/1200x300/0EA5E9/FFFFFF?text=ديف+أكاديمي',
-                        title: '📚 ديف أكاديمي',
-                        desc: 'منصتك التعليمية المتكاملة'
-                    },
-                    { 
-                        id: 'banner-2', 
-                        image: 'https://via.placeholder.com/1200x300/8B5CF6/FFFFFF?text=تعلم+بذكاء',
-                        title: '🎯 تعلم بذكاء',
-                        desc: 'تميز بثقة مع أفضل المدرسين'
-                    }
-                ];
-                saveBanners();
+        if (savedImage) {
+            if (img) {
+                img.src = savedImage;
+                img.style.display = 'block';
             }
-        } catch (e) {
-            banners = [];
-        }
-        renderBanners();
-    }
-
-    function saveBanners() {
-        try {
-            localStorage.setItem('banners', JSON.stringify(banners));
-        } catch (e) {}
-    }
-
-    function renderBanners() {
-        var slider = document.getElementById('bannerSlider');
-        var dots = document.getElementById('bannerDots');
-        if (!slider) return;
-
-        if (banners.length === 0) {
-            slider.innerHTML = '<div class="banner-placeholder">📚 ديف أكاديمي - منصتك التعليمية</div>';
-            if (dots) dots.innerHTML = '';
-            return;
-        }
-
-        var html = '';
-        banners.forEach(function(banner, index) {
-            html += `
-                <div class="banner-slide" data-index="${index}">
-                    <img src="${banner.image}" alt="${banner.title || 'بانر'}" onerror="this.parentElement.innerHTML='<div class=\\"banner-placeholder\\" style=\\"height:120px;background:linear-gradient(135deg,#0EA5E9,#38BDF8,#7DD3FC);display:flex;align-items:center;justify-content:center;color:white;font-size:1rem;font-weight:700;border-radius:16px;\\">📚 ${banner.title || 'ديف أكاديمي'}</div>'">
-                    ${banner.title || banner.desc ? `
-                        <div class="banner-overlay">
-                            ${banner.title ? `<div class="banner-title">${banner.title}</div>` : ''}
-                            ${banner.desc ? `<div class="banner-desc">${banner.desc}</div>` : ''}
-                        </div>
-                    ` : ''}
-                    <span class="banner-badge">${index + 1}/${banners.length}</span>
-                </div>
-            `;
-        });
-        slider.innerHTML = html;
-
-        if (dots) {
-            var dotsHtml = '';
-            banners.forEach(function(_, i) {
-                dotsHtml += `<span class="dot ${i === currentBannerIndex ? 'active' : ''}" onclick="goToBanner(${i})"></span>`;
-            });
-            dots.innerHTML = dotsHtml;
-        }
-
-        updateBannerSlider();
-        startBannerAutoPlay();
-    }
-
-    function updateBannerSlider() {
-        var slider = document.getElementById('bannerSlider');
-        if (!slider) return;
-        var items = slider.querySelectorAll('.banner-slide');
-        if (items.length === 0) return;
-        if (currentBannerIndex >= items.length) {
-            currentBannerIndex = 0;
-        }
-        slider.style.transform = 'translateX(-' + currentBannerIndex * 100 + '%)';
-        var dots = document.querySelectorAll('.banner-dots .dot');
-        dots.forEach(function(dot, i) {
-            dot.classList.toggle('active', i === currentBannerIndex);
-        });
-    }
-
-    window.goToBanner = function(index) {
-        currentBannerIndex = index;
-        updateBannerSlider();
-        resetBannerAutoPlay();
-    };
-
-    window.nextBanner = function() {
-        if (banners.length === 0) return;
-        currentBannerIndex = (currentBannerIndex + 1) % banners.length;
-        updateBannerSlider();
-        resetBannerAutoPlay();
-    };
-
-    window.prevBanner = function() {
-        if (banners.length === 0) return;
-        currentBannerIndex = (currentBannerIndex - 1 + banners.length) % banners.length;
-        updateBannerSlider();
-        resetBannerAutoPlay();
-    };
-
-    function startBannerAutoPlay() {
-        stopBannerAutoPlay();
-        if (banners.length > 1) {
-            bannerInterval = setInterval(function() {
-                nextBanner();
-            }, 4000);
+            if (placeholder) placeholder.style.display = 'none';
+            if (mainImg) {
+                mainImg.src = savedImage;
+                mainImg.style.display = 'block';
+            }
+            if (mainPlaceholder) mainPlaceholder.style.display = 'none';
+        } else {
+            if (img) img.style.display = 'none';
+            if (placeholder) placeholder.style.display = 'block';
+            if (mainImg) mainImg.style.display = 'none';
+            if (mainPlaceholder) mainPlaceholder.style.display = 'flex';
         }
     }
 
-    function stopBannerAutoPlay() {
-        if (bannerInterval) {
-            clearInterval(bannerInterval);
-            bannerInterval = null;
-        }
-    }
+    window.updateBannerImage = function() {
+        var urlInput = document.getElementById('bannerImageInput');
+        var message = document.getElementById('bannerMessage');
+        var url = urlInput.value.trim();
 
-    function resetBannerAutoPlay() {
-        startBannerAutoPlay();
-    }
-
-    function renderBannersAdmin() {
-        var container = document.getElementById('adminBannersList');
-        if (!container) return;
-
-        if (banners.length === 0) {
-            container.innerHTML = '<p style="color:var(--text-light);text-align:center;padding:0.5rem 0;font-size:.8rem;">لا توجد صور بانر</p>';
-            return;
-        }
-
-        var html = '';
-        banners.forEach(function(banner, index) {
-            html += `
-                <div class="banner-list-item">
-                    <div class="banner-content">
-                        <img src="${banner.image}" class="banner-preview" alt="بانر" onerror="this.style.display='none'">
-                        <span class="banner-text">${banner.title || 'بانر ' + (index + 1)}</span>
-                    </div>
-                    <button class="banner-delete-btn" onclick="deleteBanner(${index})">🗑️ حذف</button>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-
-    window.addBanner = function() {
-        var imageInput = document.getElementById('bannerImageInput');
-        var titleInput = document.getElementById('bannerTitleInput');
-        var descInput = document.getElementById('bannerDescInput');
-        var messageEl = document.getElementById('addBannerMessage');
-
-        var image = imageInput.value.trim();
-        if (!image) {
-            messageEl.innerHTML = '⚠️ يرجى إدخال رابط الصورة';
-            messageEl.style.color = '#f59e0b';
+        if (!url) {
+            message.innerHTML = '⚠️ يرجى إدخال رابط الصورة';
+            message.style.color = '#f59e0b';
             return;
         }
 
         try {
-            new URL(image);
+            new URL(url);
         } catch (e) {
-            messageEl.innerHTML = '⚠️ الرابط غير صحيح';
-            messageEl.style.color = '#f59e0b';
+            message.innerHTML = '⚠️ الرابط غير صحيح';
+            message.style.color = '#f59e0b';
             return;
         }
 
-        var newBanner = {
-            id: 'banner-' + Date.now(),
-            image: image,
-            title: titleInput.value.trim() || '',
-            desc: descInput.value.trim() || ''
-        };
-
-        banners.push(newBanner);
-        saveBanners();
-        renderBanners();
-        renderBannersAdmin();
-
-        imageInput.value = '';
-        titleInput.value = '';
-        descInput.value = '';
-        messageEl.innerHTML = '✅ تم إضافة صورة البانر بنجاح';
-        messageEl.style.color = '#22c55e';
-        showToast('success', '✅ تم إضافة صورة البانر بنجاح');
+        localStorage.setItem('bannerImage', url);
+        updateBannerPreview();
+        message.innerHTML = '✅ تم تحديث صورة البانر بنجاح';
+        message.style.color = '#22c55e';
+        showToast('success', '✅ تم تحديث صورة البانر');
+        urlInput.value = '';
     };
 
-    window.deleteBanner = function(index) {
-        if (!confirm('⚠️ هل أنت متأكد من حذف هذه الصورة؟')) return;
-        banners.splice(index, 1);
-        saveBanners();
-        renderBanners();
-        renderBannersAdmin();
-        showToast('success', '✅ تم حذف الصورة بنجاح');
+    window.removeBannerImage = function() {
+        if (!confirm('⚠️ هل أنت متأكد من حذف صورة البانر؟')) return;
+        localStorage.removeItem('bannerImage');
+        updateBannerPreview();
+        showToast('success', '✅ تم حذف صورة البانر');
     };
 
     // ============================================================
@@ -2927,9 +2780,6 @@ grant execute on function add_user_and_admin(text) to authenticated;
         document.body.classList.add('dark-mode');
         themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
     }
-
-    // تحميل البانر
-    loadBanners();
 
     async function init() {
         if (supabaseClient) {
@@ -2998,11 +2848,10 @@ grant execute on function add_user_and_admin(text) to authenticated;
         renderUsersTable();
         updateAllAdminSelects();
         loadAdminsList();
-        renderBannersAdmin();
-        console.log('📚 ديف أكاديمي - النظام جاهز مع الأقسام والفلتر');
-        console.log('🔒 جميع الميزات محمية وآمنة');
+        updateBannerPreview();
+        console.log('📚 ديف أكاديمي - النظام جاهز');
         console.log('🎥 دعم منصة mediadelivery للتشغيل');
-        console.log('🖼️ البانر المتحرك يعمل مع ' + banners.length + ' صور');
+        console.log('🖼️ البانر جاهز لعرض الصورة');
     }
 
     loadData().then(init).catch((error) => {
