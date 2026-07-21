@@ -13,7 +13,7 @@
         تصميم احترافي
         ============================================================ */
 
-        /* ===== شريط علوي موحد ===== */
+        /* ===== شريط علوي موحد - سطر واحد ===== */
         .top-bar {
             position: sticky;
             top: 0;
@@ -22,89 +22,37 @@
             align-items: center;
             justify-content: space-between;
             background: var(--bg-card);
-            padding: 0.4rem 0.8rem;
+            padding: 0.3rem 0.6rem;
             border-bottom: 2px solid var(--border);
             flex-wrap: nowrap;
             gap: 0.3rem;
-            min-height: 52px;
+            min-height: 48px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            width: 100%;
         }
 
         .top-bar .logo-text {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 900;
             color: var(--primary);
             white-space: nowrap;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .top-bar .logo-text span {
             color: var(--text);
         }
 
-        .top-bar .search-box {
-            display: flex;
-            align-items: center;
-            background: var(--bg);
-            border-radius: 50px;
-            padding: 0.1rem 0.1rem 0.1rem 0.6rem;
-            border: 1.5px solid var(--border);
-            transition: all 0.3s;
-            flex: 1;
-            max-width: 200px;
-            min-width: 80px;
-            height: 34px;
-        }
-
-        .top-bar .search-box:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-        }
-
-        .top-bar .search-box input {
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 0.7rem;
-            padding: 0.15rem 0;
-            outline: none;
-            width: 100%;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .top-bar .search-box input::placeholder {
-            color: var(--text-light);
-            font-size: 0.6rem;
-        }
-
-        .top-bar .search-box button {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            padding: 0.1rem 0.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.6rem;
-            transition: all 0.3s;
-            height: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .top-bar .search-box button:hover {
-            transform: scale(1.05);
-        }
-
         .top-bar .class-selector-wrapper {
             display: flex;
             align-items: center;
-            gap: 0.2rem;
+            gap: 0.15rem;
             flex-shrink: 0;
         }
 
         .top-bar .class-selector-wrapper label {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 600;
             color: var(--text-light);
             white-space: nowrap;
@@ -116,15 +64,15 @@
             border-radius: 50px;
             background: var(--bg);
             color: var(--text);
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 600;
             outline: none;
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s;
-            height: 28px;
-            max-width: 110px;
-            min-width: 60px;
+            height: 26px;
+            max-width: 100px;
+            min-width: 55px;
         }
 
         .top-bar .class-selector-wrapper select:focus {
@@ -132,17 +80,72 @@
             box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
         }
 
+        .top-bar .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 50px;
+            padding: 0.05rem 0.1rem 0.05rem 0.5rem;
+            border: 1.5px solid var(--border);
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 160px;
+            min-width: 70px;
+            height: 30px;
+        }
+
+        .top-bar .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .top-bar .search-box input {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 0.6rem;
+            padding: 0.1rem 0;
+            outline: none;
+            width: 100%;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .top-bar .search-box input::placeholder {
+            color: var(--text-light);
+            font-size: 0.5rem;
+        }
+
+        .top-bar .search-box button {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 0.05rem 0.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.5rem;
+            transition: all 0.3s;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .top-bar .search-box button:hover {
+            transform: scale(1.05);
+        }
+
         .top-bar .user-profile-btn {
             display: flex;
             align-items: center;
-            gap: 0.2rem;
+            gap: 0.15rem;
             background: var(--bg-card);
             border: 1.5px solid var(--border);
             border-radius: 50px;
-            padding: 0.05rem 0.4rem 0.05rem 0.05rem;
+            padding: 0.05rem 0.3rem 0.05rem 0.05rem;
             cursor: pointer;
             transition: all 0.3s;
-            height: 34px;
+            height: 30px;
             flex-shrink: 0;
         }
 
@@ -151,8 +154,8 @@
         }
 
         .top-bar .user-profile-btn .avatar {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: var(--primary-gradient);
             color: white;
@@ -160,14 +163,14 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 0.6rem;
+            font-size: 0.5rem;
             flex-shrink: 0;
         }
 
         .top-bar .user-profile-btn .user-name {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 500;
-            max-width: 55px;
+            max-width: 50px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -177,13 +180,13 @@
             background: var(--bg-card);
             border: 1.5px solid var(--border);
             color: var(--text);
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             cursor: pointer;
             padding: 0.05rem;
             border-radius: 50%;
             transition: all 0.3s;
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -207,9 +210,9 @@
             display: none !important;
         }
 
-        /* ===== البانر - في المنتصف ===== */
+        /* ===== البانر ===== */
         .banner-section {
-            padding: 0.2rem 0.5rem 0.1rem;
+            padding: 0.15rem 0.5rem 0.1rem;
             max-width: 600px;
             margin: 0 auto;
             display: none;
@@ -220,7 +223,7 @@
             overflow: hidden;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
             background: #000;
-            height: 200px;
+            height: 180px;
             position: relative;
             width: 100%;
         }
@@ -234,28 +237,28 @@
 
         .banner-container .banner-placeholder {
             width: 100%;
-            height: 200px;
+            height: 180px;
             background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             border-radius: 12px;
         }
 
         /* ===== شبكة المدرسين ===== */
         .teachers-container {
-            padding: 0.5rem 0.8rem 70px;
+            padding: 0.3rem 0.6rem 70px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .teachers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 0.6rem;
         }
 
         .teacher-card {
@@ -268,7 +271,7 @@
             position: relative;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             text-align: center;
-            padding: 0.6rem 0.4rem;
+            padding: 0.5rem 0.3rem;
         }
 
         .teacher-card::before {
@@ -295,10 +298,10 @@
         }
 
         .teacher-card .teacher-card-image {
-            width: 70px;
-            height: 70px;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
-            margin: 0 auto 0.3rem;
+            margin: 0 auto 0.2rem;
             background: linear-gradient(145deg, var(--bg), var(--border));
             display: flex;
             align-items: center;
@@ -320,37 +323,37 @@
         }
 
         .teacher-card .teacher-card-image .teacher-emoji {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         .teacher-card .teacher-section-badge {
             position: absolute;
-            top: 0.3rem;
-            right: 0.3rem;
+            top: 0.2rem;
+            right: 0.2rem;
             background: var(--bg);
-            padding: 0.05rem 0.4rem;
+            padding: 0.05rem 0.3rem;
             border-radius: 20px;
-            font-size: 0.45rem;
+            font-size: 0.4rem;
             font-weight: 600;
             color: var(--text-light);
             border: 1px solid var(--border);
         }
 
         .teacher-card-info h3 {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             margin: 0.05rem 0;
             color: var(--text);
         }
 
         .teacher-card-info .teacher-subject {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             color: var(--primary);
             font-weight: 500;
         }
 
         .teacher-card-info .teacher-stats {
-            font-size: 0.5rem;
+            font-size: 0.45rem;
             color: var(--text-light);
         }
 
@@ -376,13 +379,13 @@
         }
 
         .teacher-card-overlay i {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: white;
         }
 
         .teacher-card-overlay span {
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 600;
         }
 
@@ -437,15 +440,15 @@
             cursor: pointer;
             transition: all 0.3s;
             color: var(--text-light);
-            font-size: .6rem;
-            min-width: 50px;
+            font-size: .55rem;
+            min-width: 45px;
             border: none;
             background: none;
             position: relative;
         }
 
         .bottom-nav .nav-item i {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .bottom-nav .nav-item.active {
@@ -457,7 +460,7 @@
             color: #fff;
             border-radius: 50%;
             padding: 0.05rem 0.35rem;
-            font-size: .5rem;
+            font-size: .45rem;
             position: absolute;
             top: -2px;
             right: -4px;
@@ -620,14 +623,14 @@
 
         .my-courses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 0.6rem;
         }
 
         .course-card-mini {
             background: var(--bg-card);
             border-radius: 10px;
-            padding: 0.8rem;
+            padding: 0.6rem;
             border: 1.5px solid var(--border);
             transition: all .3s;
             cursor: pointer;
@@ -641,16 +644,16 @@
         }
 
         .course-card-mini .course-avatar {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            margin: 0 auto 0.4rem;
+            margin: 0 auto 0.3rem;
             overflow: hidden;
             background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             color: #fff;
         }
 
@@ -662,12 +665,12 @@
 
         .course-card-mini .course-name {
             font-weight: 700;
-            font-size: .9rem;
+            font-size: .8rem;
             margin-bottom: 0.1rem;
         }
 
         .course-card-mini .course-meta {
-            font-size: .7rem;
+            font-size: .6rem;
             color: var(--text-light);
         }
 
@@ -677,7 +680,7 @@
             color: #fff;
             padding: 0.1rem 0.5rem;
             border-radius: 20px;
-            font-size: .6rem;
+            font-size: .55rem;
             font-weight: 600;
             margin-top: 0.2rem;
         }
@@ -1213,107 +1216,139 @@
         @media (max-width: 480px) {
             .top-bar {
                 flex-wrap: nowrap;
-                padding: 0.2rem 0.4rem;
-                gap: 0.2rem;
-                min-height: 44px;
+                padding: 0.15rem 0.3rem;
+                gap: 0.15rem;
+                min-height: 40px;
             }
             .top-bar .logo-text {
-                font-size: 0.75rem;
-            }
-            .top-bar .search-box {
-                max-width: 90px;
-                min-width: 50px;
-                height: 28px;
-            }
-            .top-bar .search-box input {
-                font-size: 0.5rem;
-            }
-            .top-bar .search-box button {
-                font-size: 0.45rem;
-                height: 20px;
-                padding: 0.05rem 0.3rem;
-            }
-            .top-bar .class-selector-wrapper select {
-                font-size: 0.45rem;
-                height: 24px;
-                max-width: 70px;
-                min-width: 45px;
-                padding: 0.05rem 0.2rem;
-            }
-            .top-bar .class-selector-wrapper label {
-                font-size: 0.45rem;
-            }
-            .top-bar .user-profile-btn {
-                height: 28px;
-                padding: 0.05rem 0.25rem;
-            }
-            .top-bar .user-profile-btn .avatar {
-                width: 18px;
-                height: 18px;
-                font-size: 0.45rem;
-            }
-            .top-bar .user-profile-btn .user-name {
-                font-size: 0.45rem;
-                max-width: 30px;
-            }
-            .top-bar .theme-toggle {
-                width: 24px;
-                height: 24px;
                 font-size: 0.65rem;
             }
+            .top-bar .search-box {
+                max-width: 80px;
+                min-width: 45px;
+                height: 24px;
+                padding: 0.05rem 0.1rem 0.05rem 0.3rem;
+            }
+            .top-bar .search-box input {
+                font-size: 0.45rem;
+            }
+            .top-bar .search-box button {
+                font-size: 0.4rem;
+                height: 18px;
+                padding: 0.05rem 0.2rem;
+            }
+            .top-bar .class-selector-wrapper select {
+                font-size: 0.4rem;
+                height: 22px;
+                max-width: 60px;
+                min-width: 40px;
+                padding: 0.05rem 0.15rem;
+            }
+            .top-bar .class-selector-wrapper label {
+                font-size: 0.4rem;
+            }
+            .top-bar .user-profile-btn {
+                height: 24px;
+                padding: 0.05rem 0.2rem 0.05rem 0.05rem;
+            }
+            .top-bar .user-profile-btn .avatar {
+                width: 16px;
+                height: 16px;
+                font-size: 0.4rem;
+            }
+            .top-bar .user-profile-btn .user-name {
+                font-size: 0.4rem;
+                max-width: 25px;
+            }
+            .top-bar .theme-toggle {
+                width: 22px;
+                height: 22px;
+                font-size: 0.55rem;
+            }
             .banner-container {
-                height: 120px;
+                height: 100px;
             }
             .banner-container .banner-placeholder {
-                height: 120px;
-                font-size: 0.7rem;
+                height: 100px;
+                font-size: 0.6rem;
             }
             .teachers-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.4rem;
+                gap: 0.35rem;
             }
             .teacher-card .teacher-card-image {
-                width: 55px;
-                height: 55px;
+                width: 50px;
+                height: 50px;
             }
             .teacher-card .teacher-card-image .teacher-emoji {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             .teacher-card-info h3 {
-                font-size: 0.7rem;
+                font-size: 0.65rem;
             }
             .bottom-nav .nav-item {
-                font-size: 0.45rem;
-                padding: 0.1rem 0.3rem;
-                min-width: 40px;
+                font-size: 0.4rem;
+                padding: 0.1rem 0.25rem;
+                min-width: 35px;
             }
             .bottom-nav .nav-item i {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .admin-tabs .tab-btn {
-                font-size: 0.55rem;
-                padding: 0.15rem 0.3rem;
-                min-width: 35px;
+                font-size: 0.5rem;
+                padding: 0.15rem 0.25rem;
+                min-width: 30px;
+            }
+            .my-courses-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.4rem;
+            }
+            .course-card-mini {
+                padding: 0.4rem;
+            }
+            .course-card-mini .course-avatar {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            .course-card-mini .course-name {
+                font-size: 0.65rem;
             }
         }
 
         @media (max-width: 380px) {
             .teachers-grid {
                 grid-template-columns: 1fr 1fr;
-                gap: 0.3rem;
+                gap: 0.25rem;
             }
             .teacher-card {
-                padding: 0.4rem 0.2rem;
+                padding: 0.3rem 0.15rem;
             }
             .teacher-card .teacher-card-image {
-                width: 45px;
-                height: 45px;
+                width: 40px;
+                height: 40px;
             }
             .teacher-card .teacher-card-image .teacher-emoji {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
             .teacher-card-info h3 {
-                font-size: 0.6rem;
+                font-size: 0.55rem;
+            }
+            .top-bar .logo-text {
+                font-size: 0.55rem;
+            }
+            .top-bar .search-box {
+                max-width: 60px;
+                min-width: 35px;
+            }
+            .top-bar .class-selector-wrapper select {
+                max-width: 45px;
+                min-width: 30px;
+                font-size: 0.35rem;
+            }
+            .top-bar .user-profile-btn .user-name {
+                max-width: 20px;
+                font-size: 0.35rem;
             }
         }
 
@@ -1325,7 +1360,7 @@
 </head>
 <body>
 
-    <!-- ===== شريط علوي موحد ===== -->
+    <!-- ===== شريط علوي موحد - سطر واحد ===== -->
     <div class="top-bar" id="topBar" style="display:none;">
         <span class="logo-text" onclick="navigateTo('home')">ديف <span>أكاديمي</span></span>
 
@@ -1376,9 +1411,9 @@
     <!-- ===== PAGE TEACHERS ===== -->
     <div id="page-teachers" style="display:none;">
         <div class="teachers-container">
-            <div style="text-align:center;padding:0.3rem 0;">
-                <h2 style="font-size:1rem;font-weight:800;">👨‍🏫 جميع المدرسين</h2>
-                <p style="color:var(--text-light);font-size:0.7rem;">اختر الصف المناسب ثم اختر المدرس</p>
+            <div style="text-align:center;padding:0.2rem 0;">
+                <h2 style="font-size:0.95rem;font-weight:800;">👨‍🏫 جميع المدرسين</h2>
+                <p style="color:var(--text-light);font-size:0.65rem;">اختر الصف المناسب ثم اختر المدرس</p>
             </div>
             <div id="teachersGridContainer2"></div>
         </div>
@@ -1389,7 +1424,7 @@
         <div class="my-courses-section">
             <div class="section-header">
                 <h2><i class="fas fa-book-open"></i> دوراتي</h2>
-                <span id="myCoursesCount" style="color:var(--text-light);font-size:.9rem;font-weight:600;">0 دورة</span>
+                <span id="myCoursesCount" style="color:var(--text-light);font-size:.85rem;font-weight:600;">0 دورة</span>
             </div>
             <div id="myCoursesContainer"></div>
         </div>
@@ -1403,7 +1438,7 @@
                 <div class="profile-name" id="accountName">غير مسجل</div>
                 <div class="profile-email" id="accountEmail">البريد الإلكتروني</div>
                 <div class="profile-phone" id="accountPhone" style="display:none;">📱 --</div>
-                <div style="font-size:.75rem;color:var(--text-light);margin-top:0.2rem;" id="accountRegistered">مسجل منذ: --</div>
+                <div style="font-size:.7rem;color:var(--text-light);margin-top:0.15rem;" id="accountRegistered">مسجل منذ: --</div>
             </div>
             <div class="profile-stats">
                 <div class="stat-box">
@@ -1457,7 +1492,7 @@
         <div class="footer-content">
             <div class="footer-logo">
                 <span class="logo-text">ديف <span>أكاديمي</span></span>
-                <p style="font-size:.7rem;">© 2026 ديف أكاديمي</p>
+                <p style="font-size:.65rem;">© 2026 ديف أكاديمي</p>
             </div>
         </div>
     </footer>
