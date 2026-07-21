@@ -1151,7 +1151,7 @@
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
-        // إظهار البانر بعد التغيير
+        // إظهار البانر في الصفحة الرئيسية فقط
         setTimeout(showBannerOnHome, 100);
     };
 
@@ -2675,12 +2675,23 @@ grant execute on function add_user_and_admin(text) to authenticated;
     // إظهار البانر في الصفحة الرئيسية فقط
     function showBannerOnHome() {
         var bannerSection = document.getElementById('bannerSection');
-        var currentPage = document.querySelector('.page-content:not([style*="display:none"])');
+        if (!bannerSection) return;
+        
+        // التحقق من الصفحة الحالية
+        var pages = document.querySelectorAll('.page-content');
+        var currentPage = null;
+        pages.forEach(function(p) {
+            if (p.style.display !== 'none') {
+                currentPage = p;
+            }
+        });
         
         if (currentPage && currentPage.id === 'page-home') {
-            if (bannerSection) bannerSection.style.display = 'block';
+            bannerSection.style.display = 'block';
+            console.log('✅ البانر ظاهر في الصفحة الرئيسية');
         } else {
-            if (bannerSection) bannerSection.style.display = 'none';
+            bannerSection.style.display = 'none';
+            console.log('❌ البانر مخفي في صفحة أخرى');
         }
     }
 
@@ -2743,14 +2754,6 @@ grant execute on function add_user_and_admin(text) to authenticated;
         updateBannerPreview();
         showToast('success', '✅ تم حذف صورة البانر');
     };
-
-    // تحميل الصورة المحفوظة
-    var savedBanner = localStorage.getItem('bannerImage');
-    if (savedBanner) {
-        setTimeout(function() {
-            updateBannerPreview();
-        }, 100);
-    }
 
     // ============================================================
     // تحديث الصفوف في النافبار
