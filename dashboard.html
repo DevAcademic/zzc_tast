@@ -9,15 +9,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js">
     </script>
     <style>
-        /* ============================================================
-        تصميم احترافي
-        ============================================================ */
+        /* ===== RESET ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        /* ===== شريط علوي موحد - سطر واحد ===== */
+        body {
+            padding-top: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* ===== شريط علوي - في أعلى الصفحة تماماً ===== */
         .top-bar {
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -26,13 +34,13 @@
             border-bottom: 2px solid var(--border);
             flex-wrap: nowrap;
             gap: 0.3rem;
-            min-height: 48px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            min-height: 46px;
             width: 100%;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
         }
 
         .top-bar .logo-text {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 900;
             color: var(--primary);
             white-space: nowrap;
@@ -52,7 +60,7 @@
         }
 
         .top-bar .class-selector-wrapper label {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             font-weight: 600;
             color: var(--text-light);
             white-space: nowrap;
@@ -205,14 +213,17 @@
             display: none;
         }
 
-        /* ===== إزالة الفلتر القديم ===== */
+        /* ===== إزالة أي فراغات علوية ===== */
+        .hero {
+            display: none !important;
+        }
         .filter-section {
             display: none !important;
         }
 
         /* ===== البانر ===== */
         .banner-section {
-            padding: 0.15rem 0.5rem 0.1rem;
+            padding: 0.1rem 0.5rem 0.1rem;
             max-width: 600px;
             margin: 0 auto;
             display: none;
@@ -223,7 +234,7 @@
             overflow: hidden;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
             background: #000;
-            height: 180px;
+            height: 170px;
             position: relative;
             width: 100%;
         }
@@ -237,13 +248,13 @@
 
         .banner-container .banner-placeholder {
             width: 100%;
-            height: 180px;
+            height: 170px;
             background: linear-gradient(135deg, #0EA5E9, #38BDF8, #7DD3FC);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 700;
             border-radius: 12px;
         }
@@ -412,10 +423,6 @@
         }
 
         /* ===== باقي الأنماط ===== */
-        .hero {
-            display: none !important;
-        }
-
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -725,6 +732,232 @@
             background: var(--primary-dark);
         }
 
+        /* ===== Toast ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 80px;
+            right: 1rem;
+            left: 1rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .toast {
+            padding: 0.4rem 0.8rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.4s ease;
+            width: 100%;
+            max-width: 320px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.7rem;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .toast.success {
+            background: #22C55E;
+        }
+        .toast.error {
+            background: #EF4444;
+        }
+        .toast.info {
+            background: var(--primary-gradient);
+        }
+        .toast.warning {
+            background: #F59E0B;
+            color: #1E293B;
+        }
+
+        /* ===== Modal ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 0.8rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 1.2rem;
+            max-width: 100%;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .modal-large {
+            max-width: 520px;
+        }
+        .modal-small {
+            max-width: 380px;
+        }
+
+        .modal h2 {
+            color: var(--primary);
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .modal .close-btn {
+            position: absolute;
+            top: 0.3rem;
+            right: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            background: none;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal .close-btn:hover {
+            color: var(--primary);
+            background: var(--bg-hover);
+            transform: rotate(90deg);
+        }
+
+        .video-player-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .video-player-container.active {
+            display: flex;
+        }
+
+        .video-player-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .player-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+        }
+
+        .player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-player {
+            position: absolute;
+            top: 0.3rem;
+            right: 0.3rem;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-player:hover {
+            background: #DC2626;
+            transform: scale(1.1);
+        }
+
+        .loading-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .loading-screen .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%) scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0) scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%) scale(0.9);
+                opacity: 0;
+            }
+        }
+
         /* ===== Admin Panel ===== */
         .admin-panel {
             position: fixed;
@@ -987,232 +1220,6 @@
             font-size: 0.7rem;
         }
 
-        /* ===== Toast ===== */
-        .toast-container {
-            position: fixed;
-            bottom: 80px;
-            right: 1rem;
-            left: 1rem;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-            align-items: flex-end;
-            pointer-events: none;
-        }
-
-        .toast {
-            padding: 0.4rem 0.8rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            animation: slideIn 0.4s ease;
-            width: 100%;
-            max-width: 320px;
-            color: white;
-            font-weight: 600;
-            font-size: 0.7rem;
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .toast.success {
-            background: #22C55E;
-        }
-        .toast.error {
-            background: #EF4444;
-        }
-        .toast.info {
-            background: var(--primary-gradient);
-        }
-        .toast.warning {
-            background: #F59E0B;
-            color: #1E293B;
-        }
-
-        /* ===== Modal ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 0.8rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-card);
-            border-radius: 16px;
-            padding: 1.2rem;
-            max-width: 100%;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            position: relative;
-            border: 1px solid var(--border);
-        }
-
-        .modal-large {
-            max-width: 520px;
-        }
-        .modal-small {
-            max-width: 380px;
-        }
-
-        .modal h2 {
-            color: var(--primary);
-            font-size: 1rem;
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-weight: 800;
-        }
-
-        .modal .close-btn {
-            position: absolute;
-            top: 0.3rem;
-            right: 0.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-            color: var(--text-light);
-            transition: all 0.3s ease;
-            background: none;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal .close-btn:hover {
-            color: var(--primary);
-            background: var(--bg-hover);
-            transform: rotate(90deg);
-        }
-
-        .video-player-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-            padding: 0.5rem;
-        }
-
-        .video-player-container.active {
-            display: flex;
-        }
-
-        .video-player-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .player-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-        }
-
-        .player-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .close-player {
-            position: absolute;
-            top: 0.3rem;
-            right: 0.3rem;
-            background: rgba(239, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            z-index: 10;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-player:hover {
-            background: #DC2626;
-            transform: scale(1.1);
-        }
-
-        .loading-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 70vh;
-        }
-
-        .loading-screen .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--border);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%) scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideOut {
-            from {
-                transform: translateX(0) scale(1);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%) scale(0.9);
-                opacity: 0;
-            }
-        }
-
         @media (max-width: 480px) {
             .top-bar {
                 flex-wrap: nowrap;
@@ -1360,7 +1367,7 @@
 </head>
 <body>
 
-    <!-- ===== شريط علوي موحد - سطر واحد ===== -->
+    <!-- ===== شريط علوي - في أعلى الصفحة ===== -->
     <div class="top-bar" id="topBar" style="display:none;">
         <span class="logo-text" onclick="navigateTo('home')">ديف <span>أكاديمي</span></span>
 
