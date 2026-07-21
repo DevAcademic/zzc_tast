@@ -1150,6 +1150,9 @@
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // إظهار البانر بعد التغيير
+        setTimeout(showBannerOnHome, 100);
     };
 
     // ===== NAVIGATION EVENTS =====
@@ -2669,6 +2672,18 @@ grant execute on function add_user_and_admin(text) to authenticated;
     // 🆕 إدارة البانر (صورة واحدة)
     // ============================================================
 
+    // إظهار البانر في الصفحة الرئيسية فقط
+    function showBannerOnHome() {
+        var bannerSection = document.getElementById('bannerSection');
+        var currentPage = document.querySelector('.page-content:not([style*="display:none"])');
+        
+        if (currentPage && currentPage.id === 'page-home') {
+            if (bannerSection) bannerSection.style.display = 'block';
+        } else {
+            if (bannerSection) bannerSection.style.display = 'none';
+        }
+    }
+
     function updateBannerPreview() {
         var savedImage = localStorage.getItem('bannerImage');
         var img = document.getElementById('adminBannerImage');
@@ -2728,6 +2743,14 @@ grant execute on function add_user_and_admin(text) to authenticated;
         updateBannerPreview();
         showToast('success', '✅ تم حذف صورة البانر');
     };
+
+    // تحميل الصورة المحفوظة
+    var savedBanner = localStorage.getItem('bannerImage');
+    if (savedBanner) {
+        setTimeout(function() {
+            updateBannerPreview();
+        }, 100);
+    }
 
     // ============================================================
     // تحديث الصفوف في النافبار
@@ -2849,6 +2872,7 @@ grant execute on function add_user_and_admin(text) to authenticated;
         updateAllAdminSelects();
         loadAdminsList();
         updateBannerPreview();
+        showBannerOnHome();
         console.log('📚 ديف أكاديمي - النظام جاهز');
         console.log('🎥 دعم منصة mediadelivery للتشغيل');
         console.log('🖼️ البانر جاهز لعرض الصورة');
