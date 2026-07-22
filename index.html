@@ -17,7 +17,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
         .header {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: #fff;
@@ -59,7 +58,6 @@
             transition: all 0.2s ease;
         }
         .refresh-btn:hover { background: #1d4ed8; }
-        
         .table-container {
             background: #fff;
             border-radius: 1.5rem;
@@ -95,7 +93,6 @@
             min-width: 200px;
         }
         .table-header .search-box i { color: #94a3b8; }
-        
         table { width: 100%; border-collapse: collapse; }
         table thead {
             background: #f8fafc;
@@ -131,12 +128,10 @@
         .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-amber { background: #fef3c7; color: #d97706; }
-        
         .loading { text-align: center; padding: 3rem; color: #94a3b8; }
         .loading i { font-size: 2rem; display: block; margin-bottom: 1rem; }
         .empty { text-align: center; padding: 3rem; color: #94a3b8; }
         .empty i { font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.3; }
-        
         .last-update {
             text-align: left;
             font-size: 0.8rem;
@@ -144,7 +139,6 @@
             padding: 0.75rem 1.5rem;
             border-top: 1px solid #f1f5f9;
         }
-        
         @media (max-width: 768px) {
             .header { flex-direction: column; align-items: stretch; text-align: center; }
             .header .stats { justify-content: center; }
@@ -156,8 +150,6 @@
         @media (max-width: 480px) {
             table thead th:nth-child(3),
             table tbody td:nth-child(3) { display: none; }
-            table thead th:nth-child(6),
-            table tbody td:nth-child(6) { display: none; }
         }
     </style>
 </head>
@@ -197,7 +189,7 @@
         <h2><i class="fas fa-users ml-2"></i> جميع الطلاب المسجلين</h2>
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="بحث بالاسم أو البريد أو المدرس..." oninput="filterTable()">
+            <input type="text" id="searchInput" placeholder="بحث بالاسم أو البريد..." oninput="filterTable()">
         </div>
     </div>
 
@@ -220,9 +212,7 @@
                     <th>تاريخ التسجيل</th>
                 </tr>
             </thead>
-            <tbody id="usersTableBody">
-                <!-- يتم ملء البيانات هنا -->
-            </tbody>
+            <tbody id="usersTableBody"></tbody>
         </table>
     </div>
 
@@ -252,18 +242,19 @@
     });
 
     // ============================================================
-    // Supabase
+    // Supabase - استخدم المفتاح السري (Secret Key)
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
+    const SUPABASE_KEY = 'sb_secret_e3EPfM97XsFrXHKQWaNl9g_7Zu6ymKV';
 
     if (typeof supabase === 'undefined') {
         document.getElementById('loadingIndicator').innerHTML = '❌ خطأ في تحميل المكتبة';
         return;
     }
 
+    // إنشاء عميل Supabase مع المفتاح السري
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log("✅ تم إنشاء عميل Supabase");
+    console.log("✅ تم إنشاء عميل Supabase مع المفتاح السري");
 
     // ============================================================
     // عناصر DOM
@@ -315,14 +306,14 @@
         loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري تحميل البيانات...';
 
         try {
-            // ===== 1. جلب جميع المستخدمين من جدول users =====
+            // ===== 1. جلب جميع المستخدمين =====
             const { data: users, error: usersError } = await sb
                 .from('users')
                 .select('*')
                 .order('registered_at', { ascending: false });
 
             if (usersError) {
-                console.error("❌ خطأ في جلب المستخدمين:", usersError);
+                console.error("❌ خطأ:", usersError);
                 loadingIndicator.innerHTML = '❌ خطأ: ' + usersError.message;
                 return;
             }
@@ -336,7 +327,7 @@
                 return;
             }
 
-            // ===== 2. جلب جميع المدرسين =====
+            // ===== 2. جلب المدرسين =====
             const { data: teachers, error: teachersError } = await sb
                 .from('teachers')
                 .select('id, name');
@@ -357,7 +348,6 @@
                 console.error("❌ خطأ في جلب user_teachers:", utError);
             }
 
-            // تجميع المدرسين لكل مستخدم
             const userTeachersMap = {};
             userTeachers?.forEach(ut => {
                 if (!userTeachersMap[ut.user_id]) {
@@ -378,7 +368,6 @@
                 console.error("❌ خطأ في جلب الأكواد:", codesError);
             }
 
-            // عدد الأكواد لكل مستخدم
             const userCodesCount = {};
             codes?.forEach(c => {
                 if (c.user_id) {
@@ -437,7 +426,6 @@
         }
 
         usersTableBody.innerHTML = users.map((user, index) => {
-            // عرض المدرسين كـ tags
             let teachersHtml = '-';
             if (user.teachers && user.teachers.length > 0) {
                 teachersHtml = user.teachers.map(t => 
@@ -445,7 +433,6 @@
                 ).join(' ');
             }
 
-            // حالة الأكواد
             const codeBadge = user.codesCount > 0 
                 ? `<span class="badge badge-green">${user.codesCount}</span>`
                 : `<span class="badge badge-amber">0</span>`;
