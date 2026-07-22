@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديف أكاديمي | لوحة الإدارة</title>
+    <title>ديف أكاديمي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -17,7 +17,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
         .header {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: #fff;
@@ -59,7 +58,6 @@
             transition: all 0.2s ease;
         }
         .refresh-btn:hover { background: #1d4ed8; }
-        
         .table-container {
             background: #fff;
             border-radius: 1.5rem;
@@ -95,7 +93,6 @@
             min-width: 200px;
         }
         .table-header .search-box i { color: #94a3b8; }
-        
         table { width: 100%; border-collapse: collapse; }
         table thead {
             background: #f8fafc;
@@ -131,12 +128,10 @@
         .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-amber { background: #fef3c7; color: #d97706; }
-        
         .loading { text-align: center; padding: 3rem; color: #94a3b8; }
         .loading i { font-size: 2rem; display: block; margin-bottom: 1rem; }
         .empty { text-align: center; padding: 3rem; color: #94a3b8; }
         .empty i { font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.3; }
-        
         .last-update {
             text-align: left;
             font-size: 0.8rem;
@@ -144,7 +139,14 @@
             padding: 0.75rem 1.5rem;
             border-top: 1px solid #f1f5f9;
         }
-        
+        .error-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem;
+            color: #991b1b;
+        }
         @media (max-width: 768px) {
             .header { flex-direction: column; align-items: stretch; text-align: center; }
             .header .stats { justify-content: center; }
@@ -161,7 +163,6 @@
 </head>
 <body>
 
-<!-- ===== الهيدر ===== -->
 <div class="header">
     <div class="brand">
         <i class="fas fa-graduation-cap"></i>
@@ -189,7 +190,6 @@
     </div>
 </div>
 
-<!-- ===== الجدول ===== -->
 <div class="table-container">
     <div class="table-header">
         <h2><i class="fas fa-users ml-2"></i> جميع الطلاب المسجلين</h2>
@@ -203,6 +203,8 @@
         <i class="fas fa-spinner fa-pulse"></i>
         جاري تحميل البيانات...
     </div>
+
+    <div id="errorBox" class="error-box" style="display:none;"></div>
 
     <div id="tableWrapper" style="overflow-x:auto; display:none;">
         <table>
@@ -251,23 +253,13 @@
     // Supabase
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
+    const SUPABASE_KEY = 'sb_secret_e3EPfM97XsFrXHKQWaNl9g_7Zu6ymKV';
 
-    if (typeof supabase === 'undefined') {
-        document.getElementById('loadingIndicator').innerHTML = '❌ خطأ في تحميل المكتبة';
-        return;
-    }
-
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log("✅ تم إنشاء عميل Supabase");
-
-    // ============================================================
-    // عناصر DOM
-    // ============================================================
-    const usersTableBody = document.getElementById('usersTableBody');
     const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorBox = document.getElementById('errorBox');
     const tableWrapper = document.getElementById('tableWrapper');
     const emptyState = document.getElementById('emptyState');
+    const usersTableBody = document.getElementById('usersTableBody');
     const searchInput = document.getElementById('searchInput');
     const totalUsersEl = document.getElementById('totalUsers');
     const totalTeachersEl = document.getElementById('totalTeachers');
@@ -276,9 +268,12 @@
 
     let allUsers = [];
 
-    // ============================================================
-    // دوال مساعدة
-    // ============================================================
+    function showError(msg) {
+        errorBox.style.display = 'block';
+        errorBox.innerHTML = '❌ ' + msg;
+        loadingIndicator.style.display = 'none';
+    }
+
     function formatDate(dateStr) {
         if (!dateStr) return '-';
         try {
@@ -289,37 +284,47 @@
 
     function getCurrentTime() {
         const now = new Date();
-        return now.toLocaleString('ar-EG', { 
-            year: 'numeric', 
-            month: 'short', 
+        return now.toLocaleString('ar-EG', {
+            year: 'numeric',
+            month: 'short',
             day: 'numeric',
             hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
+            minute: '2-digit'
         });
     }
 
     // ============================================================
-    // جلب جميع البيانات
+    // جلب البيانات
     // ============================================================
     async function loadAllData() {
         console.log("📊 جلب جميع البيانات...");
         
         loadingIndicator.style.display = 'block';
+        errorBox.style.display = 'none';
         tableWrapper.style.display = 'none';
         emptyState.style.display = 'none';
         loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري تحميل البيانات...';
 
         try {
-            // ===== 1. جلب المستخدمين =====
+            // التحقق من المكتبة
+            if (typeof supabase === 'undefined') {
+                showError('مكتبة Supabase غير محملة');
+                return;
+            }
+
+            // إنشاء العميل
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            console.log("✅ تم إنشاء العميل");
+
+            // جلب المستخدمين
             const { data: users, error: usersError } = await sb
                 .from('users')
                 .select('*')
                 .order('registered_at', { ascending: false });
 
             if (usersError) {
+                showError('خطأ في جلب المستخدمين: ' + usersError.message);
                 console.error("❌ خطأ:", usersError);
-                loadingIndicator.innerHTML = '❌ خطأ: ' + usersError.message;
                 return;
             }
 
@@ -332,55 +337,29 @@
                 return;
             }
 
-            // ===== 2. جلب المدرسين =====
-            const { data: teachers, error: teachersError } = await sb
-                .from('teachers')
-                .select('id, name');
-
-            if (teachersError) {
-                console.error("❌ خطأ في جلب المدرسين:", teachersError);
-            }
-
+            // جلب المدرسين
+            const { data: teachers } = await sb.from('teachers').select('id, name');
             const teachersMap = {};
             teachers?.forEach(t => { teachersMap[t.id] = t.name; });
 
-            // ===== 3. جلب علاقات المستخدمين بالمدرسين =====
-            const { data: userTeachers, error: utError } = await sb
-                .from('user_teachers')
-                .select('user_id, teacher_id');
-
-            if (utError) {
-                console.error("❌ خطأ في جلب user_teachers:", utError);
-            }
-
+            // جلب علاقات المستخدمين
+            const { data: userTeachers } = await sb.from('user_teachers').select('user_id, teacher_id');
             const userTeachersMap = {};
             userTeachers?.forEach(ut => {
-                if (!userTeachersMap[ut.user_id]) {
-                    userTeachersMap[ut.user_id] = [];
-                }
+                if (!userTeachersMap[ut.user_id]) userTeachersMap[ut.user_id] = [];
                 if (teachersMap[ut.teacher_id]) {
                     userTeachersMap[ut.user_id].push(teachersMap[ut.teacher_id]);
                 }
             });
 
-            // ===== 4. جلب الأكواد المفعلة =====
-            const { data: codes, error: codesError } = await sb
-                .from('codes')
-                .select('user_id')
-                .eq('is_used', true);
-
-            if (codesError) {
-                console.error("❌ خطأ في جلب الأكواد:", codesError);
-            }
-
+            // جلب الأكواد
+            const { data: codes } = await sb.from('codes').select('user_id').eq('is_used', true);
             const userCodesCount = {};
             codes?.forEach(c => {
-                if (c.user_id) {
-                    userCodesCount[c.user_id] = (userCodesCount[c.user_id] || 0) + 1;
-                }
+                if (c.user_id) userCodesCount[c.user_id] = (userCodesCount[c.user_id] || 0) + 1;
             });
 
-            // ===== 5. بناء البيانات النهائية =====
+            // بناء البيانات
             allUsers = users.map(user => {
                 const teacherList = userTeachersMap[user.id] || [];
                 return {
@@ -395,9 +374,7 @@
                 };
             });
 
-            console.log(`✅ تم تجهيز ${allUsers.length} مستخدم للعرض`);
-
-            // ===== 6. تحديث الإحصائيات =====
+            // الإحصائيات
             const totalUsers = allUsers.length;
             const uniqueTeachers = new Set();
             allUsers.forEach(u => u.teachers.forEach(t => uniqueTeachers.add(t)));
@@ -407,21 +384,19 @@
             totalTeachersEl.textContent = uniqueTeachers.size;
             totalCodesEl.textContent = totalCodes;
 
-            // ===== 7. عرض البيانات في الجدول =====
+            // عرض الجدول
             renderTable(allUsers);
 
             loadingIndicator.style.display = 'none';
             tableWrapper.style.display = 'block';
-            emptyState.style.display = 'none';
             lastUpdateTime.textContent = getCurrentTime();
 
         } catch (err) {
-            console.error("❌ خطأ عام:", err);
-            loadingIndicator.innerHTML = '❌ حدث خطأ: ' + err.message;
+            showError('حدث خطأ: ' + err.message);
+            console.error("❌ خطأ:", err);
         }
     }
 
-    // ===== عرض الجدول =====
     function renderTable(users) {
         if (!users || users.length === 0) {
             usersTableBody.innerHTML = '';
@@ -433,12 +408,12 @@
         usersTableBody.innerHTML = users.map((user, index) => {
             let teachersHtml = '-';
             if (user.teachers && user.teachers.length > 0) {
-                teachersHtml = user.teachers.map(t => 
+                teachersHtml = user.teachers.map(t =>
                     `<span class="teacher-tag">${t}</span>`
                 ).join(' ');
             }
 
-            const codeBadge = user.codesCount > 0 
+            const codeBadge = user.codesCount > 0
                 ? `<span class="badge badge-green">${user.codesCount}</span>`
                 : `<span class="badge badge-amber">0</span>`;
 
@@ -457,14 +432,10 @@
         }).join('');
     }
 
-    // ===== بحث =====
     function filterTable() {
         const term = searchInput.value.trim().toLowerCase();
-        if (!term) {
-            renderTable(allUsers);
-            return;
-        }
-        const filtered = allUsers.filter(user => 
+        if (!term) { renderTable(allUsers); return; }
+        const filtered = allUsers.filter(user =>
             user.full_name.toLowerCase().includes(term) ||
             user.email.toLowerCase().includes(term) ||
             user.phone.includes(term) ||
@@ -472,18 +443,13 @@
         );
         renderTable(filtered);
     }
-    window.filterTable = filterTable;
 
-    // ===== تحديث =====
+    window.filterTable = filterTable;
     window.loadAllData = loadAllData;
 
-    // ===== تحميل =====
+    // ===== تشغيل =====
     loadAllData();
-
-    // ===== تحديث كل 30 ثانية =====
     setInterval(loadAllData, 30000);
-
-    console.log("✅ تم تهيئة الصفحة");
 </script>
 
 </body>
