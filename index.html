@@ -17,7 +17,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
         .header {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             color: #fff;
@@ -59,7 +58,6 @@
             transition: all 0.2s ease;
         }
         .refresh-btn:hover { background: #1d4ed8; }
-        
         .table-container {
             background: #fff;
             border-radius: 1.5rem;
@@ -95,7 +93,6 @@
             min-width: 200px;
         }
         .table-header .search-box i { color: #94a3b8; }
-        
         table { width: 100%; border-collapse: collapse; }
         table thead {
             background: #f8fafc;
@@ -131,12 +128,10 @@
         .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-amber { background: #fef3c7; color: #d97706; }
-        
         .loading { text-align: center; padding: 3rem; color: #94a3b8; }
         .loading i { font-size: 2rem; display: block; margin-bottom: 1rem; }
         .empty { text-align: center; padding: 3rem; color: #94a3b8; }
         .empty i { font-size: 3rem; display: block; margin-bottom: 1rem; opacity: 0.3; }
-        
         .last-update {
             text-align: left;
             font-size: 0.8rem;
@@ -144,7 +139,29 @@
             padding: 0.75rem 1.5rem;
             border-top: 1px solid #f1f5f9;
         }
-        
+        .error-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #991b1b;
+        }
+        .debug-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            font-family: monospace;
+            font-size: 0.8rem;
+            direction: ltr;
+            text-align: left;
+            max-height: 300px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
         @media (max-width: 768px) {
             .header { flex-direction: column; align-items: stretch; text-align: center; }
             .header .stats { justify-content: center; }
@@ -161,7 +178,6 @@
 </head>
 <body>
 
-<!-- ===== الهيدر ===== -->
 <div class="header">
     <div class="brand">
         <i class="fas fa-graduation-cap"></i>
@@ -189,7 +205,6 @@
     </div>
 </div>
 
-<!-- ===== الجدول ===== -->
 <div class="table-container">
     <div class="table-header">
         <h2><i class="fas fa-users ml-2"></i> جميع الطلاب المسجلين</h2>
@@ -203,6 +218,9 @@
         <i class="fas fa-spinner fa-pulse"></i>
         جاري تحميل البيانات...
     </div>
+
+    <!-- منطقة عرض الأخطاء والتصحيح -->
+    <div id="debugArea" style="display:none; padding: 1rem;"></div>
 
     <div id="tableWrapper" style="overflow-x:auto; display:none;">
         <table>
@@ -248,18 +266,10 @@
     });
 
     // ============================================================
-    // Supabase - استخدام المفتاح السري (Service Role Key)
+    // إعدادات Supabase
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
-    const SUPABASE_KEY = 'sb_secret_e3EPfM97XsFrXHKQWaNl9g_7Zu6ymKV';
-
-    if (typeof supabase === 'undefined') {
-        document.getElementById('loadingIndicator').innerHTML = '❌ خطأ في تحميل المكتبة';
-        return;
-    }
-
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log("✅ تم إنشاء عميل Supabase مع المفتاح السري");
+    const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
 
     // ============================================================
     // عناصر DOM
@@ -273,8 +283,32 @@
     const totalTeachersEl = document.getElementById('totalTeachers');
     const totalCodesEl = document.getElementById('totalCodes');
     const lastUpdateTime = document.getElementById('lastUpdateTime');
+    const debugArea = document.getElementById('debugArea');
 
     let allUsers = [];
+    let debugLog = [];
+
+    // ============================================================
+    // دوال التصحيح
+    // ============================================================
+    function addDebug(msg, data = null) {
+        const timestamp = new Date().toLocaleTimeString();
+        debugLog.push({ time: timestamp, msg, data });
+        console.log(`[${timestamp}] ${msg}`, data || '');
+    }
+
+    function showDebug() {
+        debugArea.style.display = 'block';
+        let html = '<div class="error-box"><strong>📋 سجل التصحيح:</strong></div>';
+        debugLog.forEach(log => {
+            html += `<div class="debug-box">[${log.time}] ${log.msg}`;
+            if (log.data) {
+                html += `\n${JSON.stringify(log.data, null, 2)}`;
+            }
+            html += '</div>';
+        });
+        debugArea.innerHTML = html;
+    }
 
     // ============================================================
     // دوال مساعدة
@@ -300,10 +334,12 @@
     }
 
     // ============================================================
-    // جلب جميع البيانات من Supabase
+    // جلب جميع البيانات
     // ============================================================
     async function loadAllData() {
-        console.log("📊 جلب جميع البيانات...");
+        addDebug('🚀 بدء تحميل البيانات');
+        debugArea.innerHTML = '';
+        debugLog = [];
         
         loadingIndicator.style.display = 'block';
         tableWrapper.style.display = 'none';
@@ -311,47 +347,69 @@
         loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري تحميل البيانات...';
 
         try {
-            // ===== 1. جلب المستخدمين من جدول users =====
-            console.log("📊 جلب من جدول users...");
-            const { data: users, error: usersError } = await sb
+            // التحقق من المكتبة
+            if (typeof supabase === 'undefined') {
+                addDebug('❌ مكتبة Supabase غير محملة');
+                loadingIndicator.innerHTML = '❌ خطأ: مكتبة Supabase غير محملة';
+                showDebug();
+                return;
+            }
+            addDebug('✅ مكتبة Supabase محملة');
+
+            // إنشاء العميل
+            const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            addDebug('✅ تم إنشاء عميل Supabase');
+
+            // ===== 1. جلب المستخدمين =====
+            addDebug('📊 محاولة جلب من جدول users...');
+            const { data: users, error: usersError, status } = await sb
                 .from('users')
                 .select('*')
                 .order('registered_at', { ascending: false });
 
             if (usersError) {
-                console.error("❌ خطأ:", usersError);
-                loadingIndicator.innerHTML = '❌ خطأ: ' + usersError.message;
+                addDebug(`❌ خطأ في جلب users: ${usersError.message} (status: ${status})`, usersError);
+                loadingIndicator.innerHTML = `❌ خطأ: ${usersError.message}`;
+                showDebug();
                 return;
             }
 
-            console.log(`✅ تم جلب ${users?.length || 0} مستخدم`);
+            addDebug(`✅ تم جلب ${users?.length || 0} مستخدم من users`, users);
 
             if (!users || users.length === 0) {
+                addDebug('⚠️ جدول users فارغ');
                 loadingIndicator.style.display = 'none';
                 emptyState.style.display = 'block';
                 lastUpdateTime.textContent = getCurrentTime();
+                showDebug();
                 return;
             }
 
             // ===== 2. جلب المدرسين =====
+            addDebug('📊 جلب من جدول teachers...');
             const { data: teachers, error: teachersError } = await sb
                 .from('teachers')
                 .select('id, name');
 
             if (teachersError) {
-                console.error("❌ خطأ في جلب المدرسين:", teachersError);
+                addDebug(`⚠️ خطأ في جلب teachers: ${teachersError.message}`, teachersError);
+            } else {
+                addDebug(`✅ تم جلب ${teachers?.length || 0} مدرس`, teachers);
             }
 
             const teachersMap = {};
             teachers?.forEach(t => { teachersMap[t.id] = t.name; });
 
-            // ===== 3. جلب علاقات المستخدمين بالمدرسين =====
+            // ===== 3. جلب user_teachers =====
+            addDebug('📊 جلب من جدول user_teachers...');
             const { data: userTeachers, error: utError } = await sb
                 .from('user_teachers')
                 .select('user_id, teacher_id');
 
             if (utError) {
-                console.error("❌ خطأ في جلب user_teachers:", utError);
+                addDebug(`⚠️ خطأ في جلب user_teachers: ${utError.message}`, utError);
+            } else {
+                addDebug(`✅ تم جلب ${userTeachers?.length || 0} علاقة`, userTeachers);
             }
 
             const userTeachersMap = {};
@@ -364,14 +422,17 @@
                 }
             });
 
-            // ===== 4. جلب الأكواد المفعلة =====
+            // ===== 4. جلب الأكواد =====
+            addDebug('📊 جلب من جدول codes (is_used=true)...');
             const { data: codes, error: codesError } = await sb
                 .from('codes')
                 .select('user_id')
                 .eq('is_used', true);
 
             if (codesError) {
-                console.error("❌ خطأ في جلب الأكواد:", codesError);
+                addDebug(`⚠️ خطأ في جلب codes: ${codesError.message}`, codesError);
+            } else {
+                addDebug(`✅ تم جلب ${codes?.length || 0} كود مفعل`, codes);
             }
 
             const userCodesCount = {};
@@ -381,7 +442,7 @@
                 }
             });
 
-            // ===== 5. بناء البيانات النهائية =====
+            // ===== 5. بناء البيانات =====
             allUsers = users.map(user => {
                 const teacherList = userTeachersMap[user.id] || [];
                 return {
@@ -396,9 +457,9 @@
                 };
             });
 
-            console.log(`✅ تم تجهيز ${allUsers.length} مستخدم للعرض`);
+            addDebug(`✅ تم تجهيز ${allUsers.length} مستخدم للعرض`, allUsers);
 
-            // ===== 6. تحديث الإحصائيات =====
+            // ===== 6. الإحصائيات =====
             const totalUsers = allUsers.length;
             const uniqueTeachers = new Set();
             allUsers.forEach(u => u.teachers.forEach(t => uniqueTeachers.add(t)));
@@ -408,7 +469,7 @@
             totalTeachersEl.textContent = uniqueTeachers.size;
             totalCodesEl.textContent = totalCodes;
 
-            // ===== 7. عرض البيانات في الجدول =====
+            // ===== 7. عرض الجدول =====
             renderTable(allUsers);
 
             loadingIndicator.style.display = 'none';
@@ -416,9 +477,13 @@
             emptyState.style.display = 'none';
             lastUpdateTime.textContent = getCurrentTime();
 
+            addDebug('✅ تم عرض البيانات بنجاح');
+            showDebug();
+
         } catch (err) {
-            console.error("❌ خطأ عام:", err);
-            loadingIndicator.innerHTML = '❌ حدث خطأ: ' + err.message;
+            addDebug(`❌ خطأ عام: ${err.message}`, err);
+            loadingIndicator.innerHTML = `❌ حدث خطأ: ${err.message}`;
+            showDebug();
         }
     }
 
@@ -475,16 +540,16 @@
     }
     window.filterTable = filterTable;
 
-    // ===== تحديث يدوي =====
+    // ===== تحديث =====
     window.loadAllData = loadAllData;
 
-    // ===== تحميل البيانات عند فتح الصفحة =====
+    // ===== تحميل =====
     loadAllData();
 
-    // ===== تحديث تلقائي كل 30 ثانية =====
+    // ===== تحديث كل 30 ثانية =====
     setInterval(loadAllData, 30000);
 
-    console.log("✅ تم تهيئة الصفحة بالكامل");
+    console.log("✅ تم تهيئة الصفحة");
 </script>
 
 </body>
