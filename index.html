@@ -199,7 +199,7 @@
     let selectedTeacherId = null;
 
     // ============================================================
-    // تحميل البيانات - جلب مباشر من قاعدة البيانات
+    // تحميل البيانات
     // ============================================================
     async function loadData() {
         try {
@@ -208,53 +208,37 @@
 
             console.log('🔄 جاري جلب البيانات من قاعدة البيانات...');
 
-            // جلب البيانات مباشرة (بدون دوال)
             const [usersRes, teachersRes, userTeachersRes] = await Promise.all([
                 sb.from('users').select('*'),
                 sb.from('teachers').select('*'),
                 sb.from('user_teachers').select('*, users(full_name, email, phone), teachers(name, subject)')
             ]);
 
-            // التحقق من الأخطاء
-            if (usersRes.error) {
-                console.error('❌ خطأ في users:', usersRes.error);
-                throw new Error('خطأ في جلب المستخدمين: ' + usersRes.error.message);
-            }
-            if (teachersRes.error) {
-                console.error('❌ خطأ في teachers:', teachersRes.error);
-                throw new Error('خطأ في جلب المدرسين: ' + teachersRes.error.message);
-            }
-            if (userTeachersRes.error) {
-                console.error('❌ خطأ في user_teachers:', userTeachersRes.error);
-                throw new Error('خطأ في جلب علاقات الطلاب: ' + userTeachersRes.error.message);
-            }
+            if (usersRes.error) console.error('❌ خطأ في users:', usersRes.error);
+            if (teachersRes.error) console.error('❌ خطأ في teachers:', teachersRes.error);
+            if (userTeachersRes.error) console.error('❌ خطأ في user_teachers:', userTeachersRes.error);
 
             allData.users = usersRes.data || [];
             allData.teachers = teachersRes.data || [];
             allData.userTeachers = userTeachersRes.data || [];
 
-            console.log(`✅ تم جلب ${allData.users.length} مستخدم، ${allData.teachers.length} مدرس، ${allData.userTeachers.length} علاقة`);
+            console.log(`✅ تم جلب ${allData.users.length} مستخدم، ${allData.teachers.length} مدرس`);
 
-            // تحديث الإحصائيات
             updateStats();
-
-            // عرض المدرسين
             renderTeachers();
 
-            // إذا كان هناك مدرسين وليس لدينا مدرس محدد، اختر الأول
             if (allData.teachers.length > 0) {
                 if (!selectedTeacherId || !allData.teachers.find(t => t.id === selectedTeacherId)) {
                     selectedTeacherId = allData.teachers[0].id;
                 }
                 renderTeacherDetails(selectedTeacherId);
             } else {
-                // لا يوجد مدرسين
                 document.getElementById('teacherDetails').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-chalkboard-teacher text-4xl text-gray-300 mb-3"></i>
                         <p class="text-lg font-medium text-gray-600">لا يوجد مدرسين</p>
-                        <p class="text-sm text-gray-400 mt-1">قم بإضافة مدرسين في قاعدة البيانات</p>
-                        <p class="text-xs text-gray-400 mt-2">بعد إضافة مدرس، اضغط على زر التحديث</p>
+                        <p class="text-sm text-gray-400 mt-1">قم بإضافة مدرسين</p>
+                        <p class="text-xs text-gray-400 mt-2">باستخدام: INSERT INTO teachers (name, subject) VALUES ('اسم', 'مادة');</p>
                     </div>
                 `;
             }
@@ -263,11 +247,11 @@
             document.getElementById('content').style.display = 'block';
 
         } catch (error) {
-            console.error('❌ خطأ في التحميل:', error);
+            console.error('❌ خطأ:', error);
             document.getElementById('loadingIndicator').innerHTML = `
                 <div class="text-red-600 text-center p-8">
                     <i class="fas fa-exclamation-circle text-4xl mb-3"></i>
-                    <p class="font-bold">حدث خطأ في تحميل البيانات</p>
+                    <p class="font-bold">حدث خطأ</p>
                     <p class="text-sm text-gray-500 mt-2">${error.message}</p>
                     <button onclick="refreshData()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                         <i class="fas fa-redo"></i> إعادة المحاولة
@@ -277,9 +261,6 @@
         }
     }
 
-    // ============================================================
-    // تحديث الإحصائيات
-    // ============================================================
     function updateStats() {
         const totalUsers = allData.users.length;
         const totalTeachers = allData.teachers.length;
@@ -292,9 +273,6 @@
         document.getElementById('teachersCount').textContent = totalTeachers;
     }
 
-    // ============================================================
-    // عرض قائمة المدرسين
-    // ============================================================
     function renderTeachers() {
         const container = document.getElementById('teachersList');
 
@@ -303,7 +281,7 @@
                 <div class="text-center py-8 text-gray-500">
                     <i class="fas fa-chalkboard-teacher text-4xl mb-3 opacity-30"></i>
                     <p>لا يوجد مدرسين</p>
-                    <p class="text-sm mt-1">قم بإضافة مدرسين في قاعدة البيانات</p>
+                    <p class="text-sm mt-1">أضف مدرساً في قاعدة البيانات</p>
                 </div>
             `;
             return;
@@ -336,18 +314,12 @@
         container.innerHTML = html;
     }
 
-    // ============================================================
-    // اختيار مدرس وعرض تفاصيله
-    // ============================================================
     function selectTeacher(teacherId) {
         selectedTeacherId = teacherId;
         renderTeachers();
         renderTeacherDetails(teacherId);
     }
 
-    // ============================================================
-    // عرض تفاصيل المدرس والطلاب المسجلين عنده
-    // ============================================================
     function renderTeacherDetails(teacherId) {
         const container = document.getElementById('teacherDetails');
 
@@ -362,11 +334,8 @@
             return;
         }
 
-        // جلب الطلاب المسجلين عند هذا المدرس
         const teacherStudents = allData.userTeachers.filter(ut => ut.teacher_id === teacherId);
-        const students = teacherStudents
-            .map(ut => ut.users)
-            .filter(s => s !== null && s !== undefined);
+        const students = teacherStudents.map(ut => ut.users).filter(s => s !== null);
 
         let html = `
             <div class="slide-enter">
@@ -394,14 +363,10 @@
                 <div class="empty-state">
                     <i class="fas fa-user-graduate text-4xl text-gray-300 mb-3"></i>
                     <p class="text-gray-500">لا يوجد طلاب مسجلين عند هذا المدرس</p>
-                    <p class="text-sm text-gray-400 mt-1">عندما يقوم طالب بإدخال كود هذا المدرس، سيظهر هنا</p>
                 </div>
             `;
         } else {
-            html += `
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            `;
-
+            html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
             students.forEach((student, index) => {
                 html += `
                     <div class="student-item slide-enter" style="animation-delay: ${index * 0.05}s">
@@ -426,33 +391,20 @@
                     </div>
                 `;
             });
-
             html += `</div>`;
         }
 
-        html += `
-                </div>
-            </div>
-        `;
-
+        html += `</div></div>`;
         container.innerHTML = html;
     }
 
-    // ============================================================
-    // تحديث البيانات
-    // ============================================================
     function refreshData() {
         document.getElementById('content').style.display = 'none';
         document.getElementById('loadingIndicator').style.display = 'block';
         loadData();
     }
 
-    // ============================================================
-    // تشغيل التطبيق
-    // ============================================================
     loadData();
-
-    // تحديث كل 30 ثانية
     setInterval(refreshData, 30000);
 </script>
 
