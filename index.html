@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديف أكاديمي</title>
+    <title>ديف أكاديمي | لوحة الإدارة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -250,10 +250,10 @@
     });
 
     // ============================================================
-    // Supabase
+    // Supabase - المفتاح العام
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
-    const SUPABASE_KEY = 'sb_secret_e3EPfM97XsFrXHKQWaNl9g_7Zu6ymKV';
+    const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
 
     const loadingIndicator = document.getElementById('loadingIndicator');
     const errorBox = document.getElementById('errorBox');
@@ -270,7 +270,7 @@
 
     function showError(msg) {
         errorBox.style.display = 'block';
-        errorBox.innerHTML = '❌ ' + msg;
+        errorBox.innerHTML = msg;
         loadingIndicator.style.display = 'none';
     }
 
@@ -306,24 +306,32 @@
         loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري تحميل البيانات...';
 
         try {
-            // التحقق من المكتبة
             if (typeof supabase === 'undefined') {
                 showError('مكتبة Supabase غير محملة');
                 return;
             }
 
-            // إنشاء العميل
             const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
             console.log("✅ تم إنشاء العميل");
 
-            // جلب المستخدمين
+            // ===== جلب المستخدمين =====
             const { data: users, error: usersError } = await sb
                 .from('users')
                 .select('*')
                 .order('registered_at', { ascending: false });
 
             if (usersError) {
-                showError('خطأ في جلب المستخدمين: ' + usersError.message);
+                if (usersError.message.includes('permission denied') || usersError.message.includes('row-level security')) {
+                    showError(`
+                        ⚠️ سياسات الأمان (RLS) تمنع القراءة.<br><br>
+                        <strong>الحل:</strong> اذهب إلى Supabase → SQL Editor وشغل هذا الكود:<br><br>
+                        <code style="background:#f1f5f9;padding:8px;border-radius:4px;display:block;direction:ltr;text-align:left;">
+                        CREATE POLICY "Enable read for all" ON public.users FOR SELECT USING (true);
+                        </code>
+                    `);
+                } else {
+                    showError('خطأ في جلب المستخدمين: ' + usersError.message);
+                }
                 console.error("❌ خطأ:", usersError);
                 return;
             }
@@ -337,12 +345,12 @@
                 return;
             }
 
-            // جلب المدرسين
+            // ===== جلب المدرسين =====
             const { data: teachers } = await sb.from('teachers').select('id, name');
             const teachersMap = {};
             teachers?.forEach(t => { teachersMap[t.id] = t.name; });
 
-            // جلب علاقات المستخدمين
+            // ===== جلب علاقات المستخدمين =====
             const { data: userTeachers } = await sb.from('user_teachers').select('user_id, teacher_id');
             const userTeachersMap = {};
             userTeachers?.forEach(ut => {
@@ -352,14 +360,14 @@
                 }
             });
 
-            // جلب الأكواد
+            // ===== جلب الأكواد =====
             const { data: codes } = await sb.from('codes').select('user_id').eq('is_used', true);
             const userCodesCount = {};
             codes?.forEach(c => {
                 if (c.user_id) userCodesCount[c.user_id] = (userCodesCount[c.user_id] || 0) + 1;
             });
 
-            // بناء البيانات
+            // ===== بناء البيانات =====
             allUsers = users.map(user => {
                 const teacherList = userTeachersMap[user.id] || [];
                 return {
@@ -374,7 +382,7 @@
                 };
             });
 
-            // الإحصائيات
+            // ===== الإحصائيات =====
             const totalUsers = allUsers.length;
             const uniqueTeachers = new Set();
             allUsers.forEach(u => u.teachers.forEach(t => uniqueTeachers.add(t)));
@@ -384,7 +392,7 @@
             totalTeachersEl.textContent = uniqueTeachers.size;
             totalCodesEl.textContent = totalCodes;
 
-            // عرض الجدول
+            // ===== عرض الجدول =====
             renderTable(allUsers);
 
             loadingIndicator.style.display = 'none';
