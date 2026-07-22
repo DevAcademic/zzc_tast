@@ -251,7 +251,7 @@
     });
 
     // ============================================================
-    // Supabase - استخدم المفتاح العام
+    // Supabase
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
@@ -327,7 +327,7 @@
                         ⚠️ سياسات الأمان (RLS) تمنع القراءة.<br><br>
                         <strong>الحل:</strong> اذهب إلى Supabase → SQL Editor وشغل:<br><br>
                         <code style="background:#f1f5f9;padding:8px;border-radius:4px;display:block;direction:ltr;text-align:left;">
-                        CREATE POLICY "users_select_all" ON public.users FOR SELECT USING (true);
+                        CREATE POLICY "allow_public_read_users" ON public.users FOR SELECT USING (true);
                         </code>
                     `);
                 } else {
@@ -373,9 +373,9 @@
                 const teacherList = userTeachersMap[user.id] || [];
                 return {
                     id: user.id,
-                    full_name: user.full_name || '⚠️ غير مسجل',
+                    full_name: user.full_name || 'غير مسجل',
                     email: user.email || '-',
-                    phone: user.phone || '⚠️ غير مسجل',
+                    phone: user.phone || 'غير مسجل',
                     registered_at: user.registered_at || user.created_at,
                     teachers: teacherList,
                     teacherCount: teacherList.length,
@@ -415,7 +415,7 @@
         }
 
         usersTableBody.innerHTML = users.map((user, index) => {
-            let teachersHtml = '❌ لا يوجد';
+            let teachersHtml = 'لا يوجد';
             if (user.teachers && user.teachers.length > 0) {
                 teachersHtml = user.teachers.map(t =>
                     `<span class="teacher-tag">${t}</span>`
@@ -424,18 +424,18 @@
 
             let codeBadge = '';
             if (user.codesCount > 0) {
-                codeBadge = `<span class="badge badge-green">✅ ${user.codesCount}</span>`;
+                codeBadge = `<span class="badge badge-green">${user.codesCount}</span>`;
             } else {
-                codeBadge = `<span class="badge badge-red">❌ 0</span>`;
+                codeBadge = `<span class="badge badge-red">0</span>`;
             }
 
             let nameDisplay = user.full_name;
-            if (user.full_name === '⚠️ غير مسجل') {
+            if (user.full_name === 'غير مسجل') {
                 nameDisplay = `<span class="text-red-500 font-bold">⚠️ غير مسجل</span>`;
             }
 
             let phoneDisplay = user.phone;
-            if (user.phone === '⚠️ غير مسجل') {
+            if (user.phone === 'غير مسجل') {
                 phoneDisplay = `<span class="text-red-500 font-bold">⚠️ غير مسجل</span>`;
             }
 
