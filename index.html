@@ -199,7 +199,7 @@
     let selectedTeacherId = null;
 
     // ============================================================
-    // تحميل البيانات - فقط من قاعدة البيانات الفعلية
+    // تحميل البيانات - جلب مباشر من قاعدة البيانات
     // ============================================================
     async function loadData() {
         try {
@@ -208,7 +208,7 @@
 
             console.log('🔄 جاري جلب البيانات من قاعدة البيانات...');
 
-            // جلب جميع البيانات من قاعدة البيانات فقط
+            // جلب البيانات مباشرة (بدون دوال)
             const [usersRes, teachersRes, userTeachersRes] = await Promise.all([
                 sb.from('users').select('*'),
                 sb.from('teachers').select('*'),
@@ -216,9 +216,18 @@
             ]);
 
             // التحقق من الأخطاء
-            if (usersRes.error) console.error('❌ خطأ في users:', usersRes.error);
-            if (teachersRes.error) console.error('❌ خطأ في teachers:', teachersRes.error);
-            if (userTeachersRes.error) console.error('❌ خطأ في user_teachers:', userTeachersRes.error);
+            if (usersRes.error) {
+                console.error('❌ خطأ في users:', usersRes.error);
+                throw new Error('خطأ في جلب المستخدمين: ' + usersRes.error.message);
+            }
+            if (teachersRes.error) {
+                console.error('❌ خطأ في teachers:', teachersRes.error);
+                throw new Error('خطأ في جلب المدرسين: ' + teachersRes.error.message);
+            }
+            if (userTeachersRes.error) {
+                console.error('❌ خطأ في user_teachers:', userTeachersRes.error);
+                throw new Error('خطأ في جلب علاقات الطلاب: ' + userTeachersRes.error.message);
+            }
 
             allData.users = usersRes.data || [];
             allData.teachers = teachersRes.data || [];
@@ -233,17 +242,19 @@
             renderTeachers();
 
             // إذا كان هناك مدرسين وليس لدينا مدرس محدد، اختر الأول
-            if (allData.teachers.length > 0 && !selectedTeacherId) {
-                selectedTeacherId = allData.teachers[0].id;
+            if (allData.teachers.length > 0) {
+                if (!selectedTeacherId || !allData.teachers.find(t => t.id === selectedTeacherId)) {
+                    selectedTeacherId = allData.teachers[0].id;
+                }
                 renderTeacherDetails(selectedTeacherId);
-            } else if (allData.teachers.length === 0) {
+            } else {
                 // لا يوجد مدرسين
                 document.getElementById('teacherDetails').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-chalkboard-teacher text-4xl text-gray-300 mb-3"></i>
                         <p class="text-lg font-medium text-gray-600">لا يوجد مدرسين</p>
-                        <p class="text-sm text-gray-400 mt-1">قم بإضافة مدرسين من لوحة الإدارة</p>
-                        <p class="text-xs text-gray-400 mt-2">المدرسين الذين تضيفهم في قاعدة البيانات سيظهرون هنا تلقائياً</p>
+                        <p class="text-sm text-gray-400 mt-1">قم بإضافة مدرسين في قاعدة البيانات</p>
+                        <p class="text-xs text-gray-400 mt-2">بعد إضافة مدرس، اضغط على زر التحديث</p>
                     </div>
                 `;
             }
@@ -282,7 +293,7 @@
     }
 
     // ============================================================
-    // عرض قائمة المدرسين (من قاعدة البيانات فقط)
+    // عرض قائمة المدرسين
     // ============================================================
     function renderTeachers() {
         const container = document.getElementById('teachersList');
@@ -351,8 +362,11 @@
             return;
         }
 
+        // جلب الطلاب المسجلين عند هذا المدرس
         const teacherStudents = allData.userTeachers.filter(ut => ut.teacher_id === teacherId);
-        const students = teacherStudents.map(ut => ut.users).filter(s => s !== null);
+        const students = teacherStudents
+            .map(ut => ut.users)
+            .filter(s => s !== null && s !== undefined);
 
         let html = `
             <div class="slide-enter">
