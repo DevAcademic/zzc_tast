@@ -248,10 +248,10 @@
     });
 
     // ============================================================
-    // Supabase - استخدام المفتاح الصحيح
+    // Supabase - استخدام المفتاح السري (Service Role Key)
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
+    const SUPABASE_KEY = 'sb_secret_e3EPfM97XsFrXHKQWaNl9g_7Zu6ymKV';
 
     if (typeof supabase === 'undefined') {
         document.getElementById('loadingIndicator').innerHTML = '❌ خطأ في تحميل المكتبة';
@@ -259,7 +259,7 @@
     }
 
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log("✅ تم إنشاء عميل Supabase");
+    console.log("✅ تم إنشاء عميل Supabase مع المفتاح السري");
 
     // ============================================================
     // عناصر DOM
@@ -311,75 +311,27 @@
         loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> جاري تحميل البيانات...';
 
         try {
-            // ===== 1. جلب من جدول profiles (هذا هو الجدول الصحيح) =====
-            console.log("📊 محاولة جلب من profiles...");
-            const { data: profiles, error: profilesError } = await sb
-                .from('profiles')
+            // ===== 1. جلب المستخدمين من جدول users =====
+            console.log("📊 جلب من جدول users...");
+            const { data: users, error: usersError } = await sb
+                .from('users')
                 .select('*')
-                .order('created_at', { ascending: false });
+                .order('registered_at', { ascending: false });
 
-            if (profilesError) {
-                console.log("⚠️ خطأ في profiles، نجرب users...");
-                // إذا فشل، نجرب users
-                const { data: users, error: usersError } = await sb
-                    .from('users')
-                    .select('*')
-                    .order('registered_at', { ascending: false });
-
-                if (usersError) {
-                    console.error("❌ خطأ في جلب البيانات:", usersError);
-                    loadingIndicator.innerHTML = '❌ خطأ: ' + usersError.message;
-                    return;
-                }
-
-                if (!users || users.length === 0) {
-                    loadingIndicator.style.display = 'none';
-                    emptyState.style.display = 'block';
-                    lastUpdateTime.textContent = getCurrentTime();
-                    return;
-                }
-
-                // معالجة بيانات users
-                allUsers = users.map(user => ({
-                    id: user.id,
-                    full_name: user.full_name || user.email?.split('@')[0] || 'غير مسمى',
-                    email: user.email || '-',
-                    phone: user.phone || '-',
-                    registered_at: user.registered_at || user.created_at,
-                    teachers: [],
-                    teacherCount: 0,
-                    codesCount: 0
-                }));
-
-            } else {
-                // معالجة بيانات profiles
-                if (!profiles || profiles.length === 0) {
-                    loadingIndicator.style.display = 'none';
-                    emptyState.style.display = 'block';
-                    lastUpdateTime.textContent = getCurrentTime();
-                    return;
-                }
-
-                // جلب البريد الإلكتروني من auth.users
-                const { data: authUsers } = await sb.auth.admin.listUsers();
-                const emailMap = {};
-                authUsers?.users?.forEach(u => {
-                    emailMap[u.id] = u.email;
-                });
-
-                allUsers = profiles.map(profile => ({
-                    id: profile.id,
-                    full_name: profile.full_name || 'غير مسمى',
-                    email: emailMap[profile.id] || '-',
-                    phone: profile.phone || '-',
-                    registered_at: profile.created_at || profile.updated_at,
-                    teachers: [],
-                    teacherCount: 0,
-                    codesCount: 0
-                }));
+            if (usersError) {
+                console.error("❌ خطأ:", usersError);
+                loadingIndicator.innerHTML = '❌ خطأ: ' + usersError.message;
+                return;
             }
 
-            console.log(`✅ تم جلب ${allUsers.length} مستخدم`);
+            console.log(`✅ تم جلب ${users?.length || 0} مستخدم`);
+
+            if (!users || users.length === 0) {
+                loadingIndicator.style.display = 'none';
+                emptyState.style.display = 'block';
+                lastUpdateTime.textContent = getCurrentTime();
+                return;
+            }
 
             // ===== 2. جلب المدرسين =====
             const { data: teachers, error: teachersError } = await sb
@@ -429,16 +381,22 @@
                 }
             });
 
-            // ===== 5. تحديث البيانات =====
-            allUsers = allUsers.map(user => {
+            // ===== 5. بناء البيانات النهائية =====
+            allUsers = users.map(user => {
                 const teacherList = userTeachersMap[user.id] || [];
                 return {
-                    ...user,
+                    id: user.id,
+                    full_name: user.full_name || user.email?.split('@')[0] || 'غير مسمى',
+                    email: user.email || '-',
+                    phone: user.phone || '-',
+                    registered_at: user.registered_at || user.created_at,
                     teachers: teacherList,
                     teacherCount: teacherList.length,
                     codesCount: userCodesCount[user.id] || 0
                 };
             });
+
+            console.log(`✅ تم تجهيز ${allUsers.length} مستخدم للعرض`);
 
             // ===== 6. تحديث الإحصائيات =====
             const totalUsers = allUsers.length;
@@ -450,7 +408,7 @@
             totalTeachersEl.textContent = uniqueTeachers.size;
             totalCodesEl.textContent = totalCodes;
 
-            // ===== 7. عرض البيانات =====
+            // ===== 7. عرض البيانات في الجدول =====
             renderTable(allUsers);
 
             loadingIndicator.style.display = 'none';
@@ -520,13 +478,13 @@
     // ===== تحديث يدوي =====
     window.loadAllData = loadAllData;
 
-    // ===== تحميل البيانات =====
+    // ===== تحميل البيانات عند فتح الصفحة =====
     loadAllData();
 
     // ===== تحديث تلقائي كل 30 ثانية =====
     setInterval(loadAllData, 30000);
 
-    console.log("✅ تم تهيئة الصفحة");
+    console.log("✅ تم تهيئة الصفحة بالكامل");
 </script>
 
 </body>
