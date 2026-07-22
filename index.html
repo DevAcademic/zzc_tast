@@ -3,308 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ديف أكاديمي | معلوماتي</title>
+    <title>ديف أكاديمي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Cairo', sans-serif;
-            background: #f0f4ff;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: #fff;
-            padding: 1.5rem 2rem;
-            border-radius: 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .header .brand {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #60a5fa;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .header .brand i { font-size: 2rem; }
-        .btn-logout {
-            background: #dc2626;
-            color: #fff;
-            border: none;
-            padding: 0.5rem 1.5rem;
-            border-radius: 0.75rem;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .btn-logout:hover { background: #b91c1c; }
-        
-        .card {
-            background: #fff;
-            border-radius: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        .card h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1e293b;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.6rem 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .info-row .label {
-            color: #64748b;
-            font-weight: 600;
-        }
-        .info-row .value {
-            color: #1e293b;
-            font-weight: 700;
-        }
-        .teacher-tag {
-            display: inline-block;
-            background: #dbeafe;
-            padding: 0.15rem 0.6rem;
-            border-radius: 9999px;
-            font-size: 0.7rem;
-            margin: 0.1rem;
-            color: #1d4ed8;
-        }
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            color: #94a3b8;
-        }
-        .loading i { font-size: 2rem; display: block; margin-bottom: 1rem; }
-        .error { color: #991b1b; background: #fef2f2; padding: 1rem; border-radius: 0.75rem; border: 1px solid #fecaca; }
-        @media (max-width: 640px) {
-            .info-row { flex-direction: column; gap: 0.25rem; }
-            .info-row .value { text-align: right; }
-        }
-    </style>
 </head>
 <body>
-
-<div class="header">
-    <div class="brand">
-        <i class="fas fa-graduation-cap"></i>
-        <span>ديف أكاديمي</span>
-    </div>
-    <button class="btn-logout" onclick="handleLogout()">
-        <i class="fas fa-sign-out-alt"></i> خروج
-    </button>
-</div>
-
-<div class="card" id="profileCard">
-    <h2><i class="fas fa-user ml-2"></i> معلوماتي الشخصية</h2>
+<div class="p-8" dir="rtl">
+    <h1 class="text-3xl font-bold text-blue-600 mb-4">📊 ديف أكاديمي</h1>
     
-    <div id="loadingDiv" class="loading">
-        <i class="fas fa-spinner fa-pulse"></i>
-        جاري تحميل بياناتك...
+    <div id="result" class="p-4 bg-gray-100 rounded-lg">
+        ⏳ جاري تحميل البيانات...
     </div>
-
-    <div id="contentDiv" style="display:none;">
-        <div class="info-row">
-            <span class="label"><i class="fas fa-user ml-2"></i>الاسم الثلاثي</span>
-            <span class="value" id="fullName">-</span>
-        </div>
-        <div class="info-row">
-            <span class="label"><i class="fas fa-envelope ml-2"></i>البريد الإلكتروني</span>
-            <span class="value" id="email">-</span>
-        </div>
-        <div class="info-row">
-            <span class="label"><i class="fas fa-phone ml-2"></i>رقم الهاتف</span>
-            <span class="value" id="phone">-</span>
-        </div>
-        <div class="info-row">
-            <span class="label"><i class="fas fa-calendar ml-2"></i>تاريخ التسجيل</span>
-            <span class="value" id="registeredAt">-</span>
-        </div>
-        <div class="info-row">
-            <span class="label"><i class="fas fa-chalkboard-teacher ml-2"></i>المدرسون المسجلون</span>
-            <span class="value" id="teachersList">-</span>
-        </div>
-        <div class="info-row">
-            <span class="label"><i class="fas fa-qrcode ml-2"></i>عدد الأكواد المفعلة</span>
-            <span class="value" id="codesCount">-</span>
-        </div>
-    </div>
-
-    <div id="errorDiv" class="error" style="display:none;"></div>
+    <div id="details" class="mt-4 p-4 bg-gray-50 rounded-lg text-sm"></div>
 </div>
 
 <script>
-    // ============================================================
-    // حماية F12
-    // ============================================================
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'F12' ||
-            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) ||
-            (e.ctrlKey && e.key === 'U')) {
-            e.preventDefault();
-            return false;
-        }
-    });
-
-    // ============================================================
-    // Supabase
-    // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
-
-    const loadingDiv = document.getElementById('loadingDiv');
-    const contentDiv = document.getElementById('contentDiv');
-    const errorDiv = document.getElementById('errorDiv');
-
-    function showError(msg) {
-        errorDiv.style.display = 'block';
-        errorDiv.innerHTML = '❌ ' + msg;
-        loadingDiv.style.display = 'none';
-        contentDiv.style.display = 'none';
-    }
-
-    function formatDate(dateStr) {
-        if (!dateStr) return '-';
+    
+    const result = document.getElementById('result');
+    const details = document.getElementById('details');
+    
+    async function loadData() {
         try {
-            const d = new Date(dateStr);
-            return d.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
-        } catch { return '-'; }
-    }
-
-    // ============================================================
-    // جلب البيانات
-    // ============================================================
-    async function loadProfile() {
-        loadingDiv.style.display = 'block';
-        contentDiv.style.display = 'none';
-        errorDiv.style.display = 'none';
-
-        try {
-            if (typeof supabase === 'undefined') {
-                showError('مكتبة Supabase غير محملة');
-                return;
-            }
-
+            result.innerHTML = '🔑 جاري الاتصال بـ Supabase...';
+            
             const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-            // التحقق من الجلسة
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) {
-                window.location.href = "index.html";
+            
+            result.innerHTML = '📊 جاري جلب المستخدمين...';
+            
+            const { data: users, error, status } = await sb.from('users').select('*');
+            
+            if (error) {
+                result.innerHTML = '❌ فشل جلب البيانات';
+                details.innerHTML = `
+                    <div class="text-red-600">الخطأ: ${error.message}</div>
+                    <div class="text-gray-600 mt-2">الحالة: ${status}</div>
+                    <div class="mt-4 p-3 bg-yellow-50 rounded">
+                        <strong>⚠️ الحل:</strong> اذهب إلى Supabase → SQL Editor وشغل:
+                        <code class="block bg-gray-100 p-2 mt-2 rounded text-sm">
+                        CREATE POLICY "users_select_all" ON public.users FOR SELECT USING (true);
+                        </code>
+                    </div>
+                `;
                 return;
             }
-
-            const userId = session.user.id;
-            const userEmail = session.user.email;
-
-            // 1. جلب بيانات المستخدم
-            const { data: userData, error: userError } = await sb
-                .from('users')
-                .select('*')
-                .eq('id', userId)
-                .maybeSingle();
-
-            if (userError) {
-                console.error("❌ خطأ:", userError);
+            
+            if (!users || users.length === 0) {
+                result.innerHTML = '⚠️ لا يوجد مستخدمين في قاعدة البيانات';
+                details.innerHTML = `
+                    <div class="text-gray-600">جدول users فارغ.</div>
+                    <div class="mt-2 p-3 bg-yellow-50 rounded">
+                        <strong>💡 أضف مستخدمين من خلال صفحة التسجيل.</strong>
+                    </div>
+                `;
+                return;
             }
-
-            // 2. جلب المدرسين المسجلين
-            const { data: userTeachers } = await sb
-                .from('user_teachers')
-                .select('teacher_id')
-                .eq('user_id', userId);
-
-            let teacherIds = userTeachers?.map(ut => ut.teacher_id) || [];
-            let teachersNames = [];
-
-            if (teacherIds.length > 0) {
-                const { data: teachers } = await sb
-                    .from('teachers')
-                    .select('name')
-                    .in('id', teacherIds);
-                if (teachers) {
-                    teachersNames = teachers.map(t => t.name);
-                }
-            }
-
-            // 3. جلب عدد الأكواد
-            const { count: codesCount } = await sb
-                .from('codes')
-                .select('*', { count: 'exact', head: true })
-                .eq('user_id', userId)
-                .eq('is_used', true);
-
-            // عرض البيانات
-            const fullName = userData?.full_name || userEmail.split('@')[0] || 'غير مسجل';
-            const phone = userData?.phone || 'غير مسجل';
-            const registeredAt = userData?.registered_at || session.user.created_at;
-
-            document.getElementById('fullName').textContent = fullName;
-            document.getElementById('email').textContent = userEmail;
-            document.getElementById('phone').textContent = phone;
-            document.getElementById('registeredAt').textContent = formatDate(registeredAt);
-
-            // عرض المدرسين
-            if (teachersNames.length > 0) {
-                document.getElementById('teachersList').innerHTML = teachersNames.map(t =>
-                    `<span class="teacher-tag">${t}</span>`
-                ).join(' ');
-            } else {
-                document.getElementById('teachersList').textContent = 'لا يوجد';
-            }
-
-            document.getElementById('codesCount').textContent = codesCount || 0;
-
-            // تخزين في localStorage
-            localStorage.setItem('user_full_name', fullName);
-            localStorage.setItem('user_email', userEmail);
-            localStorage.setItem('user_phone', phone);
-            localStorage.setItem('user_id', userId);
-
-            loadingDiv.style.display = 'none';
-            contentDiv.style.display = 'block';
-
+            
+            result.innerHTML = `✅ تم جلب ${users.length} مستخدم بنجاح!`;
+            
+            let table = '<table class="w-full border mt-4"><thead class="bg-gray-100"><tr>';
+            table += '<th class="p-2 border">#</th>';
+            table += '<th class="p-2 border">الاسم</th>';
+            table += '<th class="p-2 border">البريد</th>';
+            table += '<th class="p-2 border">الهاتف</th>';
+            table += '<th class="p-2 border">تاريخ التسجيل</th></tr></thead><tbody>';
+            
+            users.forEach((user, i) => {
+                table += `<tr>
+                    <td class="p-2 border">${i+1}</td>
+                    <td class="p-2 border">${user.full_name || 'غير مسجل'}</td>
+                    <td class="p-2 border">${user.email || '-'}</td>
+                    <td class="p-2 border">${user.phone || 'غير مسجل'}</td>
+                    <td class="p-2 border">${user.registered_at ? new Date(user.registered_at).toLocaleDateString('ar-EG') : '-'}</td>
+                </tr>`;
+            });
+            table += '</tbody></table>';
+            details.innerHTML = table;
+            
         } catch (err) {
-            showError(err.message);
-            console.error("❌ خطأ:", err);
+            result.innerHTML = '❌ حدث خطأ';
+            details.innerHTML = `<div class="text-red-600">${err.message}</div>`;
         }
     }
-
-    // ============================================================
-    // تسجيل الخروج
-    // ============================================================
-    window.handleLogout = async function() {
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        await sb.auth.signOut();
-        localStorage.clear();
-        window.location.href = "index.html";
-    };
-
-    // ===== تشغيل =====
-    loadProfile();
+    
+    loadData();
 </script>
-
 </body>
 </html>
