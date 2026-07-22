@@ -128,6 +128,7 @@
         .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
         .badge-green { background: #d1fae5; color: #065f46; }
         .badge-amber { background: #fef3c7; color: #d97706; }
+        .badge-red { background: #fef2f2; color: #991b1b; }
         .loading { text-align: center; padding: 3rem; color: #94a3b8; }
         .loading i { font-size: 2rem; display: block; margin-bottom: 1rem; }
         .empty { text-align: center; padding: 3rem; color: #94a3b8; }
@@ -250,7 +251,7 @@
     });
 
     // ============================================================
-    // Supabase - المفتاح العام
+    // Supabase - استخدم المفتاح العام
     // ============================================================
     const SUPABASE_URL = 'https://mgcljgrkxhyjjmxqjkti.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_TE4fMQARKZb0XcjhAnEJhA_ws6AUxoi';
@@ -324,9 +325,9 @@
                 if (usersError.message.includes('permission denied') || usersError.message.includes('row-level security')) {
                     showError(`
                         ⚠️ سياسات الأمان (RLS) تمنع القراءة.<br><br>
-                        <strong>الحل:</strong> اذهب إلى Supabase → SQL Editor وشغل هذا الكود:<br><br>
+                        <strong>الحل:</strong> اذهب إلى Supabase → SQL Editor وشغل:<br><br>
                         <code style="background:#f1f5f9;padding:8px;border-radius:4px;display:block;direction:ltr;text-align:left;">
-                        CREATE POLICY "Enable read for all" ON public.users FOR SELECT USING (true);
+                        CREATE POLICY "users_select_all" ON public.users FOR SELECT USING (true);
                         </code>
                     `);
                 } else {
@@ -372,9 +373,9 @@
                 const teacherList = userTeachersMap[user.id] || [];
                 return {
                     id: user.id,
-                    full_name: user.full_name || 'غير مسجل',
+                    full_name: user.full_name || '⚠️ غير مسجل',
                     email: user.email || '-',
-                    phone: user.phone || 'غير مسجل',
+                    phone: user.phone || '⚠️ غير مسجل',
                     registered_at: user.registered_at || user.created_at,
                     teachers: teacherList,
                     teacherCount: teacherList.length,
@@ -414,23 +415,36 @@
         }
 
         usersTableBody.innerHTML = users.map((user, index) => {
-            let teachersHtml = '-';
+            let teachersHtml = '❌ لا يوجد';
             if (user.teachers && user.teachers.length > 0) {
                 teachersHtml = user.teachers.map(t =>
                     `<span class="teacher-tag">${t}</span>`
                 ).join(' ');
             }
 
-            const codeBadge = user.codesCount > 0
-                ? `<span class="badge badge-green">${user.codesCount}</span>`
-                : `<span class="badge badge-amber">0</span>`;
+            let codeBadge = '';
+            if (user.codesCount > 0) {
+                codeBadge = `<span class="badge badge-green">✅ ${user.codesCount}</span>`;
+            } else {
+                codeBadge = `<span class="badge badge-red">❌ 0</span>`;
+            }
+
+            let nameDisplay = user.full_name;
+            if (user.full_name === '⚠️ غير مسجل') {
+                nameDisplay = `<span class="text-red-500 font-bold">⚠️ غير مسجل</span>`;
+            }
+
+            let phoneDisplay = user.phone;
+            if (user.phone === '⚠️ غير مسجل') {
+                phoneDisplay = `<span class="text-red-500 font-bold">⚠️ غير مسجل</span>`;
+            }
 
             return `
                 <tr>
                     <td class="font-bold text-gray-400">${index + 1}</td>
-                    <td class="font-semibold">${user.full_name}</td>
+                    <td class="font-semibold">${nameDisplay}</td>
                     <td dir="ltr" style="font-size:0.85rem;">${user.email}</td>
-                    <td dir="ltr" style="font-size:0.85rem;">${user.phone}</td>
+                    <td dir="ltr" style="font-size:0.85rem;">${phoneDisplay}</td>
                     <td style="max-width:200px; font-size:0.8rem;">${teachersHtml}</td>
                     <td class="text-center font-bold">${user.teacherCount}</td>
                     <td class="text-center">${codeBadge}</td>
