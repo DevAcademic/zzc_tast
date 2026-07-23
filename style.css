@@ -431,8 +431,6 @@ body {
 .stat-card .icon.purple { background: #8b5cf6; }
 .stat-card .icon.red { background: #ef4444; }
 .stat-card .icon.teal { background: #14b8a6; }
-.stat-card .icon.pink { background: #ec4899; }
-.stat-card .icon.indigo { background: #6366f1; }
 
 .stat-card .info span {
     display: block;
@@ -1069,7 +1067,7 @@ table tbody tr:last-child td {
     }
 }
 
-/* ===== سكrolling ===== */
+/* ===== سكرول ===== */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

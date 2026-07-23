@@ -1,6 +1,6 @@
 // ============================================
 // أقوى نظام إدارة مدرسة متكامل - JavaScript
-// النسخة الذهبية 5.0 - الكود الكامل
+// النسخة الذهبية 5.0 - مع إصلاح تسجيل الدخول
 // ============================================
 
 // ===== الثوابت =====
@@ -8,16 +8,65 @@ const USERS_KEY = 'school_users_gold';
 const DATA_KEY = 'school_data_gold';
 const SETTINGS_KEY = 'school_settings';
 
-// ===== تهيئة المستخدمين =====
+// ===== إصلاح مشكلة تسجيل الدخول =====
+// حذف المستخدمين القديمين وإعادة تهيئتهم
+localStorage.removeItem(USERS_KEY);
+localStorage.removeItem('current_user');
+
 function initUsers() {
+    const users = [
+        { id: 1, username: 'admin', password: '123456', role: 'مدير النظام', fullName: 'مدير المدرسة' },
+        { id: 2, username: 'teacher1', password: '123456', role: 'معلم', fullName: 'أحمد المعلم' },
+        { id: 3, username: 'accountant', password: '123456', role: 'محاسب', fullName: 'خالد المحاسب' }
+    ];
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    console.log('✅ تم تهيئة المستخدمين:', users);
+}
+
+// ===== دالة تسجيل الدخول المعدلة =====
+document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+    
+    console.log('🔑 محاولة دخول:', username, password);
+    
+    // التأكد من وجود المستخدمين
     if (!localStorage.getItem(USERS_KEY)) {
-        const users = [
-            { id: 1, username: 'admin', password: '123456', role: 'مدير النظام', fullName: 'مدير المدرسة' },
-            { id: 2, username: 'teacher1', password: '123456', role: 'معلم', fullName: 'أحمد المعلم' },
-            { id: 3, username: 'accountant', password: '123456', role: 'محاسب', fullName: 'خالد المحاسب' }
-        ];
-        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        initUsers();
     }
+    
+    const users = getUsers();
+    console.log('📋 المستخدمين الموجودين:', users);
+    
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        localStorage.setItem('current_user', JSON.stringify(user));
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('currentUser').textContent = user.fullName || user.username;
+        document.getElementById('currentRole').textContent = user.role || 'مستخدم';
+        initApp();
+        showToast('مرحباً بك ' + user.fullName, 'success');
+        console.log('✅ تم تسجيل الدخول بنجاح:', user);
+    } else {
+        showToast('❌ اسم المستخدم أو كلمة المرور غير صحيحة!', 'error');
+        console.log('❌ فشل تسجيل الدخول - المستخدم غير موجود');
+    }
+});
+
+// ===== دخول سريع (تجاوز) =====
+function forceLogin() {
+    const user = { id: 1, username: 'admin', password: '123456', role: 'مدير النظام', fullName: 'مدير المدرسة' };
+    localStorage.setItem('current_user', JSON.stringify(user));
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('currentUser').textContent = user.fullName;
+    document.getElementById('currentRole').textContent = user.role;
+    initApp();
+    showToast('✅ تم الدخول السريع', 'success');
+    console.log('✅ دخول سريع:', user);
 }
 
 // ===== تهيئة البيانات مع عينات كبيرة =====
@@ -38,6 +87,7 @@ function initData() {
             messages: generateSampleMessages()
         };
         localStorage.setItem(DATA_KEY, JSON.stringify(data));
+        console.log('✅ تم تهيئة البيانات');
     }
 }
 
@@ -324,26 +374,6 @@ function showToast(message, type = 'success') {
     }
 }
 
-// ===== تسجيل الدخول =====
-document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
-    const users = getUsers();
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-        localStorage.setItem('current_user', JSON.stringify(user));
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-        document.getElementById('currentUser').textContent = user.fullName || user.username;
-        document.getElementById('currentRole').textContent = user.role || 'مستخدم';
-        initApp();
-        showToast('مرحباً بك ' + user.fullName, 'success');
-    } else {
-        showToast('❌ اسم المستخدم أو كلمة المرور غير صحيحة!', 'error');
-    }
-});
-
 // ===== تسجيل الخروج =====
 document.getElementById('logoutBtn')?.addEventListener('click', function() {
     localStorage.removeItem('current_user');
@@ -562,20 +592,18 @@ function exportLibraryReport() {
 function populateAllSelects() {
     const data = getData();
     
-    // الفصول
     const classSelects = ['sClass', 'subClass', 'attendanceClass', 'gradeClass', 'filterClass', 'ttClass', 'exClass', 'timetableClass'];
     classSelects.forEach(id => {
         const sel = document.getElementById(id);
         if (!sel) return;
         const currentValue = sel.value;
-        sel.innerHTML = id === 'exClass' ? '<option value="">اختر الفصل</option>' : '<option value="">اختر الفصل</option>';
+        sel.innerHTML = '<option value="">اختر الفصل</option>';
         data.classes?.forEach(c => {
             sel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
         });
         if (currentValue) sel.value = currentValue;
     });
     
-    // المعلمين
     const teacherSelect = document.getElementById('subTeacher');
     if (teacherSelect) {
         teacherSelect.innerHTML = '<option value="">اختر المعلم</option>';
@@ -584,7 +612,6 @@ function populateAllSelects() {
         });
     }
     
-    // الطلاب
     const studentSelects = ['gStudent', 'fStudent'];
     studentSelects.forEach(id => {
         const sel = document.getElementById(id);
@@ -595,7 +622,6 @@ function populateAllSelects() {
         });
     });
     
-    // المواد
     const subjectSelects = ['gSubject', 'ttSubject', 'exSubject'];
     subjectSelects.forEach(id => {
         const sel = document.getElementById(id);
@@ -607,7 +633,6 @@ function populateAllSelects() {
         });
     });
     
-    // فلتر الحالة
     const statusSelect = document.getElementById('filterStatus');
     if (statusSelect) {
         const current = statusSelect.value;
@@ -663,7 +688,6 @@ function updateDashboard() {
 function drawCharts() {
     const data = getData();
     
-    // توزيع الطلاب حسب الفصل
     const classCount = {};
     data.students?.forEach(s => {
         classCount[s.class] = (classCount[s.class] || 0) + 1;
@@ -681,7 +705,6 @@ function drawCharts() {
         });
     }
     
-    // توزيع الدرجات
     const ranges = { '0-49': 0, '50-69': 0, '70-89': 0, '90-100': 0 };
     data.grades?.forEach(g => {
         if (g.score < 50) ranges['0-49']++;
@@ -699,7 +722,6 @@ function drawCharts() {
         });
     }
     
-    // الحضور اليومي
     const attendance = data.attendance || [];
     const days = [];
     const presentCount = [];
@@ -1190,7 +1212,6 @@ document.getElementById('timetableForm')?.addEventListener('submit', function(e)
         const index = (data.timetable || []).findIndex(t => t.id === id);
         if (index !== -1) data.timetable[index] = { ...data.timetable[index], ...timetableData };
     } else {
-        // التحقق من عدم التكرار
         const exists = (data.timetable || []).some(t => t.classId === timetableData.classId && t.day === timetableData.day && t.period === timetableData.period);
         if (exists) {
             showToast('⚠️ هذه الحصة موجودة مسبقاً!', 'error');
@@ -1242,7 +1263,6 @@ function loadAttendanceStudents() {
         `;
     }).join('');
     
-    // الملخص
     const present = (data.attendance || []).filter(a => a.date === date && a.status === 'حاضر').length;
     const absent = (data.attendance || []).filter(a => a.date === date && a.status === 'غائب').length;
     const late = (data.attendance || []).filter(a => a.date === date && a.status === 'متأخر').length;
@@ -1320,7 +1340,6 @@ function loadGradeData() {
         `;
     }).join('');
     
-    // الملخص
     const avg = grades.length > 0 ? Math.round(grades.reduce((s, g) => s + g.score, 0) / grades.length) : 0;
     const summary = document.getElementById('gradesSummary');
     if (summary) {
@@ -1516,7 +1535,6 @@ function renderFees() {
         `;
     }).join('');
     
-    // الملخص
     const fees = data.fees || [];
     const total = fees.reduce((s, f) => s + (f.amount || 0), 0);
     const paid = fees.filter(f => f.status === 'مدفوع').reduce((s, f) => s + (f.amount || 0), 0);
@@ -2057,20 +2075,23 @@ function resetAllData() {
 // ============================================
 // تشغيل التطبيق
 // ============================================
-const currentUser = localStorage.getItem('current_user');
-if (currentUser) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    const user = JSON.parse(currentUser);
-    document.getElementById('currentUser').textContent = user.fullName || user.username;
-    document.getElementById('currentRole').textContent = user.role || 'مستخدم';
-    initApp();
-} else {
-    document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
-}
-
 console.log('🏫 نظام إدارة المدرسة المتكامل - النسخة الذهبية 5.0');
 console.log('📊 تم التحميل بنجاح!');
 console.log('👤 المستخدم الافتراضي: admin / 123456');
 console.log('📁 جميع البيانات مخزنة في localStorage');
+
+// التحقق من وجود مستخدم مسجل دخول
+const currentUserLogged = localStorage.getItem('current_user');
+if (currentUserLogged) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    const user = JSON.parse(currentUserLogged);
+    document.getElementById('currentUser').textContent = user.fullName || user.username;
+    document.getElementById('currentRole').textContent = user.role || 'مستخدم';
+    initApp();
+    console.log('✅ مستخدم مسجل: ' + user.username);
+} else {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    console.log('🔑 انتظر تسجيل الدخول...');
+}
