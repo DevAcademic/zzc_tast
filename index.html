@@ -23,10 +23,10 @@
             padding: 20px;
         }
 
-        .login-container {
+        .container {
             width: 100%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.9);
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(20px);
             border-radius: 30px;
             padding: 30px 25px;
@@ -34,54 +34,115 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .logo-container {
+        .logo {
             text-align: center;
             padding: 10px 0 25px;
         }
 
-        .logo-icon {
+        .logo .icon {
             font-size: 4rem;
             display: block;
             margin-bottom: 10px;
         }
 
-        h1 {
+        .logo h1 {
             font-size: 1.8rem;
             font-weight: 700;
             color: #2C3E50;
-            margin-bottom: 5px;
         }
 
-        .subtitle {
+        .logo p {
             color: #7F8C8D;
             font-size: 0.95rem;
         }
 
-        .login-card {
+        /* ===== أزرار الاختيار ===== */
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 15px 0 20px;
+        }
+
+        .role-btn {
+            padding: 16px;
+            border: 3px solid #E8ECF0;
+            border-radius: 16px;
+            background: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            color: #7F8C8D;
+        }
+
+        .role-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .role-btn.active {
+            border-color: #2ECC71;
+            background: #F0FFF4;
+            color: #2ECC71;
+        }
+
+        .role-btn .emoji {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        /* ===== نموذج التسجيل ===== */
+        .form-card {
             background: white;
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             margin: 10px 0;
+            display: none;
+        }
+
+        .form-card.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card h3 {
+            color: #2C3E50;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         .input-group {
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
 
         .input-group label {
             display: block;
             font-weight: 500;
             color: #2C3E50;
-            margin-bottom: 6px;
-            font-size: 0.95rem;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 14px 16px;
+            padding: 12px 16px;
             border: 2px solid #E8ECF0;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 1rem;
             font-family: inherit;
             transition: all 0.3s;
@@ -98,8 +159,8 @@
         .input-group small {
             display: block;
             color: #95A5A6;
-            font-size: 0.8rem;
-            margin-top: 4px;
+            font-size: 0.75rem;
+            margin-top: 3px;
         }
 
         .phone-input {
@@ -107,7 +168,7 @@
             align-items: center;
             background: #FAFBFC;
             border: 2px solid #E8ECF0;
-            border-radius: 14px;
+            border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s;
         }
@@ -117,20 +178,20 @@
             box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
         }
 
-        .country-code {
-            padding: 14px 12px;
+        .phone-input .country {
+            padding: 12px 10px;
             background: #2ECC71;
             color: white;
             font-weight: 700;
-            font-size: 0.95rem;
-            min-width: 50px;
+            font-size: 0.85rem;
+            min-width: 45px;
             text-align: center;
         }
 
         .phone-input input {
             border: none !important;
             flex: 1;
-            padding: 14px 12px;
+            padding: 12px 14px;
             background: transparent;
             font-size: 1rem;
             font-family: inherit;
@@ -153,7 +214,7 @@
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            margin-top: 5px;
+            margin-top: 10px;
         }
 
         .btn-primary:hover {
@@ -168,12 +229,12 @@
 
         .btn-secondary {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: transparent;
             color: #2ECC71;
             border: 2px solid #2ECC71;
             border-radius: 14px;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -186,30 +247,14 @@
             color: white;
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            color: #95A5A6;
-            font-size: 0.85rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #E8ECF0;
-            margin: 0 10px;
-        }
-
         .message {
             margin-top: 15px;
-            padding: 14px;
-            border-radius: 14px;
+            padding: 12px;
+            border-radius: 12px;
             text-align: center;
             font-weight: 500;
             display: none;
+            font-size: 0.95rem;
         }
 
         .message.success {
@@ -226,8 +271,8 @@
 
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border: 3px solid #f3f3f3;
             border-top: 3px solid #2ECC71;
             border-radius: 50%;
@@ -237,54 +282,121 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 480px) {
-            .login-container {
+            .container {
                 padding: 20px 15px;
             }
-            h1 {
+            .logo h1 {
                 font-size: 1.5rem;
             }
-            .login-card {
-                padding: 20px;
+            .role-btn {
+                padding: 14px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo-container">
-            <div class="logo-icon">🕌</div>
+    <div class="container">
+        <!-- ===== الشعار ===== -->
+        <div class="logo">
+            <span class="icon">🕌</span>
             <h1>معهد أنوار السلام</h1>
-            <p class="subtitle">نظام تسجيل الحضور</p>
+            <p>نظام تسجيل الحضور</p>
         </div>
 
-        <div class="login-card">
+        <!-- ===== اختيار الدور ===== -->
+        <div class="role-selector">
+            <button id="studentRoleBtn" class="role-btn active" onclick="selectRole('student')">
+                <span class="emoji">👤</span>
+                طالب
+            </button>
+            <button id="teacherRoleBtn" class="role-btn" onclick="selectRole('teacher')">
+                <span class="emoji">👨‍🏫</span>
+                مدرس
+            </button>
+        </div>
+
+        <!-- ===== نموذج تسجيل الطالب ===== -->
+        <div id="studentForm" class="form-card active">
+            <h3>📝 تسجيل طالب جديد</h3>
+
+            <div class="input-group">
+                <label>👤 الاسم الثلاثي</label>
+                <input type="text" id="studentName" placeholder="مثال: أحمد محمد علي" />
+                <small>الاسم باللغة العربية فقط</small>
+            </div>
+
+            <div class="input-group">
+                <label>📧 البريد الإلكتروني</label>
+                <input type="email" id="studentEmail" placeholder="example@email.com" />
+            </div>
+
             <div class="input-group">
                 <label>📱 رقم الهاتف</label>
                 <div class="phone-input">
-                    <span class="country-code">+964</span>
-                    <input type="tel" id="loginPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                    <span class="country">+964</span>
+                    <input type="tel" id="studentPhone" placeholder="7XXXXXXXXX" maxlength="10" />
                 </div>
                 <small>أدخل 10 أرقام فقط</small>
             </div>
 
             <div class="input-group">
                 <label>🔑 كلمة المرور</label>
-                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" />
+                <input type="password" id="studentPassword" placeholder="أدخل كلمة مرور (6 أحرف على الأقل)" />
             </div>
 
-            <button id="loginBtn" onclick="loginUser()" class="btn-primary">تسجيل الدخول</button>
-
-            <div class="divider"><span>أو</span></div>
-
-            <button onclick="goToRegister()" class="btn-secondary">إنشاء حساب جديد</button>
+            <button id="studentBtn" onclick="registerStudent()" class="btn-primary">تسجيل كطالب</button>
         </div>
 
-        <div id="loginMessage" class="message"></div>
+        <!-- ===== نموذج تسجيل المدرس ===== -->
+        <div id="teacherForm" class="form-card">
+            <h3>📝 تسجيل مدرس جديد</h3>
+
+            <div class="input-group">
+                <label>👤 الاسم الثلاثي</label>
+                <input type="text" id="teacherName" placeholder="مثال: خالد إبراهيم أحمد" />
+                <small>الاسم باللغة العربية فقط</small>
+            </div>
+
+            <div class="input-group">
+                <label>📧 البريد الإلكتروني</label>
+                <input type="email" id="teacherEmail" placeholder="example@email.com" />
+            </div>
+
+            <div class="input-group">
+                <label>📱 رقم الهاتف</label>
+                <div class="phone-input">
+                    <span class="country">+964</span>
+                    <input type="tel" id="teacherPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                </div>
+                <small>أدخل 10 أرقام فقط</small>
+            </div>
+
+            <div class="input-group">
+                <label>🔑 كلمة المرور</label>
+                <input type="password" id="teacherPassword" placeholder="أدخل كلمة مرور (6 أحرف على الأقل)" />
+            </div>
+
+            <div class="input-group">
+                <label>🔐 كود المدرس السري</label>
+                <input type="password" id="teacherSecretCode" placeholder="أدخل كود المدرس السري" />
+                <small>يجب إدخال الكود الصحيح للتسجيل كمدرس</small>
+            </div>
+
+            <button id="teacherBtn" onclick="registerTeacher()" class="btn-primary">تسجيل كمدرس</button>
+        </div>
+
+        <!-- ===== رسائل النظام ===== -->
+        <div id="message" class="message"></div>
     </div>
 
     <script>
@@ -292,10 +404,10 @@
         //                      الإعدادات (مخفية)
         // ============================================================
 
-        // ===== كود المدرس مشفر =====
-        const _0xsecret = atob('enpubjU1MDAxMUFuQA==');
+        // كود المدرس مشفر
+        const TEACHER_CODE = atob('enpubjU1MDAxMUFuQA==');
 
-        // ===== Supabase مشفر =====
+        // Supabase مشفر
         const SUPABASE_URL = atob('aHR0cHM6Ly9oZHRybmZwd3Z5dmFlemlhaXdlY2suc3VwYWJhc2UuY28=');
         const SUPABASE_KEY = atob('c2JfcHVibGlzaGFibGVfWFlpVWZpemRlOC1aMHlCanZaTnNCd3FfTFNYSzdW');
 
@@ -305,104 +417,261 @@
         //                      دوال مساعدة
         // ============================================================
 
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        }
+
+        function isArabicName(name) {
+            return /^[\u0600-\u06FF\s]+$/.test(name) && name.trim().split(/\s+/).length >= 2;
+        }
+
         function isValidPhone(phone) {
             return /^\d{10}$/.test(phone);
         }
 
+        function isValidPassword(password) {
+            return password.length >= 6;
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
         function showMessage(text, type = 'success') {
-            const el = document.getElementById('loginMessage');
+            const el = document.getElementById('message');
             el.textContent = text;
             el.className = `message ${type}`;
         }
 
         function hideMessage() {
-            const el = document.getElementById('loginMessage');
+            const el = document.getElementById('message');
             el.textContent = '';
             el.className = 'message';
-            el.style.display = 'none';
         }
 
-        function setLoading(loading) {
-            const btn = document.getElementById('loginBtn');
+        function setLoading(buttonId, loading) {
+            const btn = document.getElementById(buttonId);
             if (loading) {
                 btn.disabled = true;
-                btn.innerHTML = 'جاري التحقق <span class="loading"></span>';
+                btn.innerHTML = 'جاري التسجيل <span class="loading"></span>';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = 'تسجيل الدخول';
+                btn.innerHTML = btn.id === 'studentBtn' ? 'تسجيل كطالب' : 'تسجيل كمدرس';
             }
         }
 
         // ============================================================
-        //                      تسجيل الدخول
+        //                      اختيار الدور
         // ============================================================
 
-        window.loginUser = async function() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+        window.selectRole = function(role) {
+            const studentBtn = document.getElementById('studentRoleBtn');
+            const teacherBtn = document.getElementById('teacherRoleBtn');
+            const studentForm = document.getElementById('studentForm');
+            const teacherForm = document.getElementById('teacherForm');
 
             hideMessage();
 
-            if (!isValidPhone(phone)) {
-                showMessage('⚠️ يرجى إدخال 10 أرقام صحيحة', 'error');
-                return;
-            }
-
-            if (!password) {
-                showMessage('⚠️ يرجى إدخال كلمة المرور', 'error');
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                const { data: users, error } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('phone', phone);
-
-                if (error || !users || users.length === 0) {
-                    showMessage('❌ رقم غير مسجل، يرجى التسجيل أولاً', 'error');
-                    setLoading(false);
-                    return;
-                }
-
-                const user = users[0];
-
-                if (user.password !== password) {
-                    showMessage('❌ كلمة المرور غير صحيحة', 'error');
-                    setLoading(false);
-                    return;
-                }
-
-                // حفظ المستخدم
-                localStorage.setItem('currentUser', JSON.stringify(user));
-
-                showMessage('✅ تم تسجيل الدخول بنجاح', 'success');
-
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 800);
-
-            } catch (err) {
-                showMessage('❌ حدث خطأ، حاول مرة أخرى', 'error');
-                setLoading(false);
+            if (role === 'student') {
+                studentBtn.classList.add('active');
+                teacherBtn.classList.remove('active');
+                studentForm.classList.add('active');
+                teacherForm.classList.remove('active');
+            } else {
+                teacherBtn.classList.add('active');
+                studentBtn.classList.remove('active');
+                teacherForm.classList.add('active');
+                studentForm.classList.remove('active');
             }
         };
 
         // ============================================================
-        //                      التوجه للتسجيل
+        //                      تسجيل الطالب
         // ============================================================
 
-        window.goToRegister = function() {
-            window.location.href = 'register.html';
+        window.registerStudent = async function() {
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const phone = document.getElementById('studentPhone').value.trim();
+            const password = document.getElementById('studentPassword').value.trim();
+
+            hideMessage();
+
+            // التحقق من الاسم
+            if (!isArabicName(name)) {
+                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي على الأقل)', 'error');
+                return;
+            }
+
+            // التحقق من البريد
+            if (!isValidEmail(email)) {
+                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
+                return;
+            }
+
+            // التحقق من الهاتف
+            if (!isValidPhone(phone)) {
+                showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
+                return;
+            }
+
+            // التحقق من كلمة المرور
+            if (!isValidPassword(password)) {
+                showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            setLoading('studentBtn', true);
+
+            try {
+                // التحقق من عدم وجود الرقم مسبقاً
+                const { data: existing } = await supabase
+                    .from('users')
+                    .select('phone')
+                    .eq('phone', phone);
+
+                if (existing && existing.length > 0) {
+                    showMessage('⚠️ هذا الرقم مسجل مسبقاً', 'error');
+                    setLoading('studentBtn', false);
+                    return;
+                }
+
+                const newUser = {
+                    id: generateId(),
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    password: password,
+                    grade: 'غير محدد',
+                    is_teacher: false,
+                    created_at: new Date().toISOString()
+                };
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([newUser])
+                    .select();
+
+                if (error) {
+                    showMessage('❌ حدث خطأ أثناء التسجيل', 'error');
+                    setLoading('studentBtn', false);
+                    return;
+                }
+
+                const savedUser = data[0];
+                localStorage.setItem('currentUser', JSON.stringify(savedUser));
+
+                showMessage('✅ تم تسجيلك كطالب بنجاح!', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+
+            } catch (err) {
+                showMessage('❌ حدث خطأ، حاول مرة أخرى', 'error');
+                setLoading('studentBtn', false);
+            }
+        };
+
+        // ============================================================
+        //                      تسجيل المدرس
+        // ============================================================
+
+        window.registerTeacher = async function() {
+            const name = document.getElementById('teacherName').value.trim();
+            const email = document.getElementById('teacherEmail').value.trim();
+            const phone = document.getElementById('teacherPhone').value.trim();
+            const password = document.getElementById('teacherPassword').value.trim();
+            const secretCode = document.getElementById('teacherSecretCode').value.trim();
+
+            hideMessage();
+
+            // التحقق من الاسم
+            if (!isArabicName(name)) {
+                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي على الأقل)', 'error');
+                return;
+            }
+
+            // التحقق من البريد
+            if (!isValidEmail(email)) {
+                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
+                return;
+            }
+
+            // التحقق من الهاتف
+            if (!isValidPhone(phone)) {
+                showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
+                return;
+            }
+
+            // التحقق من كلمة المرور
+            if (!isValidPassword(password)) {
+                showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            // التحقق من كود المدرس
+            if (secretCode !== TEACHER_CODE) {
+                showMessage('❌ كود المدرس غير صحيح!', 'error');
+                return;
+            }
+
+            setLoading('teacherBtn', true);
+
+            try {
+                // التحقق من عدم وجود الرقم مسبقاً
+                const { data: existing } = await supabase
+                    .from('users')
+                    .select('phone')
+                    .eq('phone', phone);
+
+                if (existing && existing.length > 0) {
+                    showMessage('⚠️ هذا الرقم مسجل مسبقاً', 'error');
+                    setLoading('teacherBtn', false);
+                    return;
+                }
+
+                const newUser = {
+                    id: generateId(),
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    password: password,
+                    grade: 'مدرس',
+                    is_teacher: true,
+                    created_at: new Date().toISOString()
+                };
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([newUser])
+                    .select();
+
+                if (error) {
+                    showMessage('❌ حدث خطأ أثناء التسجيل', 'error');
+                    setLoading('teacherBtn', false);
+                    return;
+                }
+
+                const savedUser = data[0];
+                localStorage.setItem('currentUser', JSON.stringify(savedUser));
+
+                showMessage('✅ تم تسجيلك كمدرس بنجاح!', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+
+            } catch (err) {
+                showMessage('❌ حدث خطأ، حاول مرة أخرى', 'error');
+                setLoading('teacherBtn', false);
+            }
         };
 
         // ============================================================
         //                      التحقق من الجلسة
         // ============================================================
 
-        // إذا كان المستخدم مسجل دخول مسبقاً يوجه للوحة
         (function() {
             const user = localStorage.getItem('currentUser');
             if (user) {
@@ -416,6 +685,7 @@
         })();
 
         console.log('🕌 معهد أنوار السلام - صفحة تسجيل الدخول');
+        console.log('🔑 كود المدرس: ' + TEACHER_CODE);
     </script>
 </body>
 </html>

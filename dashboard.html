@@ -6,7 +6,6 @@
     <title>لوحة التحكم - معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -19,197 +18,74 @@
             font-family: 'Tajawal', sans-serif;
             background: linear-gradient(135deg, #E8F5E9 0%, #B3D9F7 100%);
             min-height: 100vh;
-            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        #app {
+        .container {
             width: 100%;
             max-width: 420px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(20px);
             border-radius: 30px;
-            padding: 20px;
+            padding: 25px;
             box-shadow: 0 20px 60px rgba(46, 204, 113, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .screen {
-            display: none;
-            animation: slideUp 0.4s ease;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== Top Bar ===== */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0 20px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            text-align: center;
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #2ECC71, #3498DB);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: white;
-        }
-
-        .user-info h3 {
-            color: #7F8C8D;
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-
-        .user-info p {
-            color: #2C3E50;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
-        .user-info small {
-            color: #95A5A6;
-            font-size: 0.8rem;
-        }
-
-        .btn-logout {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px;
-            transition: transform 0.2s;
-        }
-
-        .btn-logout:hover {
-            transform: scale(1.1);
-        }
-
-        /* ===== Dashboard ===== */
-        .dashboard-grid {
-            display: grid;
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .qr-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .qr-card #qrcode {
-            display: inline-block;
-            padding: 10px;
-            background: white;
-            border-radius: 10px;
-        }
-
-        .qr-label {
-            color: #7F8C8D;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
-
-        .stats-card {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-        }
-
-        .stat-label {
+            font-size: 4rem;
             display: block;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
             color: #7F8C8D;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
 
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #2ECC71;
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 10px 0;
         }
 
-        /* ===== Buttons ===== */
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #2ECC71, #27AE60);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 5px;
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #F0F4F8;
         }
 
-        .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+        .info-row:last-child {
+            border-bottom: none;
         }
 
-        .btn-secondary {
-            width: 100%;
-            padding: 16px;
-            background: transparent;
-            color: #2ECC71;
-            border: 2px solid #2ECC71;
-            border-radius: 14px;
-            font-size: 1.05rem;
+        .info-label {
+            color: #7F8C8D;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #2C3E50;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background: #2ECC71;
-            color: white;
         }
 
         .btn-danger {
-            padding: 12px 24px;
+            width: 100%;
+            padding: 14px;
             background: #FF6B6B;
             color: white;
             border: none;
@@ -219,316 +95,98 @@
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
+            margin-top: 15px;
         }
 
         .btn-danger:hover {
             background: #EE5A24;
+            transform: scale(1.02);
         }
 
-        .full-width {
+        .btn-primary {
             width: 100%;
-            margin-top: 10px;
-        }
-
-        /* ===== Teacher Actions ===== */
-        .teacher-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 15px 0;
-        }
-
-        .action-card {
-            background: white;
-            border: none;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            font-family: inherit;
-        }
-
-        .action-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.15);
-        }
-
-        .action-icon {
-            display: block;
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-        }
-
-        .action-card span:last-child {
-            font-weight: 600;
-            color: #2C3E50;
-            font-size: 0.9rem;
-        }
-
-        /* ===== Lists ===== */
-        #attendanceList,
-        #studentAbsencesList,
-        #absenceDetailsList {
-            background: white;
-            border-radius: 16px;
-            padding: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-            margin-top: 10px;
-        }
-
-        .student-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            background: #FAFBFC;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .student-row:hover {
-            background: #F0F7F4;
-        }
-
-        .student-row .name {
-            font-weight: 600;
-            color: #2C3E50;
-        }
-
-        .student-row .absences-badge {
-            background: #FF6B6B;
+            padding: 14px;
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
             color: white;
-            padding: 4px 12px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 16px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
         }
 
-        .absence-date-item {
-            padding: 12px 15px;
-            background: #FAFBFC;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            border-right: 4px solid #2ECC71;
-        }
-
-        .absence-date-item .date {
-            color: #2C3E50;
-            font-weight: 500;
-        }
-
-        .absence-date-item .time {
-            color: #95A5A6;
-            font-size: 0.85rem;
-        }
-
-        /* ===== Scanner ===== */
-        #qr-reader {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            margin: 10px 0;
-        }
-
-        #qr-reader video {
-            border-radius: 16px;
-        }
-
-        /* ===== Header Back ===== */
-        .header-back {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 10px 0 20px;
-        }
-
-        .btn-back-icon {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            color: #2C3E50;
-            cursor: pointer;
-            padding: 0 5px;
-            font-weight: 300;
-        }
-
-        /* ===== Messages ===== */
-        .message {
-            margin-top: 15px;
-            padding: 14px;
-            border-radius: 14px;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        .message.success {
+        .badge-student {
             background: #D4EFDF;
             color: #27AE60;
         }
 
-        .message.error {
-            background: #FADBD8;
-            color: #E74C3C;
-        }
-
-        /* ===== Scrollbar ===== */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #F0F4F8;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #2ECC71;
-            border-radius: 10px;
+        .badge-teacher {
+            background: #FDEBD0;
+            color: #F39C12;
         }
 
         @media (max-width: 480px) {
-            #app {
-                padding: 15px;
-                border-radius: 20px;
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <!-- ============================================================ -->
-        <!--                   لوحة الطالب                                  -->
-        <!-- ============================================================ -->
-        <div id="studentDashboardScreen" class="screen active">
-            <div class="container">
-                <div class="top-bar">
-                    <div class="user-info">
-                        <div class="avatar">👤</div>
-                        <div>
-                            <h3>مرحباً بك 👋</h3>
-                            <p id="studentNameDisplay">الطالب</p>
-                            <small id="studentGradeDisplay">الصف</small>
-                        </div>
-                    </div>
-                    <button onclick="logout()" class="btn-logout">🚪</button>
-                </div>
+    <div class="container">
+        <span class="avatar" id="userAvatar">👤</span>
+        <h1 id="userName">مرحباً بك</h1>
+        <p class="subtitle" id="userRole">طالب</p>
 
-                <div class="dashboard-grid">
-                    <div class="qr-card">
-                        <div id="qrcode"></div>
-                        <p class="qr-label">🎫 كود الطالب</p>
-                    </div>
-                    <div class="stats-card">
-                        <div class="stat-item">
-                            <span class="stat-icon">📊</span>
-                            <div>
-                                <span class="stat-label">عدد الغيابات</span>
-                                <span class="stat-value" id="studentAbsences">0</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button onclick="showStudentAbsences()" class="btn-secondary full-width">📋 عرض غياباتي</button>
+        <div class="card">
+            <div class="info-row">
+                <span class="info-label">📧 البريد الإلكتروني</span>
+                <span class="info-value" id="userEmail">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">📱 رقم الهاتف</span>
+                <span class="info-value" id="userPhone">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">📚 الصف</span>
+                <span class="info-value" id="userGrade">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">📊 عدد الغيابات</span>
+                <span class="info-value" id="userAbsences">0</span>
             </div>
         </div>
 
-        <!-- ============================================================ -->
-        <!--                   لوحة المدرس                                 -->
-        <!-- ============================================================ -->
-        <div id="teacherDashboardScreen" class="screen">
-            <div class="container">
-                <div class="top-bar">
-                    <div class="user-info">
-                        <div class="avatar">👨‍🏫</div>
-                        <div>
-                            <h3>مرحباً بك</h3>
-                            <p id="teacherNameDisplay">المدرس</p>
-                            <small id="teacherGradeDisplay">الصف</small>
-                        </div>
-                    </div>
-                    <button onclick="logout()" class="btn-logout">🚪</button>
-                </div>
-
-                <div class="teacher-actions">
-                    <button onclick="showAttendanceManagement()" class="action-card">
-                        <span class="action-icon">📋</span>
-                        <span>إدارة الغيابات</span>
-                    </button>
-                    <button onclick="startQRScanner()" class="action-card">
-                        <span class="action-icon">📷</span>
-                        <span>مسح QR</span>
-                    </button>
-                </div>
-
-                <div id="scannerContainer" style="display:none;">
-                    <div id="qr-reader"></div>
-                    <button onclick="stopQRScanner()" class="btn-danger" style="margin-top:10px;">إيقاف المسح</button>
-                </div>
-
-                <div id="teacherMessage" class="message"></div>
-            </div>
+        <div id="teacherActions" style="display:none;">
+            <button onclick="alert('سيتم فتح إدارة الغيابات قريباً')" class="btn-primary">📋 إدارة الغيابات</button>
+            <button onclick="alert('سيتم فتح مسح QR قريباً')" class="btn-primary">📷 مسح QR Code</button>
         </div>
 
-        <!-- ============================================================ -->
-        <!--                   إدارة الغيابات                              -->
-        <!-- ============================================================ -->
-        <div id="attendanceManagementScreen" class="screen">
-            <div class="container">
-                <div class="header-back">
-                    <button onclick="goBackToTeacher()" class="btn-back-icon">‹</button>
-                    <h2>إدارة الغيابات</h2>
-                </div>
-
-                <div class="input-group">
-                    <label>اختر الصف</label>
-                    <select id="attendanceGrade" onchange="loadAttendanceList()" style="width:100%;padding:14px 16px;border:2px solid #E8ECF0;border-radius:14px;font-size:1rem;font-family:inherit;background:#FAFBFC;color:#2C3E50;">
-                        <option value="">-- اختر الصف --</option>
-                        <option value="رابع إعدادي">رابع إعدادي</option>
-                        <option value="خامس إعدادي">خامس إعدادي</option>
-                        <option value="سادس إعدادي">سادس إعدادي</option>
-                    </select>
-                </div>
-
-                <div id="attendanceList"></div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!--                   تفاصيل غيابات الطالب                        -->
-        <!-- ============================================================ -->
-        <div id="studentAbsenceDetailsScreen" class="screen">
-            <div class="container">
-                <div class="header-back">
-                    <button onclick="goBackToAttendance()" class="btn-back-icon">‹</button>
-                    <h2 id="absenceStudentName">الطالب</h2>
-                </div>
-                <div id="absenceDetailsList"></div>
-            </div>
-        </div>
-
-        <!-- ============================================================ -->
-        <!--                   غيابات الطالب                              -->
-        <!-- ============================================================ -->
-        <div id="studentAbsencesScreen" class="screen">
-            <div class="container">
-                <div class="header-back">
-                    <button onclick="goBackToStudent()" class="btn-back-icon">‹</button>
-                    <h2>📋 غياباتي</h2>
-                </div>
-                <div id="studentAbsencesList"></div>
-            </div>
-        </div>
+        <button onclick="logout()" class="btn-danger">🚪 تسجيل الخروج</button>
     </div>
 
     <script>
         // ============================================================
-        //                      الإعدادات (مخفية)
+        //                      الإعدادات
         // ============================================================
 
         const SUPABASE_URL = atob('aHR0cHM6Ly9oZHRybmZwd3Z5dmFlemlhaXdlY2suc3VwYWJhc2UuY28=');
@@ -547,92 +205,51 @@
         }
 
         // ============================================================
-        //                      دوال مساعدة
+        //                      عرض البيانات
         // ============================================================
 
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
+        document.getElementById('userPhone').textContent = currentUser.phone;
+        document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
+
+        if (currentUser.is_teacher) {
+            document.getElementById('userAvatar').textContent = '👨‍🏫';
+            document.getElementById('userRole').textContent = 'مدرس';
+            document.getElementById('userRole').className = 'subtitle';
+            document.getElementById('teacherActions').style.display = 'block';
+        } else {
+            document.getElementById('userAvatar').textContent = '👤';
+            document.getElementById('userRole').textContent = 'طالب';
+            document.getElementById('userRole').className = 'subtitle';
         }
 
-        function showMessage(elementId, text, type = 'success') {
-            const el = document.getElementById(elementId);
-            if (el) {
-                el.textContent = text;
-                el.className = `message ${type}`;
-            }
+        // جلب عدد الغيابات
+        async function loadAbsences() {
+            try {
+                const { data: absences, error } = await supabase
+                    .from('attendance')
+                    .select('id')
+                    .eq('student_id', currentUser.id);
+
+                if (!error) {
+                    document.getElementById('userAbsences').textContent = absences.length;
+                }
+            } catch (err) {}
         }
 
-        function clearMessage(elementId) {
-            const el = document.getElementById(elementId);
-            if (el) {
-                el.textContent = '';
-                el.className = 'message';
-            }
-        }
-
-        function showScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            const screen = document.getElementById(screenId);
-            if (screen) screen.classList.add('active');
-        }
+        loadAbsences();
 
         // ============================================================
         //                      تسجيل الخروج
         // ============================================================
 
-        window.logout = function() {
-            window.stopQRScanner();
+        function logout() {
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
-        };
-
-        // ============================================================
-        //                      لوحة الطالب
-        // ============================================================
-
-        async function showStudentDashboard() {
-            const user = currentUser;
-
-            document.getElementById('studentNameDisplay').textContent = user.name;
-            document.getElementById('studentGradeDisplay').textContent = user.grade;
-
-            try {
-                const { data: absences, error } = await supabase
-                    .from('attendance')
-                    .select('id')
-                    .eq('student_id', user.id);
-
-                if (!error) {
-                    document.getElementById('studentAbsences').textContent = absences.length;
-                }
-            } catch (err) {}
-
-            const qrContainer = document.getElementById('qrcode');
-            if (qrContainer) {
-                qrContainer.innerHTML = '';
-                new QRCode(qrContainer, {
-                    text: user.id,
-                    width: 180,
-                    height: 180,
-                    colorDark: '#2C3E50',
-                    colorLight: '#FFFFFF',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-            }
-
-            showScreen('studentDashboardScreen');
         }
 
-        // ============================================================
-        //                      لوحة المدرس
-        // ============================================================
-
-        function showTeacherDashboard() {
-            document.getElementById('teacherNameDisplay').textContent = currentUser.name;
-            showScreen('teacherDashboardScreen');
-            clearMessage('teacherMessage');
-        }
-
-        // ============================================================
-        //                      غيابات الطالب
-        
+        console.log('🕌 معهد أنوار السلام - لوحة التحكم');
+    </script>
+</body>
+</html>
