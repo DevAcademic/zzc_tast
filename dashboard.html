@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>لوحة التحكم - معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,99 +17,165 @@
             font-family: 'Tajawal', sans-serif;
             background: linear-gradient(135deg, #0C2340, #1A3A5C, #2A5F7A);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
-            padding: 30px 25px;
+            padding: 25px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(201, 168, 76, 0.2);
-            text-align: center;
         }
 
+        /* ===== الهيدر ===== */
         .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px 0 20px;
+            border-bottom: 2px solid #F0F2F5;
         }
 
-        .header .avatar {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 10px;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .header h1 {
+        .user-info .avatar {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #C9A84C, #B8942E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 1.8rem;
+            color: white;
+        }
+
+        .user-info .details h2 {
+            font-size: 1.2rem;
             color: #0C2340;
-            margin-bottom: 5px;
         }
 
-        .header .subtitle {
+        .user-info .details .role {
+            font-size: 0.85rem;
             color: #6B7B8D;
-            font-size: 0.95rem;
         }
 
+        .user-info .details .grade-badge {
+            display: inline-block;
+            padding: 2px 12px;
+            background: #FDF8EE;
+            color: #C9A84C;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .btn-logout {
+            padding: 10px 18px;
+            background: #E74C3C;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .btn-logout:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== البطاقات ===== */
         .card {
             background: white;
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             margin: 15px 0;
-            text-align: right;
             border: 1px solid #F0F2F5;
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            color: #6B7B8D;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #F0F4F8;
+            padding: 8px 0;
+            border-bottom: 1px solid #F5F6F8;
         }
-
         .info-row:last-child {
             border-bottom: none;
         }
-
         .info-label {
             color: #6B7B8D;
-            font-weight: 500;
+            font-size: 0.9rem;
         }
-
         .info-value {
             color: #0C2340;
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
+        /* ===== QR Code ===== */
+        .qr-section {
+            text-align: center;
+            padding: 15px;
+            background: #FAFBFC;
+            border-radius: 16px;
+            margin: 10px 0;
+        }
+        .qr-section #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+        }
+        .qr-section .qr-label {
+            color: #6B7B8D;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        /* ===== أزرار ===== */
         .btn-primary {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             background: linear-gradient(135deg, #C9A84C, #B8942E);
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            margin-top: 10px;
+            margin-top: 8px;
         }
-
         .btn-primary:active {
             transform: scale(0.96);
         }
-
-        .btn-danger {
+        .btn-secondary {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #E74C3C, #C0392B);
-            color: white;
+            background: #E8ECF0;
+            color: #0C2340;
             border: none;
             border-radius: 14px;
             font-size: 1rem;
@@ -116,54 +183,145 @@
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            margin-top: 15px;
+            margin-top: 8px;
         }
-
-        .btn-danger:active {
+        .btn-secondary:active {
             transform: scale(0.96);
         }
 
-        .teacher-actions {
-            margin-top: 10px;
+        /* ===== قائمة الغيابات ===== */
+        .absence-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #FAFBFC;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border-right: 3px solid #C9A84C;
+        }
+        .absence-item .date {
+            color: #0C2340;
+            font-weight: 500;
+        }
+        .absence-item .time {
+            color: #6B7B8D;
+            font-size: 0.85rem;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6B7B8D;
+        }
+        .empty-state .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* ===== قائمة الطلاب ===== */
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #FAFBFC;
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+        .student-item .name {
+            font-weight: 600;
+            color: #0C2340;
+        }
+        .student-item .absences-badge {
+            background: #FF6B6B;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
-        .badge-student {
-            background: #E8F5E9;
-            color: #2E7D32;
+        /* ===== المودال ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-
-        .badge-teacher {
-            background: #FDF8EE;
-            color: #C9A84C;
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .modal-header h3 {
+            color: #0C2340;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #6B7B8D;
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 20px 15px;
+                padding: 15px;
             }
-            .header h1 {
-                font-size: 1.5rem;
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .user-info .avatar {
+                width: 45px;
+                height: 45px;
+                font-size: 1.4rem;
+            }
+            .user-info .details h2 {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- ===== الهيدر ===== -->
         <div class="header">
-            <span class="avatar" id="userAvatar">👤</span>
-            <h1 id="userName">مرحباً بك</h1>
-            <p class="subtitle" id="userRole">طالب</p>
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">👤</div>
+                <div class="details">
+                    <h2 id="userName">مرحباً بك</h2>
+                    <span class="role" id="userRole">طالب</span>
+                    <span class="grade-badge" id="userGradeBadge">رابع إعدادي</span>
+                </div>
+            </div>
+            <button class="btn-logout" onclick="logout()">🚪 خروج</button>
         </div>
 
+        <!-- ===== معلومات المستخدم ===== -->
         <div class="card">
+            <div class="card-title">📋 معلومات الحساب</div>
             <div class="info-row">
                 <span class="info-label">📧 البريد الإلكتروني</span>
                 <span class="info-value" id="userEmail">-</span>
@@ -176,52 +334,308 @@
                 <span class="info-label">📚 الصف</span>
                 <span class="info-value" id="userGrade">-</span>
             </div>
+            <div class="info-row">
+                <span class="info-label">📊 عدد الغيابات</span>
+                <span class="info-value" id="userAbsencesCount">0</span>
+            </div>
         </div>
 
-        <div id="teacherActions" class="teacher-actions" style="display:none;">
-            <button onclick="alert('📋 إدارة الغيابات')" class="btn-primary">📋 إدارة الغيابات</button>
-            <button onclick="alert('📷 مسح QR Code')" class="btn-primary">📷 مسح QR Code</button>
+        <!-- ===== QR Code ===== -->
+        <div class="qr-section">
+            <div id="qrcode"></div>
+            <p class="qr-label">🎫 كود الطالب - استخدمه للمسح</p>
         </div>
 
-        <button onclick="logout()" class="btn-danger">🚪 تسجيل الخروج</button>
+        <!-- ===== أزرار الطالب ===== -->
+        <div id="studentActions">
+            <button class="btn-secondary" onclick="showAbsences()">📋 غياباتي</button>
+        </div>
+
+        <!-- ===== أزرار المدرس ===== -->
+        <div id="teacherActions" style="display:none;">
+            <button class="btn-primary" onclick="showManageStudents()">📋 إدارة الطلاب</button>
+            <button class="btn-primary" onclick="scanQR()">📷 مسح QR Code</button>
+        </div>
+
+        <!-- ===== رسائل ===== -->
+        <div id="message" class="message" style="display:none;margin-top:10px;padding:12px;border-radius:12px;text-align:center;"></div>
+    </div>
+
+    <!-- ===== مودال عرض الغيابات ===== -->
+    <div id="absencesModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📋 سجل الغيابات</h3>
+                <button class="modal-close" onclick="closeModal('absencesModal')">✕</button>
+            </div>
+            <div id="absencesList"></div>
+        </div>
+    </div>
+
+    <!-- ===== مودال إدارة الطلاب ===== -->
+    <div id="studentsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📋 إدارة الطلاب</h3>
+                <button class="modal-close" onclick="closeModal('studentsModal')">✕</button>
+            </div>
+            <div style="margin-bottom:10px;">
+                <select id="filterGrade" style="width:100%;padding:12px;border:2px solid #E8ECF0;border-radius:12px;font-size:1rem;font-family:inherit;">
+                    <option value="">كل الصفوف</option>
+                    <option value="رابع إعدادي">رابع إعدادي</option>
+                    <option value="خامس إعدادي">خامس إعدادي</option>
+                    <option value="سادس إعدادي">سادس إعدادي</option>
+                </select>
+            </div>
+            <div id="studentsList"></div>
+        </div>
+    </div>
+
+    <!-- ===== مودال مسح QR ===== -->
+    <div id="qrModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📷 مسح QR Code</h3>
+                <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
+            </div>
+            <div id="qrScannerContainer" style="text-align:center;padding:20px;">
+                <p style="color:#6B7B8D;margin-bottom:15px;">📱 قم بتوجيه الكاميرا نحو كود الطالب</p>
+                <div style="background:#F0F2F5;border-radius:16px;padding:30px;border:2px dashed #C9A84C;">
+                    <div style="font-size:4rem;">📷</div>
+                    <p style="color:#6B7B8D;margin-top:10px;">(محاكاة المسح - اضغط على زر المسح أدناه)</p>
+                </div>
+                <button class="btn-primary" onclick="simulateScan()" style="margin-top:15px;">🔍 مسح الكود</button>
+                <div id="scanResult" style="margin-top:15px;"></div>
+            </div>
+        </div>
     </div>
 
     <script>
-        console.log('🚀 فتح لوحة التحكم');
+        // ============================================================
+        //                      البيانات
+        // ============================================================
 
-        // جلب البيانات
-        const userData = JSON.parse(localStorage.getItem('userData'));
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let attendance = JSON.parse(localStorage.getItem('attendance')) || [];
 
-        if (!userData) {
-            console.log('❌ لا يوجد مستخدم');
+        if (!currentUser) {
             window.location.href = 'index.html';
         }
 
-        console.log('👤 المستخدم:', userData);
+        // ============================================================
+        //                      عرض البيانات
+        // ============================================================
 
-        // عرض البيانات
-        document.getElementById('userName').textContent = userData.name || 'مستخدم';
-        document.getElementById('userEmail').textContent = userData.email || 'غير محدد';
-        document.getElementById('userPhone').textContent = userData.phone || 'غير محدد';
-        document.getElementById('userGrade').textContent = userData.grade || 'غير محدد';
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
+        document.getElementById('userPhone').textContent = currentUser.phone;
+        document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
+        document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
 
-        if (userData.is_teacher) {
+        // حساب عدد الغيابات
+        const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
+        document.getElementById('userAbsencesCount').textContent = userAbsences.length;
+
+        if (currentUser.is_teacher) {
             document.getElementById('userAvatar').textContent = '👨‍🏫';
             document.getElementById('userRole').textContent = 'مدرس';
+            document.getElementById('userGradeBadge').style.display = 'none';
             document.getElementById('teacherActions').style.display = 'block';
+            document.getElementById('studentActions').style.display = 'none';
         } else {
             document.getElementById('userAvatar').textContent = '👤';
             document.getElementById('userRole').textContent = 'طالب';
         }
 
-        // تسجيل الخروج
+        // ============================================================
+        //                      QR Code
+        // ============================================================
+
+        if (document.getElementById('qrcode')) {
+            new QRCode(document.getElementById('qrcode'), {
+                text: currentUser.id,
+                width: 160,
+                height: 160,
+                colorDark: '#0C2340',
+                colorLight: '#FFFFFF',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // ============================================================
+        //                      عرض الغيابات
+        // ============================================================
+
+        function showAbsences() {
+            const list = document.getElementById('absencesList');
+            const userAbs = attendance.filter(a => a.studentId === currentUser.id);
+
+            if (userAbs.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <span class="icon">🎉</span>
+                        <p>لا توجد غيابات مسجلة</p>
+                        <p style="font-size:0.85rem;">ممتاز! استمر في الحضور</p>
+                    </div>
+                `;
+            } else {
+                list.innerHTML = userAbs.map(a => `
+                    <div class="absence-item">
+                        <span class="date">📅 ${a.date}</span>
+                        <span class="time">⏰ ${a.time}</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('absencesModal').classList.add('active');
+        }
+
+        // ============================================================
+        //                      إدارة الطلاب (للمدرس)
+        // ============================================================
+
+        function showManageStudents() {
+            document.getElementById('studentsModal').classList.add('active');
+            loadStudentsList();
+        }
+
+        function loadStudentsList() {
+            const filter = document.getElementById('filterGrade').value;
+            const list = document.getElementById('studentsList');
+
+            let students = users.filter(u => !u.is_teacher);
+
+            if (filter) {
+                students = students.filter(u => u.grade === filter);
+            }
+
+            if (students.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <span class="icon">👤</span>
+                        <p>لا يوجد طلاب</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = students.map(s => {
+                const abs = attendance.filter(a => a.studentId === s.id).length;
+                return `
+                    <div class="student-item">
+                        <span class="name">${s.name}</span>
+                        <span class="absences-badge">${abs} غياب</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('filterGrade').onchange = loadStudentsList;
+
+        // ============================================================
+        //                      مسح QR (محاكاة)
+        // ============================================================
+
+        function scanQR() {
+            document.getElementById('qrModal').classList.add('active');
+            document.getElementById('scanResult').innerHTML = '';
+        }
+
+        function simulateScan() {
+            const result = document.getElementById('scanResult');
+
+            // محاكاة مسح طالب عشوائي
+            const students = users.filter(u => !u.is_teacher);
+
+            if (students.length === 0) {
+                result.innerHTML = `
+                    <div style="padding:12px;background:#FFEBEE;border-radius:12px;color:#C62828;">
+                        ❌ لا يوجد طلاب مسجلين
+                    </div>
+                `;
+                return;
+            }
+
+            const randomStudent = students[Math.floor(Math.random() * students.length)];
+
+            // التحقق من عدم تسجيل حضور مكرر اليوم
+            const today = new Date().toISOString().split('T')[0];
+            const alreadyExists = attendance.some(a =>
+                a.studentId === randomStudent.id && a.date === today
+            );
+
+            if (alreadyExists) {
+                result.innerHTML = `
+                    <div style="padding:12px;background:#E8F5E9;border-radius:12px;color:#2E7D32;">
+                        ✅ ${randomStudent.name} مسجل حضور اليوم بالفعل
+                    </div>
+                `;
+                return;
+            }
+
+            // تسجيل الحضور
+            const now = new Date();
+            const record = {
+                id: generateId(),
+                studentId: randomStudent.id,
+                studentName: randomStudent.name,
+                grade: randomStudent.grade,
+                date: today,
+                time: now.toLocaleTimeString('ar-EG'),
+                teacherId: currentUser.id,
+                teacherName: currentUser.name,
+                timestamp: now.toISOString()
+            };
+
+            attendance.push(record);
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+
+            result.innerHTML = `
+                <div style="padding:12px;background:#E8F5E9;border-radius:12px;color:#2E7D32;">
+                    ✅ تم تسجيل حضور ${randomStudent.name}
+                    <br><small style="color:#6B7B8D;">${today} - ${record.time}</small>
+                </div>
+            `;
+
+            // تحديث عدد الغيابات
+            document.getElementById('userAbsencesCount').textContent =
+                attendance.filter(a => a.studentId === currentUser.id).length;
+
+            setTimeout(() => {
+                closeModal('qrModal');
+            }, 2000);
+        }
+
+        // ============================================================
+        //                      دوال مساعدة
+        // ============================================================
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
         function logout() {
-            console.log('🚪 تسجيل الخروج');
-            localStorage.removeItem('userData');
+            localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
         }
 
-        console.log('✅ لوحة التحكم جاهزة');
+        // إغلاق المودال عند الضغط خارجها
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.onclick = function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            };
+        });
+
+        console.log('🕌 لوحة التحكم جاهزة');
+        console.log('👤 المستخدم:', currentUser.name);
+        console.log('📊 عدد الغيابات:', userAbsences.length);
     </script>
 </body>
 </html>
