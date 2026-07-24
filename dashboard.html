@@ -545,7 +545,6 @@
         function simulateScan() {
             const result = document.getElementById('scanResult');
 
-            // محاكاة مسح طالب عشوائي
             const students = users.filter(u => !u.is_teacher);
 
             if (students.length === 0) {
@@ -559,7 +558,6 @@
 
             const randomStudent = students[Math.floor(Math.random() * students.length)];
 
-            // التحقق من عدم تسجيل حضور مكرر اليوم
             const today = new Date().toISOString().split('T')[0];
             const alreadyExists = attendance.some(a =>
                 a.studentId === randomStudent.id && a.date === today
@@ -574,7 +572,6 @@
                 return;
             }
 
-            // تسجيل الحضور
             const now = new Date();
             const record = {
                 id: generateId(),
@@ -598,7 +595,6 @@
                 </div>
             `;
 
-            // تحديث عدد الغيابات
             document.getElementById('userAbsencesCount').textContent =
                 attendance.filter(a => a.studentId === currentUser.id).length;
 
@@ -624,7 +620,6 @@
             window.location.href = 'index.html';
         }
 
-        // إغلاق المودال عند الضغط خارجها
         document.querySelectorAll('.modal-overlay').forEach(el => {
             el.onclick = function(e) {
                 if (e.target === this) {
@@ -635,7 +630,6 @@
 
         console.log('🕌 لوحة التحكم جاهزة');
         console.log('👤 المستخدم:', currentUser.name);
-        console.log('📊 عدد الغيابات:', userAbsences.length);
     </script>
 </body>
 </html>
