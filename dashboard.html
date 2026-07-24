@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>لوحة التحكم - معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ============================================================
-                    تنسيقات لوحة التحكم
-           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -18,38 +14,22 @@
 
         body {
             font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, #0C2340 0%, #1A3A5C 50%, #2A5F7A 100%);
+            background: linear-gradient(135deg, #0C2340, #1A3A5C, #2A5F7A);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        body::before {
-            content: '☪';
-            position: absolute;
-            font-size: 20rem;
-            opacity: 0.05;
-            top: -10%;
-            right: -10%;
-            transform: rotate(20deg);
-            color: #C9A84C;
         }
 
         .container {
             width: 100%;
             max-width: 420px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
             border-radius: 30px;
             padding: 30px 25px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(201, 168, 76, 0.2);
-            position: relative;
-            z-index: 1;
             text-align: center;
         }
 
@@ -74,20 +54,12 @@
             font-size: 0.95rem;
         }
 
-        .header .decoration {
-            color: #C9A84C;
-            font-size: 1.2rem;
-            letter-spacing: 8px;
-            opacity: 0.5;
-            margin-top: 8px;
-        }
-
         .card {
             background: white;
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin: 10px 0;
+            margin: 15px 0;
             text-align: right;
             border: 1px solid #F0F2F5;
         }
@@ -123,11 +95,9 @@
             font-size: 1.05rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             font-family: inherit;
             margin-top: 10px;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
 
         .btn-primary:active {
@@ -144,15 +114,17 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             font-family: inherit;
             margin-top: 15px;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
         }
 
         .btn-danger:active {
             transform: scale(0.96);
+        }
+
+        .teacher-actions {
+            margin-top: 10px;
         }
 
         .badge {
@@ -173,14 +145,9 @@
             color: #C9A84C;
         }
 
-        .teacher-actions {
-            margin-top: 10px;
-        }
-
         @media (max-width: 480px) {
             .container {
                 padding: 20px 15px;
-                border-radius: 20px;
             }
             .header h1 {
                 font-size: 1.5rem;
@@ -194,7 +161,6 @@
             <span class="avatar" id="userAvatar">👤</span>
             <h1 id="userName">مرحباً بك</h1>
             <p class="subtitle" id="userRole">طالب</p>
-            <div class="decoration">✦ ✦ ✦</div>
         </div>
 
         <div class="card">
@@ -210,50 +176,36 @@
                 <span class="info-label">📚 الصف</span>
                 <span class="info-value" id="userGrade">-</span>
             </div>
-            <div class="info-row">
-                <span class="info-label">📊 عدد الغيابات</span>
-                <span class="info-value" id="userAbsences">0</span>
-            </div>
         </div>
 
         <div id="teacherActions" class="teacher-actions" style="display:none;">
-            <button onclick="alert('📋 سيتم فتح إدارة الغيابات قريباً')" class="btn-primary">📋 إدارة الغيابات</button>
-            <button onclick="alert('📷 سيتم فتح مسح QR قريباً')" class="btn-primary">📷 مسح QR Code</button>
+            <button onclick="alert('📋 إدارة الغيابات')" class="btn-primary">📋 إدارة الغيابات</button>
+            <button onclick="alert('📷 مسح QR Code')" class="btn-primary">📷 مسح QR Code</button>
         </div>
 
         <button onclick="logout()" class="btn-danger">🚪 تسجيل الخروج</button>
     </div>
 
     <script>
-        // ============================================================
-        //                      الإعدادات
-        // ============================================================
+        console.log('🚀 فتح لوحة التحكم');
 
-        const SUPABASE_URL = 'https://hdtrnfpwyvaeziaiweck.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_XYiUfizde8-Z0yBjvZNsBw_q_LSXK7V';
+        // جلب البيانات
+        const userData = JSON.parse(localStorage.getItem('userData'));
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // ============================================================
-        //                      التحقق من الجلسة
-        // ============================================================
-
-        const user = JSON.parse(localStorage.getItem('currentUser'));
-
-        if (!user) {
+        if (!userData) {
+            console.log('❌ لا يوجد مستخدم');
             window.location.href = 'index.html';
         }
 
-        // ============================================================
-        //                      عرض البيانات
-        // ============================================================
+        console.log('👤 المستخدم:', userData);
 
-        document.getElementById('userName').textContent = user.name;
-        document.getElementById('userEmail').textContent = user.email || 'غير محدد';
-        document.getElementById('userPhone').textContent = user.phone;
-        document.getElementById('userGrade').textContent = user.grade || 'غير محدد';
+        // عرض البيانات
+        document.getElementById('userName').textContent = userData.name || 'مستخدم';
+        document.getElementById('userEmail').textContent = userData.email || 'غير محدد';
+        document.getElementById('userPhone').textContent = userData.phone || 'غير محدد';
+        document.getElementById('userGrade').textContent = userData.grade || 'غير محدد';
 
-        if (user.is_teacher) {
+        if (userData.is_teacher) {
             document.getElementById('userAvatar').textContent = '👨‍🏫';
             document.getElementById('userRole').textContent = 'مدرس';
             document.getElementById('teacherActions').style.display = 'block';
@@ -262,32 +214,14 @@
             document.getElementById('userRole').textContent = 'طالب';
         }
 
-        // جلب عدد الغيابات
-        async function loadAbsences() {
-            try {
-                const { data, error } = await supabase
-                    .from('attendance')
-                    .select('id')
-                    .eq('student_id', user.id);
-
-                if (!error) {
-                    document.getElementById('userAbsences').textContent = data.length;
-                }
-            } catch (err) {}
-        }
-
-        loadAbsences();
-
-        // ============================================================
-        //                      تسجيل الخروج
-        // ============================================================
-
+        // تسجيل الخروج
         function logout() {
-            localStorage.removeItem('currentUser');
+            console.log('🚪 تسجيل الخروج');
+            localStorage.removeItem('userData');
             window.location.href = 'index.html';
         }
 
-        console.log('🕌 معهد أنوار السلام - لوحة التحكم');
+        console.log('✅ لوحة التحكم جاهزة');
     </script>
 </body>
 </html>
