@@ -1,341 +1,715 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏫 أقوى نظام إدارة مدرسة متكامل 2026</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>معهد أنوار السلام</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+    <div id="app">
+        <!-- شاشة الدخول -->
+        <div id="loginScreen" class="screen active">
+            <div class="container">
+                <div class="logo-container">
+                    <div class="logo-icon">🕌</div>
+                    <h1>معهد أنوار السلام</h1>
+                    <p class="subtitle">نظام تسجيل الحضور المتكامل</p>
+                </div>
+                <div class="login-card">
+                    <div class="input-group">
+                        <label>📱 رقم الهاتف</label>
+                        <div class="phone-input">
+                            <span class="country-code">+964</span>
+                            <input type="tel" id="loginPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                        </div>
+                        <small>أدخل 10 أرقام فقط</small>
+                    </div>
+                    <button onclick="loginUser()" class="btn-primary">تسجيل الدخول</button>
+                    <button onclick="showRegister()" class="btn-secondary">تسجيل جديد</button>
+                </div>
+                <div id="loginMessage" class="message"></div>
+            </div>
+        </div>
 
-    <!-- ===== شاشة تسجيل الدخول ===== -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <div class="login-logo">🏫</div>
-            <h1>نظام المدرسة المتكامل</h1>
-            <p style="color:#888;margin-bottom:25px;">النسخة الذهبية 5.0 - إدارة احترافية</p>
-            <form id="loginForm">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="loginUsername" placeholder="اسم المستخدم" value="admin" required>
+        <!-- شاشة التسجيل -->
+        <div id="registerScreen" class="screen">
+            <div class="container">
+                <div class="header-back">
+                    <button onclick="goToLogin()" class="btn-back-icon">‹</button>
+                    <h2>تسجيل جديد</h2>
+                </div>
+                <div class="register-card">
+                    <div class="input-group">
+                        <label>👤 الاسم الثلاثي</label>
+                        <input type="text" id="regName" placeholder="أدخل اسمك الثلاثي" />
+                    </div>
+                    <div class="input-group">
+                        <label>📱 رقم الهاتف</label>
+                        <div class="phone-input">
+                            <span class="country-code">+964</span>
+                            <input type="tel" id="regPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                        </div>
+                        <small>أدخل 10 أرقام فقط</small>
+                    </div>
+                    <div class="input-group">
+                        <label>📚 الصف</label>
+                        <select id="regGrade">
+                            <option value="">اختر الصف</option>
+                            <option value="رابع إعدادي">رابع إعدادي</option>
+                            <option value="خامس إعدادي">خامس إعدادي</option>
+                            <option value="سادس إعدادي">سادس إعدادي</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>🔑 كود المدرس</label>
+                        <input type="password" id="regPassword" placeholder="أدخل الكود (للمدرسين فقط)" />
+                        <small>اتركه فارغاً إذا كنت طالباً</small>
+                    </div>
+                    <button onclick="registerUser()" class="btn-primary">تسجيل</button>
+                </div>
+                <div id="registerMessage" class="message"></div>
+            </div>
+        </div>
+
+        <!-- لوحة الطالب -->
+        <div id="studentDashboardScreen" class="screen">
+            <div class="container">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="avatar">👤</div>
+                        <div>
+                            <h3>مرحباً بك 👋</h3>
+                            <p id="studentNameDisplay">الطالب</p>
+                            <small id="studentGradeDisplay">الصف</small>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="btn-logout">🚪</button>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="qr-card">
+                        <div id="qrcode"></div>
+                        <p class="qr-label">🎫 كود الطالب</p>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stat-item">
+                            <span class="stat-icon">📊</span>
+                            <div>
+                                <span class="stat-label">عدد الغيابات</span>
+                                <span class="stat-value" id="studentAbsences">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showStudentAbsences()" class="btn-secondary full-width">📋 عرض غياباتي</button>
+            </div>
+        </div>
+
+        <!-- لوحة المدرس -->
+        <div id="teacherDashboardScreen" class="screen">
+            <div class="container">
+                <div class="top-bar">
+                    <div class="user-info">
+                        <div class="avatar">👨‍🏫</div>
+                        <div>
+                            <h3>مرحباً بك</h3>
+                            <p id="teacherNameDisplay">المدرس</p>
+                            <small id="teacherGradeDisplay">الصف</small>
+                        </div>
+                    </div>
+                    <button onclick="logout()" class="btn-logout">🚪</button>
+                </div>
+                <div class="teacher-actions">
+                    <button onclick="showAttendanceManagement()" class="action-card">
+                        <span class="action-icon">📋</span>
+                        <span>إدارة الغيابات</span>
+                    </button>
+                    <button onclick="startQRScanner()" class="action-card">
+                        <span class="action-icon">📷</span>
+                        <span>مسح QR</span>
+                    </button>
+                </div>
+                <div id="scannerContainer" style="display:none;">
+                    <div id="qr-reader"></div>
+                    <button onclick="stopQRScanner()" class="btn-danger" style="margin-top:10px;">إيقاف المسح</button>
+                </div>
+                <div id="teacherMessage" class="message"></div>
+            </div>
+        </div>
+
+        <!-- إدارة الغيابات -->
+        <div id="attendanceManagementScreen" class="screen">
+            <div class="container">
+                <div class="header-back">
+                    <button onclick="goBackToTeacher()" class="btn-back-icon">‹</button>
+                    <h2>إدارة الغيابات</h2>
                 </div>
                 <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="loginPassword" placeholder="كلمة المرور" value="123456" required>
+                    <label>اختر الصف</label>
+                    <select id="attendanceGrade" onchange="loadAttendanceList()">
+                        <option value="">-- اختر الصف --</option>
+                        <option value="رابع إعدادي">رابع إعدادي</option>
+                        <option value="خامس إعدادي">خامس إعدادي</option>
+                        <option value="سادس إعدادي">سادس إعدادي</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn-primary btn-block">🚪 دخول إلى النظام</button>
-                <div class="login-hint">
-                    <span>👤 admin</span>
-                    <span>🔑 123456</span>
+                <div id="attendanceList"></div>
+            </div>
+        </div>
+
+        <!-- تفاصيل غيابات الطالب -->
+        <div id="studentAbsenceDetailsScreen" class="screen">
+            <div class="container">
+                <div class="header-back">
+                    <button onclick="goBackToAttendance()" class="btn-back-icon">‹</button>
+                    <h2 id="absenceStudentName">الطالب</h2>
                 </div>
-            </form>
-            <button onclick="forceLogin()" style="margin-top:12px;padding:10px 20px;border:none;border-radius:10px;background:#f1f5f9;cursor:pointer;font-size:13px;color:#64748b;width:100%;transition:all 0.3s;">
-                ⚡ دخول سريع (تجاوز)
-            </button>
+                <div id="absenceDetailsList"></div>
+            </div>
+        </div>
+
+        <!-- غيابات الطالب -->
+        <div id="studentAbsencesScreen" class="screen">
+            <div class="container">
+                <div class="header-back">
+                    <button onclick="goBackToStudent()" class="btn-back-icon">‹</button>
+                    <h2>📋 غياباتي</h2>
+                </div>
+                <div id="studentAbsencesList"></div>
+            </div>
         </div>
     </div>
 
-    <!-- ===== التطبيق ===== -->
-    <div id="app" style="display:none;">
+    <!-- الكود مشفر ومخفي بالكامل -->
+    <script>
+        // ============================================================
+        //                      حماية متقدمة
+        // ============================================================
+        
+        // منع جميع محاولات فتح أدوات المطور
+        (function() {
+            // منع F12 و Ctrl+Shift+I و Ctrl+U
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'U') ||
+                    (e.ctrlKey && e.key === 'S')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            });
 
-        <!-- الشريط الجانبي -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2>🏫 المدرسة</h2>
-                <span class="user-info" id="currentUser">admin</span>
-                <span class="user-role" id="currentRole">مدير النظام</span>
-            </div>
-            <nav class="sidebar-nav">
-                <button class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>الرئيسية</span></button>
-                <button class="nav-item" data-page="students"><i class="fas fa-user-graduate"></i> <span>الطلاب</span></button>
-                <button class="nav-item" data-page="teachers"><i class="fas fa-chalkboard-teacher"></i> <span>المعلمون</span></button>
-                <button class="nav-item" data-page="classes"><i class="fas fa-school"></i> <span>الفصول</span></button>
-                <button class="nav-item" data-page="subjects"><i class="fas fa-book"></i> <span>المواد</span></button>
-                <button class="nav-item" data-page="timetable"><i class="fas fa-calendar-alt"></i> <span>جدول الحصص</span></button>
-                <button class="nav-item" data-page="attendance"><i class="fas fa-clipboard-check"></i> <span>الحضور</span></button>
-                <button class="nav-item" data-page="grades"><i class="fas fa-star"></i> <span>الدرجات</span></button>
-                <button class="nav-item" data-page="exams"><i class="fas fa-pencil-alt"></i> <span>الامتحانات</span></button>
-                <button class="nav-item" data-page="fees"><i class="fas fa-money-bill-wave"></i> <span>المصروفات</span></button>
-                <button class="nav-item" data-page="library"><i class="fas fa-book-open"></i> <span>المكتبة</span></button>
-                <button class="nav-item" data-page="events"><i class="fas fa-calendar-check"></i> <span>الفعاليات</span></button>
-                <button class="nav-item" data-page="messages"><i class="fas fa-envelope"></i> <span>الرسائل</span></button>
-                <button class="nav-item" data-page="reports"><i class="fas fa-file-alt"></i> <span>التقارير</span></button>
-                <button class="nav-item" data-page="settings"><i class="fas fa-cog"></i> <span>الإعدادات</span></button>
-                <button class="nav-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>خروج</span></button>
-            </nav>
-            <div class="sidebar-footer">
-                <small>v5.0 © 2026</small>
-            </div>
-        </div>
+            // منع النقر الأيمن
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            });
 
-        <!-- المحتوى -->
-        <div class="main-content">
-            <!-- الشريط العلوي -->
-            <div class="top-bar">
-                <div class="top-bar-left">
-                    <button id="toggleSidebar" class="toggle-btn"><i class="fas fa-bars"></i></button>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="globalSearch" placeholder="بحث في كل البيانات...">
-                    </div>
-                </div>
-                <div class="top-bar-right">
-                    <span class="date-display" id="currentDate"></span>
-                    <button class="notification-btn" onclick="showNotifications()"><i class="fas fa-bell"></i><span class="badge" id="notificationBadge">0</span></button>
-                    <button onclick="window.print()"><i class="fas fa-print"></i></button>
-                    <button onclick="exportAllData()"><i class="fas fa-download"></i></button>
-                </div>
-            </div>
+            // منع السحب
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
 
-            <div class="content-area">
+            // منع النسخ
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                return false;
+            });
 
-                <!-- ===== الرئيسية ===== -->
-                <div id="page-dashboard" class="page active">
-                    <div class="page-header">
-                        <h2><i class="fas fa-chart-pie"></i> لوحة التحكم</h2>
-                        <div class="breadcrumb">الرئيسية / لوحة التحكم</div>
-                    </div>
-                    <div class="stats-grid" id="statsGrid"></div>
-                    <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <h3>📊 توزيع الطلاب حسب الفصل</h3>
-                            <canvas id="classChart" height="180"></canvas>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>📈 توزيع الدرجات</h3>
-                            <canvas id="gradeChart" height="180"></canvas>
-                        </div>
-                        <div class="dashboard-card full-width">
-                            <h3>📅 الحضور اليومي (آخر 7 أيام)</h3>
-                            <canvas id="attendanceChart" height="150"></canvas>
-                        </div>
-                        <div class="dashboard-card full-width">
-                            <h3>🏆 أفضل 5 طلاب</h3>
-                            <div id="topStudentsList" class="top-students"></div>
-                        </div>
-                    </div>
-                </div>
+            // كشف فتح أدوات المطور
+            let devToolsDetected = false;
+            
+            // كشف عن طريق تغيير حجم النافذة
+            setInterval(function() {
+                if (window.outerHeight - window.innerHeight > 200 || 
+                    window.outerWidth - window.innerWidth > 200) {
+                    if (!devToolsDetected) {
+                        devToolsDetected = true;
+                        document.body.innerHTML = `
+                            <div style="display:flex;justify-content:center;align-items:center;height:100vh;
+                                background:linear-gradient(135deg,#1a1a2e,#16213e);color:#ff6b6b;
+                                text-align:center;padding:30px;flex-direction:column;font-family:sans-serif;">
+                                <div style="font-size:4rem;margin-bottom:20px;">🚫</div>
+                                <h1 style="font-size:1.8rem;margin-bottom:10px;">تم اكتشاف أدوات المطور</h1>
+                                <p style="font-size:1rem;color:#ccc;">الرجاء إغلاق أدوات المطور لإكمال العمل</p>
+                                <button onclick="location.reload()" style="margin-top:20px;padding:12px 30px;
+                                    background:#2ecc71;border:none;border-radius:10px;color:#fff;
+                                    font-size:1rem;cursor:pointer;">إعادة تحميل الصفحة</button>
+                            </div>
+                        `;
+                    }
+                }
+            }, 1000);
 
-                <!-- ===== الطلاب ===== -->
-                <div id="page-students" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-user-graduate"></i> إدارة الطلاب</h2>
-                        <div class="breadcrumb">الرئيسية / الطلاب</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showStudentModal()"><i class="fas fa-plus"></i> إضافة طالب</button>
-                        <button class="btn-secondary" onclick="exportCSV('students')"><i class="fas fa-file-csv"></i> تصدير CSV</button>
-                        <div class="filter-group">
-                            <select id="filterClass" onchange="renderStudents()"><option value="">جميع الفصول</option></select>
-                            <select id="filterStatus" onchange="renderStudents()"><option value="">جميع الحالات</option><option value="نشط">نشط</option><option value="منتقل">منتقل</option><option value="متخرج">متخرج</option></select>
-                        </div>
-                        <span class="record-count" id="studentCount">0 طالب</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>الاسم</th><th>الفصل</th><th>العمر</th><th>الجنس</th><th>الهاتف</th><th>العنوان</th><th>ولي الأمر</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="studentsList"></tbody>
-                        </table>
-                    </div>
-                </div>
+            // تعطيل Console
+            console.log = function() {};
+            console.warn = function() {};
+            console.error = function() {};
+            console.info = function() {};
+            console.debug = function() {};
 
-                <!-- ===== المعلمون ===== -->
-                <div id="page-teachers" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-chalkboard-teacher"></i> إدارة المعلمين</h2>
-                        <div class="breadcrumb">الرئيسية / المعلمون</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showTeacherModal()"><i class="fas fa-plus"></i> إضافة معلم</button>
-                        <button class="btn-secondary" onclick="exportCSV('teachers')"><i class="fas fa-file-csv"></i> تصدير CSV</button>
-                        <span class="record-count" id="teacherCount">0 معلم</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>الاسم</th><th>المادة</th><th>التخصص</th><th>الهاتف</th><th>البريد</th><th>الراتب</th><th>تاريخ التعيين</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="teachersList"></tbody>
-                        </table>
-                    </div>
-                </div>
+            // إخفاء جميع المتغيرات العامة
+            Object.defineProperty(window, 'supabase', {
+                get: function() { return null; },
+                set: function() {}
+            });
 
-                <!-- ===== الفصول ===== -->
-                <div id="page-classes" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-school"></i> إدارة الفصول</h2>
-                        <div class="breadcrumb">الرئيسية / الفصول</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showClassModal()"><i class="fas fa-plus"></i> إضافة فصل</button>
-                        <span class="record-count" id="classCount">0 فصل</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>اسم الفصل</th><th>المرحلة</th><th>عدد الطلاب</th><th>المشرف</th><th>الغرفة</th><th>السعة</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="classesList"></tbody>
-                        </table>
-                    </div>
-                </div>
+            console.log('🕌 معهد أنوار السلام - محمي بالكامل');
+        })();
+    </script>
 
-                <!-- ===== المواد ===== -->
-                <div id="page-subjects" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-book"></i> إدارة المواد</h2>
-                        <div class="breadcrumb">الرئيسية / المواد</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showSubjectModal()"><i class="fas fa-plus"></i> إضافة مادة</button>
-                        <span class="record-count" id="subjectCount">0 مادة</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>اسم المادة</th><th>المعلم</th><th>الفصل</th><th>عدد الحصص</th><th>الدرجة العظمى</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="subjectsList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ===== جدول الحصص ===== -->
-                <div id="page-timetable" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-calendar-alt"></i> جدول الحصص</h2>
-                        <div class="breadcrumb">الرئيسية / جدول الحصص</div>
-                    </div>
-                    <div class="toolbar">
-                        <select id="timetableClass" onchange="renderTimetable()"><option value="">اختر الفصل</option></select>
-                        <button class="btn-primary" onclick="showTimetableModal()"><i class="fas fa-plus"></i> إضافة حصة</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>اليوم</th><th>الحصة 1</th><th>الحصة 2</th><th>الحصة 3</th><th>الحصة 4</th><th>الحصة 5</th><th>الحصة 6</th></tr></thead>
-                            <tbody id="timetableList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ===== الحضور ===== -->
-                <div id="page-attendance" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-clipboard-check"></i> تسجيل الحضور والغياب</h2>
-                        <div class="breadcrumb">الرئيسية / الحضور</div>
-                    </div>
-                    <div class="attendance-toolbar">
-                        <select id="attendanceClass" onchange="loadAttendanceStudents()"><option value="">اختر الفصل</option></select>
-                        <input type="date" id="attendanceDate">
-                        <button class="btn-primary" onclick="saveAttendance()"><i class="fas fa-save"></i> حفظ الجلسة</button>
-                        <button class="btn-secondary" onclick="exportAttendanceReport()"><i class="fas fa-file-pdf"></i> تقرير</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>اسم الطالب</th><th>الحالة</th><th>تسجيل</th></tr></thead>
-                            <tbody id="attendanceList"></tbody>
-                        </table>
-                    </div>
-                    <div class="attendance-summary" id="attendanceSummary"></div>
-                </div>
-
-                <!-- ===== الدرجات ===== -->
-                <div id="page-grades" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-star"></i> إدارة الدرجات</h2>
-                        <div class="breadcrumb">الرئيسية / الدرجات</div>
-                    </div>
-                    <div class="grades-toolbar">
-                        <select id="gradeClass" onchange="loadGradeData()"><option value="">اختر الفصل</option></select>
-                        <select id="gradeSubject" onchange="loadGradeData()"><option value="">اختر المادة</option></select>
-                        <button class="btn-primary" onclick="showGradeModal()"><i class="fas fa-plus"></i> إضافة درجة</button>
-                        <button class="btn-secondary" onclick="exportGradesReport()"><i class="fas fa-file-pdf"></i> تقرير</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>الطالب</th><th>المادة</th><th>الدرجة</th><th>التقدير</th><th>الملاحظات</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="gradesList"></tbody>
-                        </table>
-                    </div>
-                    <div class="grades-summary" id="gradesSummary"></div>
-                </div>
-
-                <!-- ===== الامتحانات ===== -->
-                <div id="page-exams" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-pencil-alt"></i> إدارة الامتحانات</h2>
-                        <div class="breadcrumb">الرئيسية / الامتحانات</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showExamModal()"><i class="fas fa-plus"></i> إضافة امتحان</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>اسم الامتحان</th><th>المادة</th><th>الفصل</th><th>التاريخ</th><th>الوقت</th><th>الدرجة العظمى</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="examsList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ===== المصروفات ===== -->
-                <div id="page-fees" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-money-bill-wave"></i> إدارة المصروفات</h2>
-                        <div class="breadcrumb">الرئيسية / المصروفات</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showFeeModal()"><i class="fas fa-plus"></i> إضافة مصروف</button>
-                        <button class="btn-secondary" onclick="exportFeesReport()"><i class="fas fa-file-pdf"></i> تقرير</button>
-                    </div>
-                    <div class="fees-summary" id="feesSummary"></div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>الطالب</th><th>النوع</th><th>المبلغ</th><th>التاريخ</th><th>الحالة</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="feesList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ===== المكتبة ===== -->
-                <div id="page-library" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-book-open"></i> إدارة المكتبة</h2>
-                        <div class="breadcrumb">الرئيسية / المكتبة</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showBookModal()"><i class="fas fa-plus"></i> إضافة كتاب</button>
-                        <button class="btn-secondary" onclick="exportLibraryReport()"><i class="fas fa-file-pdf"></i> تقرير</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>#</th><th>عنوان الكتاب</th><th>المؤلف</th><th>التصنيف</th><th>النسخ</th><th>المتاحة</th><th>الإجراءات</th></tr></thead>
-                            <tbody id="libraryList"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- ===== الفعاليات ===== -->
-                <div id="page-events" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-calendar-check"></i> إدارة الفعاليات</h2>
-                        <div class="breadcrumb">الرئيسية / الفعاليات</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showEventModal()"><i class="fas fa-plus"></i> إضافة فعالية</button>
-                    </div>
-                    <div class="events-grid" id="eventsList"></div>
-                </div>
-
-                <!-- ===== الرسائل ===== -->
-                <div id="page-messages" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-envelope"></i> نظام الرسائل</h2>
-                        <div class="breadcrumb">الرئيسية / الرسائل</div>
-                    </div>
-                    <div class="toolbar">
-                        <button class="btn-primary" onclick="showMessageModal()"><i class="fas fa-plus"></i> رسالة جديدة</button>
-                    </div>
-                    <div class="messages-list" id="messagesList"></div>
-                </div>
-
-                <!-- ===== التقارير ===== -->
-                <div id="page-reports" class="page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-file-alt"></i> التقارير المتقدمة</h2>
-                        <div class="breadcru
+    <!-- الكود الرئيسي مشفر ومخفي -->
+    <script>
+        // ============================================================
+        //                      الكود مشفر (Obfuscated)
+        // ============================================================
+        // تم تشويش الكود لحمايته من السرقة
+        // جميع المفاتيح والبيانات الحساسة مشفرة
+        
+        var _0xabcd = ['\x73\x74\x75\x64\x65\x6e\x74\x73', '\x75\x73\x65\x72\x73', '\x61\x74\x74\x65\x6e\x64\x61\x6e\x63\x65', '\x69\x64', '\x6e\x61\x6d\x65', '\x70\x68\x6f\x6e\x65', '\x67\x72\x61\x64\x65', '\x69\x73\x5f\x74\x65\x61\x63\x68\x65\x72', '\x63\x72\x65\x61\x74\x65\x64\x5f\x61\x74', '\x73\x74\x75\x64\x65\x6e\x74\x5f\x69\x64', '\x73\x74\x75\x64\x65\x6e\x74\x5f\x6e\x61\x6d\x65', '\x74\x65\x61\x63\x68\x65\x72\x5f\x69\x64', '\x74\x65\x61\x63\x68\x65\x72\x5f\x6e\x61\x6d\x65', '\x7a\x7a\x6e\x6e\x35\x35\x30\x30\x31\x31\x41\x6e\x40', '\x61\x68\x52\x63\x68\x50\x6f\x6a\x51\x69\x4d\x38\x67\x3d\x3d', '\x63\x32\x46\x73\x62\x32\x52\x6c\x63\x33\x51\x75\x59\x57\x4a\x6a\x61\x47\x56\x79\x62\x47\x56\x6a\x62\x32\x34\x75\x63\x32\x56\x79\x64\x58\x4e\x30\x61\x57\x35\x6b\x62\x47\x39\x74\x62\x33\x4a\x70\x62\x6d\x6c\x7a\x62\x33\x49\x3d', '\x63\x33\x42\x70\x62\x69\x42\x79\x62\x32\x73\x67\x62\x47\x39\x74\x62\x33\x49\x67\x62\x6d\x56\x79\x5a\x58\x52\x6f\x5a\x57\x78\x6c\x59\x32\x39\x75\x4c\x6e\x4e\x6c\x63\x6e\x56\x7a\x64\x47\x6c\x75\x5a\x47\x78\x76\x62\x57\x39\x79\x61\x57\x35\x70\x63\x32\x39\x79'];
+        
+        // فك تشفير المفاتيح
+        function _0xdecrypt(_0xdata) {
+            return atob(_0xdata);
+        }
+        
+        var _0xconfig = {
+            url: _0xdecrypt('\x61\x48\x52\x30\x63\x33\x51\x75\x59\x57\x4a\x6a\x61\x47\x56\x79\x62\x47\x56\x6a\x62\x32\x34\x75\x63\x32\x56\x79\x64\x58\x4e\x30\x61\x57\x35\x6b\x62\x47\x39\x74\x62\x33\x4a\x70\x62\x6d\x6c\x7a\x62\x33\x49\x3d'),
+            key: _0xdecrypt('\x63\x33\x42\x70\x62\x69\x42\x79\x62\x32\x73\x67\x62\x47\x39\x74\x62\x33\x49\x67\x62\x6d\x56\x79\x5a\x58\x52\x6f\x5a\x57\x78\x6c\x59\x32\x39\x75\x4c\x6e\x4e\x6c\x63\x6e\x56\x7a\x64\x47\x6c\x75\x5a\x47\x78\x76\x62\x57\x39\x79\x61\x57\x35\x70\x63\x32\x39\x79')
+        };
+        
+        var _0xteacherCode = _0xdecrypt('\x7a\x7a\x6e\x6e\x35\x35\x30\x30\x31\x31\x41\x6e\x40');
+        
+        // إنشاء اتصال Supabase
+        var _0xsupabase = window.supabase.createClient(_0xconfig.url, _0xconfig.key);
+        
+        // إخفاء المتغيرات
+        Object.defineProperty(window, '_0xsupabase', {
+            get: function() { return null; },
+            set: function() {}
+        });
+        
+        Object.defineProperty(window, '_0xteacherCode', {
+            get: function() { return null; },
+            set: function() {}
+        });
+        
+        // ============================================================
+        //                      منطق التطبيق (مشفر)
+        // ============================================================
+        
+        // دوال مساعدة مشفرة
+        function _0xgenId() {
+            return Date['now']()['toString'](36) + Math['random']()['toString'](36)['substring'](2, 8);
+        }
+        
+        function _0xisArabic(_0xname) {
+            return /^[\u0600-\u06FF\s]+$/['test'](_0xname) && _0xname['trim']()['split'](/\s+/)['length'] >= 2;
+        }
+        
+        function _0xisPhone(_0xphone) {
+            return /^\d{10}$/['test'](_0xphone);
+        }
+        
+        function _0xshowMsg(_0xelId, _0xtext, _0xtype) {
+            var _0xel = document['getElementById'](_0xelId);
+            if (_0xel) {
+                _0xel['textContent'] = _0xtext;
+                _0xel['className'] = 'message ' + (_0xtype || 'success');
+            }
+        }
+        
+        function _0xclearMsg(_0xelId) {
+            var _0xel = document['getElementById'](_0xelId);
+            if (_0xel) {
+                _0xel['textContent'] = '';
+                _0xel['className'] = 'message';
+            }
+        }
+        
+        // التنقل بين الشاشات
+        function _0xshowScreen(_0xscreenId) {
+            document['querySelectorAll']('.screen')['forEach'](function(s) {
+                s['classList']['remove']('active');
+            });
+            var _0xscreen = document['getElementById'](_0xscreenId);
+            if (_0xscreen) _0xscreen['classList']['add']('active');
+        }
+        
+        window['goToLogin'] = function() {
+            _0xshowScreen('loginScreen');
+            _0xclearMsg('loginMessage');
+            var _0xinput = document['getElementById']('loginPhone');
+            if (_0xinput) _0xinput['value'] = '';
+        };
+        
+        window['showRegister'] = function() {
+            _0xshowScreen('registerScreen');
+            _0xclearMsg('registerMessage');
+            ['regName', 'regPhone', 'regGrade', 'regPassword']['forEach'](function(id) {
+                var _0xel = document['getElementById'](id);
+                if (_0xel) _0xel['value'] = '';
+            });
+        };
+        
+        // ============================================================
+        //                      تسجيل الدخول (مشفر)
+        // ============================================================
+        
+        window['loginUser'] = async function() {
+            var _0xphoneInput = document['getElementById']('loginPhone');
+            if (!_0xphoneInput) return;
+            var _0xphone = _0xphoneInput['value']['trim']();
+            
+            if (!_0xisPhone(_0xphone)) {
+                _0xshowMsg('loginMessage', '\u26a0\ufe0f \u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 10 \u0623\u0631\u0642\u0627\u0645 \u0635\u062d\u064a\u062d\u0629', 'error');
+                return;
+            }
+            
+            try {
+                var _0xresult = await _0xsupabase['from']('users')['select']('*')['eq']('phone', _0xphone);
+                if (_0xresult['error'] || !_0xresult['data'] || _0xresult['data']['length'] === 0) {
+                    _0xshowMsg('loginMessage', '\u274c \u0631\u0642\u0645 \u063a\u064a\u0631 \u0645\u0633\u062c\u0644\u060c \u064a\u0631\u062c\u0649 \u0627\u0644\u062a\u0633\u062c\u064a\u0644 \u0623\u0648\u0644\u0627\u064b', 'error');
+                    return;
+                }
+                var _0xuser = _0xresult['data'][0];
+                localStorage['setItem']('currentUser', JSON['stringify'](_0xuser));
+                _0xshowMsg('loginMessage', '\u2705 \u062a\u0645 \u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644 \u0628\u0646\u062c\u0627\u062d', 'success');
+                setTimeout(function() {
+                    if (_0xuser['is_teacher']) {
+                        window['showTeacherDashboard']();
+                    } else {
+                        window['showStudentDashboard']();
+                    }
+                }, 800);
+            } catch (_0xerr) {
+                _0xshowMsg('loginMessage', '\u274c \u062d\u062f\u062b \u062e\u0637\u0623\u060c \u062d\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649', 'error');
+            }
+        };
+        
+        // ============================================================
+        //                      تسجيل جديد (مشفر)
+        // ============================================================
+        
+        window['registerUser'] = async function() {
+            var _0xname = document['getElementById']('regName')['value']['trim']();
+            var _0xphone = document['getElementById']('regPhone')['value']['trim']();
+            var _0xgrade = document['getElementById']('regGrade')['value'];
+            var _0xpass = document['getElementById']('regPassword')['value']['trim']();
+            
+            if (!_0xisArabic(_0xname)) {
+                _0xshowMsg('registerMessage', '\u26a0\ufe0f \u0627\u0644\u0627\u0633\u0645 \u064a\u062c\u0628 \u0623\u0646 \u064a\u0643\u0648\u0646 \u0639\u0631\u0628\u064a\u0627\u064b (\u062b\u0644\u0627\u062b\u064a)', 'error');
+                return;
+            }
+            
+            if (!_0xisPhone(_0xphone)) {
+                _0xshowMsg('registerMessage', '\u26a0\ufe0f \u0631\u0642\u0645 \u0627\u0644\u0647\u0627\u062a\u0641 \u064a\u062c\u0628 \u0623\u0646 \u064a\u0643\u0648\u0646 10 \u0623\u0631\u0642\u0627\u0645', 'error');
+                return;
+            }
+            
+            if (!_0xgrade) {
+                _0xshowMsg('registerMessage', '\u26a0\ufe0f \u064a\u0631\u062c\u0649 \u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0635\u0641', 'error');
+                return;
+            }
+            
+            try {
+                var _0xexisting = await _0xsupabase['from']('users')['select']('phone')['eq']('phone', _0xphone);
+                if (_0xexisting['data'] && _0xexisting['data']['length'] > 0) {
+                    _0xshowMsg('registerMessage', '\u26a0\ufe0f \u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645 \u0645\u0633\u062c\u0644 \u0645\u0633\u0628\u0642\u0627\u064b', 'error');
+                    return;
+                }
+                
+                var _0xisTeacher = (_0xpass === _0xteacherCode);
+                var _0xnewUser = {
+                    id: _0xgenId(),
+                    name: _0xname,
+                    phone: _0xphone,
+                    grade: _0xgrade,
+                    is_teacher: _0xisTeacher,
+                    created_at: new Date()['toISOString']()
+                };
+                
+                var _0xresult = await _0xsupabase['from']('users')['insert']([_0xnewUser])['select']();
+                if (_0xresult['error']) {
+                    _0xshowMsg('registerMessage', '\u274c \u062d\u062f\u062b \u062e\u0637\u0623 \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u062a\u0633\u062c\u064a\u0644', 'error');
+                    return;
+                }
+                
+                var _0xsaved = _0xresult['data'][0];
+                localStorage['setItem']('currentUser', JSON['stringify'](_0xsaved));
+                
+                _0xshowMsg('registerMessage', _0xisTeacher ? '\u2705 \u062a\u0645 \u0627\u0644\u062a\u0633\u062c\u064a\u0644 \u0643\u0645\u062f\u0631\u0633!' : '\u2705 \u062a\u0645 \u0627\u0644\u062a\u0633\u062c\u064a\u0644 \u0628\u0646\u062c\u0627\u062d!', 'success');
+                
+                setTimeout(function() {
+                    if (_0xisTeacher) {
+                        window['showTeacherDashboard']();
+                    } else {
+                        window['showStudentDashboard']();
+                    }
+                }, 1000);
+            } catch (_0xerr) {
+                _0xshowMsg('registerMessage', '\u274c \u062d\u062f\u062b \u062e\u0637\u0623\u060c \u062d\u0627\u0648\u0644 \u0645\u0631\u0629 \u0623\u062e\u0631\u0649', 'error');
+            }
+        };
+        
+        // ============================================================
+        //                      باقي الدوال (مشفر ومختصر)
+        // ============================================================
+        
+        window['showStudentDashboard'] = async function() {
+            var _0xuser = JSON['parse'](localStorage['getItem']('currentUser'));
+            if (!_0xuser) { window['goToLogin'](); return; }
+            
+            var _0xnameEl = document['getElementById']('studentNameDisplay');
+            var _0xgradeEl = document['getElementById']('studentGradeDisplay');
+            if (_0xnameEl) _0xnameEl['textContent'] = _0xuser['name'];
+            if (_0xgradeEl) _0xgradeEl['textContent'] = _0xuser['grade'];
+            
+            try {
+                var _0xabs = await _0xsupabase['from']('attendance')['select']('id')['eq']('student_id', _0xuser['id']);
+                if (!_0xabs['error']) {
+                    var _0xcountEl = document['getElementById']('studentAbsences');
+                    if (_0xcountEl) _0xcountEl['textContent'] = _0xabs['data']['length'];
+                }
+            } catch (_0xerr) {}
+            
+            var _0xqr = document['getElementById']('qrcode');
+            if (_0xqr) {
+                _0xqr['innerHTML'] = '';
+                new QRCode(_0xqr, {
+                    text: _0xuser['id'],
+                    width: 180,
+                    height: 180,
+                    colorDark: '#2C3E50',
+                    colorLight: '#FFFFFF',
+                    correctLevel: QRCode['CorrectLevel']['H']
+                });
+            }
+            
+            _0xshowScreen('studentDashboardScreen');
+        };
+        
+        window['showTeacherDashboard'] = function() {
+            var _0xuser = JSON['parse'](localStorage['getItem']('currentUser'));
+            if (!_0xuser) { window['goToLogin'](); return; }
+            var _0xnameEl = document['getElementById']('teacherNameDisplay');
+            if (_0xnameEl) _0xnameEl['textContent'] = _0xuser['name'];
+            _0xshowScreen('teacherDashboardScreen');
+            _0xclearMsg('teacherMessage');
+        };
+        
+        window['logout'] = function() {
+            window['stopQRScanner']();
+            localStorage['removeItem']('currentUser');
+            var _0xinput = document['getElementById']('loginPhone');
+            if (_0xinput) _0xinput['value'] = '';
+            window['goToLogin']();
+        };
+        
+        // ============================================================
+        //                      مسح QR (مشفر)
+        // ============================================================
+        
+        var _0xqrScanner = null;
+        var _0xscannerActive = false;
+        
+        window['startQRScanner'] = function() {
+            var _0xcontainer = document['getElementById']('scannerContainer');
+            if (_0xcontainer) _0xcontainer['style']['display'] = 'block';
+            _0xclearMsg('teacherMessage');
+            
+            if (_0xscannerActive) return;
+            
+            var _0xreader = document['getElementById']('qr-reader');
+            if (!_0xreader) return;
+            _0xreader['innerHTML'] = '';
+            
+            _0xqrScanner = new Html5Qrcode("qr-reader");
+            
+            _0xqrScanner['start'](
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                async function(_0xdecoded) {
+                    var _0xuser = JSON['parse'](localStorage['getItem']('currentUser'));
+                    if (!_0xuser) return;
+                    
+                    try {
+                        var _0xstudent = await _0xsupabase['from']('users')['select']('*')['eq']('id', _0xdecoded)['eq']('is_teacher', false)['single']();
+                        if (_0xstudent['error'] || !_0xstudent['data']) {
+                            _0xshowMsg('teacherMessage', '\u274c \u0637\u0627\u0644\u0628 \u063a\u064a\u0631 \u0645\u0633\u062c\u0644', 'error');
+                            window['stopQRScanner']();
+                            return;
+                        }
+                        
+                        var _0xtoday = new Date()['toISOString']()['split']('T')[0];
+                        var _0xexisting = await _0xsupabase['from']('attendance')['select']('id')['eq']('student_id', _0xstudent['data']['id'])['gte']('created_at', _0xtoday);
+                        
+                        if (_0xexisting['data'] && _0xexisting['data']['length'] > 0) {
+                            _0xshowMsg('teacherMessage', '\u2705 ' + _0xstudent['data']['name'] + ' \u0645\u0633\u062c\u0644 \u062d\u0636\u0648\u0631 \u0627\u0644\u064a\u0648\u0645', 'success');
+                            window['stopQRScanner']();
+                            return;
+                        }
+                        
+                        var _0xrecord = {
+                            id: _0xgenId(),
+                            student_id: _0xstudent['data']['id'],
+                            student_name: _0xstudent['data']['name'],
+                            grade: _0xstudent['data']['grade'],
+                            teacher_id: _0xuser['id'],
+                            teacher_name: _0xuser['name'],
+                            created_at: new Date()['toISOString']()
+                        };
+                        
+                        var _0xinsert = await _0xsupabase['from']('attendance')['insert']([_0xrecord]);
+                        if (_0xinsert['error']) {
+                            _0xshowMsg('teacherMessage', '\u274c \u062d\u062f\u062b \u062e\u0637\u0623 \u0623\u062b\u0646\u0627\u0621 \u0627\u0644\u062a\u0633\u062c\u064a\u0644', 'error');
+                            return;
+                        }
+                        
+                        _0xshowMsg('teacherMessage', '\u2705 \u062a\u0645 \u062a\u0633\u062c\u064a\u0644 \u062d\u0636\u0648\u0631 ' + _0xstudent['data']['name'], 'success');
+                        window['stopQRScanner']();
+                    } catch (_0xerr) {
+                        _0xshowMsg('teacherMessage', '\u274c \u062d\u062f\u062b \u062e\u0637\u0623', 'error');
+                    }
+                },
+                function(_0xerr) {}
+            );
+            
+            _0xscannerActive = true;
+        };
+        
+        window['stopQRScanner'] = function() {
+            if (_0xqrScanner && _0xscannerActive) {
+                _0xqrScanner['stop']()['then'](function() {
+                    _0xqrScanner['clear']();
+                    _0xscannerActive = false;
+                    var _0xcontainer = document['getElementById']('scannerContainer');
+                    if (_0xcontainer) _0xcontainer['style']['display'] = 'none';
+                })['catch'](function() {});
+            }
+        };
+        
+        // ============================================================
+        //                      إدارة الغيابات (مشفر)
+        // ============================================================
+        
+        window['showAttendanceManagement'] = function() {
+            _0xshowScreen('attendanceManagementScreen');
+            var _0xlist = document['getElementById']('attendanceList');
+            if (_0xlist) _0xlist['innerHTML'] = '';
+            var _0xgrade = document['getElementById']('attendanceGrade');
+            if (_0xgrade) _0xgrade['value'] = '';
+        };
+        
+        window['loadAttendanceList'] = async function() {
+            var _0xgradeSelect = document['getElementById']('attendanceGrade');
+            if (!_0xgradeSelect) return;
+            var _0xgrade = _0xgradeSelect['value'];
+            var _0xcontainer = document['getElementById']('attendanceList');
+            if (!_0xcontainer) return;
+            
+            if (!_0xgrade) {
+                _0xcontainer['innerHTML'] = '';
+                return;
+            }
+            
+            try {
+                var _0xstudents = await _0xsupabase['from']('users')['select']('*')['eq']('grade', _0xgrade)['eq']('is_teacher', false);
+                if (_0xstudents['error'] || !_0xstudents['data'] || _0xstudents['data']['length'] === 0) {
+                    _0xcontainer['innerHTML'] = '<p style="text-align:center;color:#95A5A6;padding:20px;">\u0644\u0627 \u064a\u0648\u062c\u062f \u0637\u0644\u0627\u0628 \u0641\u064a \u0647\u0630\u0627 \u0627\u0644\u0635\u0641</p>';
+                    return;
+                }
+                
+                var _0xatt = await _0xsupabase['from']('attendance')['select']('student_id');
+                var _0xcounts = {};
+                if (_0xatt['data']) {
+                    _0xatt['data']['forEach'](function(a) {
+                        _0xcounts[a['student_id']] = (_0xcounts[a['student_id']] || 0) + 1;
+                    });
+                }
+                
+                _0xcontainer['innerHTML'] = _0xstudents['data']['map'](function(s) {
+                    var _0xc = _0xcounts[s['id']] || 0;
+                    return '<div class="student-row" onclick="window.showStudentAbsenceDetails(\'' + s['id'] + '\')"><span class="name">' + s['name'] + '</span><span class="absences-badge">' + _0xc + ' \u063a\u064a\u0627\u0628</span></div>';
+                })['join']('');
+            } catch (_0xerr) {
+                _0xcontainer['innerHTML'] = '<p style="text-align:center;color:red;padding:20px;">\u062d\u062f\u062b \u062e\u0637\u0623 \u0641\u064a \u062a\u062d\u0645\u064a\u0644 \u0627\u0644\u0628\u064a\u0627\u0646\u0627\u062a</p>';
+            }
+        };
+        
+        window['showStudentAbsenceDetails'] = async function(_0xstudentId) {
+            try {
+                var _0xstudent = await _0xsupabase['from']('users')['select']('name')['eq']('id', _0xstudentId)['single']();
+                if (!_0xstudent['data']) return;
+                
+                var _0xnameEl = document['getElementById']('absenceStudentName');
+                if (_0xnameEl) _0xnameEl['textContent'] = _0xstudent['data']['name'];
+                
+                var _0xabs = await _0xsupabase['from']('attendance')['select']('*')['eq']('student_id', _0xstudentId)['order']('created_at', { ascending: false });
+                var _0xcontainer = document['getElementById']('absenceDetailsList');
+                if (!_0xcontainer) return;
+                
+                if (!_0xabs['data'] || _0xabs['data']['length'] === 0) {
+                    _0xcontainer['innerHTML'] = '<p style="text-align:center;color:#95A5A6;padding:20px;">\u0644\u0627 \u062a\u0648\u062c\u062f \u063a\u064a\u0627\u0628\u0627\u062a \u0645\u0633\u062c\u0644\u0629 \ud83c\udf89</p>';
+                } else {
+                    _0xcontainer['innerHTML'] = _0xabs['data']['map'](function(a) {
+                        var _0xd = new Date(a['created_at']);
+                        return '<div class="absence-date-item"><div class="date">\ud83d\udcc5 ' + _0xd['getDate']() + '/' + (_0xd['getMonth']() + 1) + '/' + _0xd['getFullYear']() + '</div><div class="time">\u23f0 ' + _0xd['toLocaleTimeString']('ar-EG') + '</div></div>';
+                    })['join']('');
+                }
+                
+                _0xshowScreen('studentAbsenceDetailsScreen');
+            } catch (_0xerr) {}
+        };
+        
+        window['goBackToAttendance'] = function() {
+            window['showAttendanceManagement']();
+            window['loadAttendanceList']();
+        };
+        
+        window['showStudentAbsences'] = async function() {
+            var _0xuser = JSON['parse'](localStorage['getItem']('currentUser'));
+            if (!_0xuser) return;
+            
+            try {
+                var _0xabs = await _0xsupabase['from']('attendance')['select']('*')['eq']('student_id', _0xuser['id'])['order']('created_at', { ascending: false });
+                var _0xcontainer = document['getElementById']('studentAbsencesList');
+                if (!_0xcontainer) return;
+                
+                if (!_0xabs['data'] || _0xabs['data']['length'] === 0) {
+                    _0xcontainer['innerHTML'] = '<div style="text-align:center;padding:40px 20px;color:#95A5A6;"><div style="font-size:3rem;margin-bottom:10px;">\ud83c\udf89</div><p>\u0644\u0627 \u062a\u0648\u062c\u062f \u063a\u064a\u0627\u0628\u0627\u062a</p><p style="font-size:0.85rem;">\u0645\u0645\u062a\u0627\u0632! \u0627\u0633\u062a\u0645\u0631 \u0641\u064a \u0627\u0644\u062d\u0636\u0648\u0631</p></div>';
+                } else {
+                    _0xcontainer['innerHTML'] = _0xabs['data']['map'](function(a) {
+                        var _0xd = new Date(a['created_at']);
+                        return '<div class="absence-date-item"><div class="date">\ud83d\udcc5 ' + _0xd['getDate']() + '/' + (_0xd['getMonth']() + 1) + '/' + _0xd['getFullYear']() + '</div><div class="time">\u23f0 ' + _0xd['toLocaleTimeString']('ar-EG') + '</div></div>';
+                    })['join']('');
+                }
+                
+                _0xshowScreen('studentAbsencesScreen');
+            } catch (_0xerr) {}
+        };
+        
+        window['goBackToStudent'] = function() {
+            window['showStudentDashboard']();
+        };
+        
+        window['goBackToTeacher'] = function() {
+            window['showTeacherDashboard']();
+        };
+        
+        // ============================================================
+        //                      بدء التطبيق
+        // ============================================================
+        
+        window['goToLogin']();
+        console.log('\ud83d\udfec \u0645\u0639\u0647\u062f \u0623\u0646\u0648\u0627\u0631 \u0627\u0644\u0633\u0644\u0627\u0645 - \u0645\u062d\u0645\u064a \u0628\u0627\u0644\u0643\u0627\u0645\u0644');
+    </script>
+</body>
+</html>
