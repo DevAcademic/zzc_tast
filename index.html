@@ -56,7 +56,7 @@
             font-size: 0.95rem;
         }
 
-        /* ===== أزرار الاختيار ===== */
+        /* ===== أزرار اختيار الدور ===== */
         .role-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -79,6 +79,7 @@
 
         .role-btn:hover {
             transform: scale(1.02);
+            border-color: #2ECC71;
         }
 
         .role-btn.active {
@@ -93,7 +94,7 @@
             margin-bottom: 5px;
         }
 
-        /* ===== نموذج التسجيل ===== */
+        /* ===== نموذج ===== */
         .form-card {
             background: white;
             border-radius: 20px;
@@ -227,26 +228,6 @@
             cursor: not-allowed;
         }
 
-        .btn-secondary {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            color: #2ECC71;
-            border: 2px solid #2ECC71;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background: #2ECC71;
-            color: white;
-        }
-
         .message {
             margin-top: 15px;
             padding: 12px;
@@ -288,6 +269,22 @@
             100% {
                 transform: rotate(360deg);
             }
+        }
+
+        .test-btn {
+            margin-top: 10px;
+            padding: 10px;
+            background: #3498DB;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        .test-btn:hover {
+            background: #2980B9;
         }
 
         @media (max-width: 480px) {
@@ -355,6 +352,7 @@
             </div>
 
             <button id="studentBtn" onclick="registerStudent()" class="btn-primary">تسجيل كطالب</button>
+            <button onclick="testClick()" class="test-btn">🔧 اختبار الضغط</button>
         </div>
 
         <!-- ===== نموذج تسجيل المدرس ===== -->
@@ -401,17 +399,58 @@
 
     <script>
         // ============================================================
-        //                      الإعدادات (مخفية)
+        //                      اختبار الضغط
         // ============================================================
 
-        // كود المدرس مشفر
-        const TEACHER_CODE = atob('enpubjU1MDAxMUFuQA==');
+        function testClick() {
+            alert('✅ الزر يعمل! تم الضغط بنجاح');
+            console.log('✅ زر الاختبار يعمل');
+        }
 
-        // Supabase مشفر
-        const SUPABASE_URL = atob('aHR0cHM6Ly9oZHRybmZwd3Z5dmFlemlhaXdlY2suc3VwYWJhc2UuY28=');
-        const SUPABASE_KEY = atob('c2JfcHVibGlzaGFibGVfWFlpVWZpemRlOC1aMHlCanZaTnNCd3FfTFNYSzdW');
+        // ============================================================
+        //                      اختيار الدور
+        // ============================================================
+
+        function selectRole(role) {
+            console.log('🔄 تم اختيار: ' + role);
+
+            const studentBtn = document.getElementById('studentRoleBtn');
+            const teacherBtn = document.getElementById('teacherRoleBtn');
+            const studentForm = document.getElementById('studentForm');
+            const teacherForm = document.getElementById('teacherForm');
+            const message = document.getElementById('message');
+
+            // إخفاء الرسائل
+            message.style.display = 'none';
+            message.textContent = '';
+
+            if (role === 'student') {
+                studentBtn.classList.add('active');
+                teacherBtn.classList.remove('active');
+                studentForm.classList.add('active');
+                teacherForm.classList.remove('active');
+                console.log('✅ تم عرض نموذج الطالب');
+            } else {
+                teacherBtn.classList.add('active');
+                studentBtn.classList.remove('active');
+                teacherForm.classList.add('active');
+                studentForm.classList.remove('active');
+                console.log('✅ تم عرض نموذج المدرس');
+            }
+        }
+
+        // ============================================================
+        //                      الإعدادات
+        // ============================================================
+
+        const TEACHER_CODE = 'zznn550011AN@';
+
+        const SUPABASE_URL = 'https://hdtrnfpwyvaeziaiweck.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_XYiUfizde8-Z0yBjvZNsBw_q_LSXK7V';
 
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        console.log('🔄 Supabase متصل');
 
         // ============================================================
         //                      دوال مساعدة
@@ -437,16 +476,12 @@
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
-        function showMessage(text, type = 'success') {
+        function showMessage(text, type) {
             const el = document.getElementById('message');
             el.textContent = text;
-            el.className = `message ${type}`;
-        }
-
-        function hideMessage() {
-            const el = document.getElementById('message');
-            el.textContent = '';
-            el.className = 'message';
+            el.className = 'message ' + type;
+            el.style.display = 'block';
+            console.log('📨 رسالة: ' + text);
         }
 
         function setLoading(buttonId, loading) {
@@ -456,236 +491,107 @@
                 btn.innerHTML = 'جاري التسجيل <span class="loading"></span>';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = btn.id === 'studentBtn' ? 'تسجيل كطالب' : 'تسجيل كمدرس';
+                if (buttonId === 'studentBtn') {
+                    btn.innerHTML = 'تسجيل كطالب';
+                } else {
+                    btn.innerHTML = 'تسجيل كمدرس';
+                }
             }
         }
-
-        // ============================================================
-        //                      اختيار الدور
-        // ============================================================
-
-        window.selectRole = function(role) {
-            const studentBtn = document.getElementById('studentRoleBtn');
-            const teacherBtn = document.getElementById('teacherRoleBtn');
-            const studentForm = document.getElementById('studentForm');
-            const teacherForm = document.getElementById('teacherForm');
-
-            hideMessage();
-
-            if (role === 'student') {
-                studentBtn.classList.add('active');
-                teacherBtn.classList.remove('active');
-                studentForm.classList.add('active');
-                teacherForm.classList.remove('active');
-            } else {
-                teacherBtn.classList.add('active');
-                studentBtn.classList.remove('active');
-                teacherForm.classList.add('active');
-                studentForm.classList.remove('active');
-            }
-        };
 
         // ============================================================
         //                      تسجيل الطالب
         // ============================================================
 
-        window.registerStudent = async function() {
+        function registerStudent() {
+            console.log('🔄 تم الضغط على تسجيل طالب');
+
             const name = document.getElementById('studentName').value.trim();
             const email = document.getElementById('studentEmail').value.trim();
             const phone = document.getElementById('studentPhone').value.trim();
             const password = document.getElementById('studentPassword').value.trim();
 
-            hideMessage();
-
-            // التحقق من الاسم
+            // التحقق
             if (!isArabicName(name)) {
                 showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي على الأقل)', 'error');
                 return;
             }
 
-            // التحقق من البريد
             if (!isValidEmail(email)) {
                 showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
 
-            // التحقق من الهاتف
             if (!isValidPhone(phone)) {
                 showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
                 return;
             }
 
-            // التحقق من كلمة المرور
             if (!isValidPassword(password)) {
                 showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
                 return;
             }
 
-            setLoading('studentBtn', true);
-
-            try {
-                // التحقق من عدم وجود الرقم مسبقاً
-                const { data: existing } = await supabase
-                    .from('users')
-                    .select('phone')
-                    .eq('phone', phone);
-
-                if (existing && existing.length > 0) {
-                    showMessage('⚠️ هذا الرقم مسجل مسبقاً', 'error');
-                    setLoading('studentBtn', false);
-                    return;
-                }
-
-                const newUser = {
-                    id: generateId(),
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    password: password,
-                    grade: 'غير محدد',
-                    is_teacher: false,
-                    created_at: new Date().toISOString()
-                };
-
-                const { data, error } = await supabase
-                    .from('users')
-                    .insert([newUser])
-                    .select();
-
-                if (error) {
-                    showMessage('❌ حدث خطأ أثناء التسجيل', 'error');
-                    setLoading('studentBtn', false);
-                    return;
-                }
-
-                const savedUser = data[0];
-                localStorage.setItem('currentUser', JSON.stringify(savedUser));
-
-                showMessage('✅ تم تسجيلك كطالب بنجاح!', 'success');
-
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-
-            } catch (err) {
-                showMessage('❌ حدث خطأ، حاول مرة أخرى', 'error');
-                setLoading('studentBtn', false);
-            }
-        };
+            showMessage('✅ البيانات صحيحة! جاري التسجيل...', 'success');
+            console.log('📝 بيانات الطالب:', { name, email, phone });
+        }
 
         // ============================================================
         //                      تسجيل المدرس
         // ============================================================
 
-        window.registerTeacher = async function() {
+        function registerTeacher() {
+            console.log('🔄 تم الضغط على تسجيل مدرس');
+
             const name = document.getElementById('teacherName').value.trim();
             const email = document.getElementById('teacherEmail').value.trim();
             const phone = document.getElementById('teacherPhone').value.trim();
             const password = document.getElementById('teacherPassword').value.trim();
             const secretCode = document.getElementById('teacherSecretCode').value.trim();
 
-            hideMessage();
-
-            // التحقق من الاسم
+            // التحقق
             if (!isArabicName(name)) {
                 showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي على الأقل)', 'error');
                 return;
             }
 
-            // التحقق من البريد
             if (!isValidEmail(email)) {
                 showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
 
-            // التحقق من الهاتف
             if (!isValidPhone(phone)) {
                 showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
                 return;
             }
 
-            // التحقق من كلمة المرور
             if (!isValidPassword(password)) {
                 showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
                 return;
             }
 
-            // التحقق من كود المدرس
             if (secretCode !== TEACHER_CODE) {
                 showMessage('❌ كود المدرس غير صحيح!', 'error');
+                console.log('❌ كود خاطئ: ' + secretCode);
                 return;
             }
 
-            setLoading('teacherBtn', true);
-
-            try {
-                // التحقق من عدم وجود الرقم مسبقاً
-                const { data: existing } = await supabase
-                    .from('users')
-                    .select('phone')
-                    .eq('phone', phone);
-
-                if (existing && existing.length > 0) {
-                    showMessage('⚠️ هذا الرقم مسجل مسبقاً', 'error');
-                    setLoading('teacherBtn', false);
-                    return;
-                }
-
-                const newUser = {
-                    id: generateId(),
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    password: password,
-                    grade: 'مدرس',
-                    is_teacher: true,
-                    created_at: new Date().toISOString()
-                };
-
-                const { data, error } = await supabase
-                    .from('users')
-                    .insert([newUser])
-                    .select();
-
-                if (error) {
-                    showMessage('❌ حدث خطأ أثناء التسجيل', 'error');
-                    setLoading('teacherBtn', false);
-                    return;
-                }
-
-                const savedUser = data[0];
-                localStorage.setItem('currentUser', JSON.stringify(savedUser));
-
-                showMessage('✅ تم تسجيلك كمدرس بنجاح!', 'success');
-
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1000);
-
-            } catch (err) {
-                showMessage('❌ حدث خطأ، حاول مرة أخرى', 'error');
-                setLoading('teacherBtn', false);
-            }
-        };
+            showMessage('✅ كود المدرس صحيح! جاري التسجيل...', 'success');
+            console.log('📝 بيانات المدرس:', { name, email, phone });
+        }
 
         // ============================================================
-        //                      التحقق من الجلسة
+        //                      بدء التطبيق
         // ============================================================
 
-        (function() {
-            const user = localStorage.getItem('currentUser');
-            if (user) {
-                try {
-                    const parsed = JSON.parse(user);
-                    if (parsed && parsed.id) {
-                        window.location.href = 'dashboard.html';
-                    }
-                } catch (e) {}
-            }
-        })();
-
-        console.log('🕌 معهد أنوار السلام - صفحة تسجيل الدخول');
+        console.log('🕌 معهد أنوار السلام - جاهز');
         console.log('🔑 كود المدرس: ' + TEACHER_CODE);
+        console.log('📌 اختبر الأزرار الآن');
+
+        // عرض رسالة ترحيب
+        setTimeout(function() {
+            showMessage('👋 مرحباً! اختر طالب أو مدرس', 'success');
+        }, 500);
     </script>
 </body>
 </html>
