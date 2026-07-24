@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>تسجيل الدخول - معهد أنوار السلام</title>
+    <title>تسجيل جديد - معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -23,7 +23,7 @@
             padding: 20px;
         }
 
-        .login-container {
+        .register-container {
             width: 100%;
             max-width: 400px;
             background: rgba(255, 255, 255, 0.9);
@@ -34,30 +34,35 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .logo-container {
-            text-align: center;
-            padding: 10px 0 25px;
+        .header-back {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0 20px;
         }
 
-        .logo-icon {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
+        .btn-back {
+            background: none;
+            border: none;
+            font-size: 2rem;
             color: #2C3E50;
-            margin-bottom: 5px;
+            cursor: pointer;
+            padding: 0 5px;
+            font-weight: 300;
+            transition: transform 0.2s;
         }
 
-        .subtitle {
-            color: #7F8C8D;
-            font-size: 0.95rem;
+        .btn-back:hover {
+            transform: scale(1.1);
         }
 
-        .login-card {
+        h2 {
+            font-size: 1.4rem;
+            color: #2C3E50;
+            font-weight: 700;
+        }
+
+        .register-card {
             background: white;
             border-radius: 20px;
             padding: 25px;
@@ -77,7 +82,8 @@
             font-size: 0.95rem;
         }
 
-        .input-group input {
+        .input-group input,
+        .input-group select {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #E8ECF0;
@@ -89,7 +95,8 @@
             color: #2C3E50;
         }
 
-        .input-group input:focus {
+        .input-group input:focus,
+        .input-group select:focus {
             outline: none;
             border-color: #2ECC71;
             box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
@@ -166,43 +173,6 @@
             cursor: not-allowed;
         }
 
-        .btn-secondary {
-            width: 100%;
-            padding: 16px;
-            background: transparent;
-            color: #2ECC71;
-            border: 2px solid #2ECC71;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background: #2ECC71;
-            color: white;
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            color: #95A5A6;
-            font-size: 0.85rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #E8ECF0;
-            margin: 0 10px;
-        }
-
         .message {
             margin-top: 15px;
             padding: 14px;
@@ -242,49 +212,65 @@
         }
 
         @media (max-width: 480px) {
-            .login-container {
+            .register-container {
                 padding: 20px 15px;
             }
-            h1 {
-                font-size: 1.5rem;
+            h2 {
+                font-size: 1.2rem;
             }
-            .login-card {
+            .register-card {
                 padding: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo-container">
-            <div class="logo-icon">🕌</div>
-            <h1>معهد أنوار السلام</h1>
-            <p class="subtitle">نظام تسجيل الحضور</p>
+    <div class="register-container">
+        <div class="header-back">
+            <button onclick="goToLogin()" class="btn-back">‹</button>
+            <h2>إنشاء حساب جديد</h2>
         </div>
 
-        <div class="login-card">
+        <div class="register-card">
+            <div class="input-group">
+                <label>👤 الاسم الثلاثي</label>
+                <input type="text" id="regName" placeholder="مثال: أحمد محمد علي" />
+            </div>
+
             <div class="input-group">
                 <label>📱 رقم الهاتف</label>
                 <div class="phone-input">
                     <span class="country-code">+964</span>
-                    <input type="tel" id="loginPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                    <input type="tel" id="regPhone" placeholder="7XXXXXXXXX" maxlength="10" />
                 </div>
                 <small>أدخل 10 أرقام فقط</small>
             </div>
 
             <div class="input-group">
                 <label>🔑 كلمة المرور</label>
-                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" />
+                <input type="password" id="regPassword" placeholder="أدخل كلمة مرور (6 أحرف على الأقل)" />
             </div>
 
-            <button id="loginBtn" onclick="loginUser()" class="btn-primary">تسجيل الدخول</button>
+            <div class="input-group">
+                <label>📚 الصف</label>
+                <select id="regGrade">
+                    <option value="">اختر الصف</option>
+                    <option value="رابع إعدادي">رابع إعدادي</option>
+                    <option value="خامس إعدادي">خامس إعدادي</option>
+                    <option value="سادس إعدادي">سادس إعدادي</option>
+                </select>
+            </div>
 
-            <div class="divider"><span>أو</span></div>
+            <div class="input-group">
+                <label>👨‍🏫 كود المدرس (اختياري)</label>
+                <input type="password" id="regTeacherCode" placeholder="أدخل الكود إذا كنت مدرساً" />
+                <small>اتركه فارغاً إذا كنت طالباً</small>
+            </div>
 
-            <button onclick="goToRegister()" class="btn-secondary">إنشاء حساب جديد</button>
+            <button id="registerBtn" onclick="registerUser()" class="btn-primary">إنشاء حساب</button>
         </div>
 
-        <div id="loginMessage" class="message"></div>
+        <div id="registerMessage" class="message"></div>
     </div>
 
     <script>
@@ -305,84 +291,127 @@
         //                      دوال مساعدة
         // ============================================================
 
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        }
+
+        function isArabicName(name) {
+            return /^[\u0600-\u06FF\s]+$/.test(name) && name.trim().split(/\s+/).length >= 2;
+        }
+
         function isValidPhone(phone) {
             return /^\d{10}$/.test(phone);
         }
 
+        function isValidPassword(password) {
+            return password.length >= 6;
+        }
+
         function showMessage(text, type = 'success') {
-            const el = document.getElementById('loginMessage');
+            const el = document.getElementById('registerMessage');
             el.textContent = text;
             el.className = `message ${type}`;
         }
 
         function hideMessage() {
-            const el = document.getElementById('loginMessage');
+            const el = document.getElementById('registerMessage');
             el.textContent = '';
             el.className = 'message';
             el.style.display = 'none';
         }
 
         function setLoading(loading) {
-            const btn = document.getElementById('loginBtn');
+            const btn = document.getElementById('registerBtn');
             if (loading) {
                 btn.disabled = true;
-                btn.innerHTML = 'جاري التحقق <span class="loading"></span>';
+                btn.innerHTML = 'جاري التسجيل <span class="loading"></span>';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = 'تسجيل الدخول';
+                btn.innerHTML = 'إنشاء حساب';
             }
         }
 
         // ============================================================
-        //                      تسجيل الدخول
+        //                      تسجيل جديد
         // ============================================================
 
-        window.loginUser = async function() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+        window.registerUser = async function() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const grade = document.getElementById('regGrade').value;
+            const teacherCode = document.getElementById('regTeacherCode').value.trim();
 
             hideMessage();
 
-            if (!isValidPhone(phone)) {
-                showMessage('⚠️ يرجى إدخال 10 أرقام صحيحة', 'error');
+            if (!isArabicName(name)) {
+                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي)', 'error');
                 return;
             }
 
-            if (!password) {
-                showMessage('⚠️ يرجى إدخال كلمة المرور', 'error');
+            if (!isValidPhone(phone)) {
+                showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
+                return;
+            }
+
+            if (!isValidPassword(password)) {
+                showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            if (!grade) {
+                showMessage('⚠️ يرجى اختيار الصف', 'error');
                 return;
             }
 
             setLoading(true);
 
             try {
-                const { data: users, error } = await supabase
+                const { data: existing } = await supabase
                     .from('users')
-                    .select('*')
+                    .select('phone')
                     .eq('phone', phone);
 
-                if (error || !users || users.length === 0) {
-                    showMessage('❌ رقم غير مسجل، يرجى التسجيل أولاً', 'error');
+                if (existing && existing.length > 0) {
+                    showMessage('⚠️ هذا الرقم مسجل مسبقاً', 'error');
                     setLoading(false);
                     return;
                 }
 
-                const user = users[0];
+                const isTeacher = (teacherCode === _0xsecret);
 
-                if (user.password !== password) {
-                    showMessage('❌ كلمة المرور غير صحيحة', 'error');
+                const newUser = {
+                    id: generateId(),
+                    name: name,
+                    phone: phone,
+                    password: password,
+                    grade: grade,
+                    is_teacher: isTeacher,
+                    created_at: new Date().toISOString()
+                };
+
+                const { data, error } = await supabase
+                    .from('users')
+                    .insert([newUser])
+                    .select();
+
+                if (error) {
+                    showMessage('❌ حدث خطأ أثناء التسجيل', 'error');
                     setLoading(false);
                     return;
                 }
 
-                // حفظ المستخدم
-                localStorage.setItem('currentUser', JSON.stringify(user));
+                const savedUser = data[0];
+                localStorage.setItem('currentUser', JSON.stringify(savedUser));
 
-                showMessage('✅ تم تسجيل الدخول بنجاح', 'success');
+                showMessage(
+                    isTeacher ? '✅ تم التسجيل كمدرس!' : '✅ تم التسجيل بنجاح!',
+                    'success'
+                );
 
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
-                }, 800);
+                }, 1000);
 
             } catch (err) {
                 showMessage('❌ حدث خطأ، حاول مرة أخرى', 'error');
@@ -391,18 +420,17 @@
         };
 
         // ============================================================
-        //                      التوجه للتسجيل
+        //                      التوجه لتسجيل الدخول
         // ============================================================
 
-        window.goToRegister = function() {
-            window.location.href = 'register.html';
+        window.goToLogin = function() {
+            window.location.href = 'index.html';
         };
 
         // ============================================================
         //                      التحقق من الجلسة
         // ============================================================
 
-        // إذا كان المستخدم مسجل دخول مسبقاً يوجه للوحة
         (function() {
             const user = localStorage.getItem('currentUser');
             if (user) {
@@ -415,7 +443,7 @@
             }
         })();
 
-        console.log('🕌 معهد أنوار السلام - صفحة تسجيل الدخول');
+        console.log('🕌 معهد أنوار السلام - صفحة التسجيل');
     </script>
 </body>
 </html>
