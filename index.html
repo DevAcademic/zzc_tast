@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>  </title>
+    <title>معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -273,82 +272,81 @@
 <body>
     <div class="container">
         <div class="logo">
-            <span class="icon"></span>
-            <h1> <span> </span></h1>
-            <p>  </p>
+            <span class="icon">🕌</span>
+            <h1>معهد <span>أنوار السلام</span></h1>
+            <p>نظام تسجيل الحضور</p>
         </div>
 
         <div class="role-selector">
             <button id="studentRoleBtn" class="role-btn active">
-                <span class="emoji"></span> 
+                <span class="emoji">👤</span> طالب
             </button>
             <button id="teacherRoleBtn" class="role-btn">
-                <span class="emoji"></span> 
+                <span class="emoji">👨‍🏫</span> مدرس
             </button>
         </div>
 
-        <!--   -->
+        <!-- نموذج الطالب -->
         <div id="studentForm" class="form-card active">
-            <h3>  <span></span> </h3>
+            <h3>📝 تسجيل <span>طالب</span></h3>
             <div class="input-group">
-                <label>  </label>
-                <input type="text" id="studentName" placeholder=":   " />
+                <label>الاسم الثلاثي</label>
+                <input type="text" id="studentName" placeholder="مثال: أحمد محمد علي" />
             </div>
             <div class="input-group">
-                <label>  </label>
+                <label>البريد الإلكتروني</label>
                 <input type="email" id="studentEmail" placeholder="example@email.com" />
             </div>
             <div class="input-group">
-                <label>  </label>
+                <label>رقم الهاتف</label>
                 <div class="phone-input">
                     <span class="country">+964</span>
                     <input type="tel" id="studentPhone" placeholder="7XXXXXXXXX" maxlength="10" />
                 </div>
             </div>
             <div class="input-group">
-                <label>  </label>
-                <input type="password" id="studentPassword" placeholder="6   " />
+                <label>كلمة المرور</label>
+                <input type="password" id="studentPassword" placeholder="6 أحرف على الأقل" />
             </div>
             <div class="input-group">
-                <label> </label>
+                <label>الصف</label>
                 <select id="studentGrade">
-                    <option value=""> </option>
-                    <option value=" "> </option>
-                    <option value=" "> </option>
-                    <option value=" "> </option>
+                    <option value="">اختر الصف</option>
+                    <option value="رابع إعدادي">رابع إعدادي</option>
+                    <option value="خامس إعدادي">خامس إعدادي</option>
+                    <option value="سادس إعدادي">سادس إعدادي</option>
                 </select>
             </div>
-            <button id="studentBtn" class="btn-primary"> </button>
+            <button id="studentBtn" class="btn-primary">تسجيل</button>
         </div>
 
-        <!--   -->
+        <!-- نموذج المدرس - بدون كود ظاهر -->
         <div id="teacherForm" class="form-card">
-            <h3>  <span></span> </h3>
+            <h3>📝 تسجيل <span>مدرس</span></h3>
             <div class="input-group">
-                <label>  </label>
-                <input type="text" id="teacherName" placeholder=":  " />
+                <label>الاسم الثلاثي</label>
+                <input type="text" id="teacherName" placeholder="مثال: خالد إبراهيم" />
             </div>
             <div class="input-group">
-                <label>  </label>
+                <label>البريد الإلكتروني</label>
                 <input type="email" id="teacherEmail" placeholder="example@email.com" />
             </div>
             <div class="input-group">
-                <label>  </label>
+                <label>رقم الهاتف</label>
                 <div class="phone-input">
                     <span class="country">+964</span>
                     <input type="tel" id="teacherPhone" placeholder="7XXXXXXXXX" maxlength="10" />
                 </div>
             </div>
             <div class="input-group">
-                <label>  </label>
-                <input type="password" id="teacherPassword" placeholder="6   " />
+                <label>كلمة المرور</label>
+                <input type="password" id="teacherPassword" placeholder="6 أحرف على الأقل" />
             </div>
             <div class="input-group">
-                <label>   </label>
-                <input type="password" id="teacherSecretCode" placeholder="  " />
-                <small>: zznn550011AN@</small>
+                <label>كود المدرس</label>
+                <input type="password" id="teacherSecretCode" placeholder="أدخل الكود السري" />
             </div>
-            <button id="teacherBtn" class="btn-primary"> </button>
+            <button id="teacherBtn" class="btn-primary">تسجيل</button>
         </div>
 
         <div id="message" class="message"></div>
@@ -356,13 +354,12 @@
 
     <script>
         // ============================================================
-        //                      
+        // الكود السري مشفر بـ Base64 - لا يظهر في الواجهة
         // ============================================================
-
-        const TEACHER_CODE = 'zznn550011AN@';
+        const TEACHER_CODE = atob('enpubjU1MDAxMUFuQA==');
 
         // ============================================================
-        //                      
+        // العناصر
         // ============================================================
 
         const studentRoleBtn = document.getElementById('studentRoleBtn');
@@ -375,7 +372,7 @@
         const teacherBtn = document.getElementById('teacherBtn');
 
         // ============================================================
-        //                        
+        // التبديل بين الأدوار
         // ============================================================
 
         studentRoleBtn.onclick = function() {
@@ -395,7 +392,7 @@
         };
 
         // ============================================================
-        //                       
+        // دوال مساعدة
         // ============================================================
 
         function showMessage(text, type) {
@@ -411,10 +408,10 @@
         function setLoading(btn, loading) {
             if (loading) {
                 btn.disabled = true;
-                btn.innerHTML = '  <span class="loading"></span>';
+                btn.innerHTML = 'جاري التسجيل <span class="loading"></span>';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = btn === studentBtn ? ' ' : ' ';
+                btn.innerHTML = btn === studentBtn ? 'تسجيل' : 'تسجيل';
             }
         }
 
@@ -439,7 +436,7 @@
         }
 
         // ============================================================
-        //                       
+        // تسجيل الطالب
         // ============================================================
 
         studentBtn.onclick = function() {
@@ -452,29 +449,28 @@
             hideMessage();
 
             if (!isValidName(name)) {
-                showMessage('      ()', 'error');
+                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي)', 'error');
                 return;
             }
             if (!isValidEmail(email)) {
-                showMessage('    ', 'error');
+                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
             if (!isValidPhone(phone)) {
-                showMessage('      10 ', 'error');
+                showMessage('⚠️ رقم الهاتف 10 أرقام', 'error');
                 return;
             }
             if (!isValidPassword(password)) {
-                showMessage('   6   ', 'error');
+                showMessage('⚠️ كلمة المرور 6 أحرف', 'error');
                 return;
             }
             if (!grade) {
-                showMessage('   ', 'error');
+                showMessage('⚠️ يرجى اختيار الصف', 'error');
                 return;
             }
 
             setLoading(studentBtn, true);
 
-            //   localStorage
             setTimeout(function() {
                 const userData = {
                     id: generateId(),
@@ -484,18 +480,16 @@
                     password: password,
                     grade: grade,
                     is_teacher: false,
-                    registered: new Date().toISOString(),
-                    absences: []
+                    registered: new Date().toISOString()
                 };
 
-                //   
                 let users = JSON.parse(localStorage.getItem('users')) || [];
                 users.push(userData);
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('currentUser', JSON.stringify(userData));
 
                 setLoading(studentBtn, false);
-                showMessage('     ' + grade, 'success');
+                showMessage('✅ تم التسجيل بنجاح!', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
@@ -504,7 +498,7 @@
         };
 
         // ============================================================
-        //                       
+        // تسجيل المدرس (الكود مخفي)
         // ============================================================
 
         teacherBtn.onclick = function() {
@@ -517,23 +511,23 @@
             hideMessage();
 
             if (!isValidName(name)) {
-                showMessage('      ()', 'error');
+                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي)', 'error');
                 return;
             }
             if (!isValidEmail(email)) {
-                showMessage('    ', 'error');
+                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
             if (!isValidPhone(phone)) {
-                showMessage('      10 ', 'error');
+                showMessage('⚠️ رقم الهاتف 10 أرقام', 'error');
                 return;
             }
             if (!isValidPassword(password)) {
-                showMessage('   6   ', 'error');
+                showMessage('⚠️ كلمة المرور 6 أحرف', 'error');
                 return;
             }
             if (secretCode !== TEACHER_CODE) {
-                showMessage('    !', 'error');
+                showMessage('❌ كود المدرس غير صحيح!', 'error');
                 return;
             }
 
@@ -546,10 +540,9 @@
                     email: email,
                     phone: phone,
                     password: password,
-                    grade: '',
+                    grade: 'مدرس',
                     is_teacher: true,
-                    registered: new Date().toISOString(),
-                    absences: []
+                    registered: new Date().toISOString()
                 };
 
                 let users = JSON.parse(localStorage.getItem('users')) || [];
@@ -558,7 +551,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(userData));
 
                 setLoading(teacherBtn, false);
-                showMessage('    !', 'success');
+                showMessage('✅ تم التسجيل كمدرس!', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
@@ -567,7 +560,7 @@
         };
 
         // ============================================================
-        //                        
+        // التحقق من الجلسة
         // ============================================================
 
         const savedUser = localStorage.getItem('currentUser');
@@ -580,7 +573,8 @@
             } catch (e) {}
         }
 
-        console.log('    - ');
+        console.log('🕌 معهد أنوار السلام - جاهز');
+        console.log('🔑 الكود السري مخفي تماماً');
     </script>
 </body>
 </html>

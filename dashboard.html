@@ -31,7 +31,6 @@
             border: 1px solid rgba(201, 168, 76, 0.2);
         }
 
-        /* ===== الهيدر ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -95,7 +94,6 @@
             transform: scale(0.95);
         }
 
-        /* ===== البطاقات ===== */
         .card {
             background: white;
             border-radius: 16px;
@@ -109,9 +107,6 @@
             font-size: 0.9rem;
             color: #6B7B8D;
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .info-row {
@@ -133,7 +128,6 @@
             font-size: 0.95rem;
         }
 
-        /* ===== QR Code ===== */
         .qr-section {
             text-align: center;
             padding: 15px;
@@ -153,7 +147,6 @@
             margin-top: 8px;
         }
 
-        /* ===== أزرار ===== */
         .btn-primary {
             width: 100%;
             padding: 14px;
@@ -189,7 +182,6 @@
             transform: scale(0.96);
         }
 
-        /* ===== قائمة الغيابات ===== */
         .absence-item {
             display: flex;
             justify-content: space-between;
@@ -219,7 +211,6 @@
             margin-bottom: 10px;
         }
 
-        /* ===== قائمة الطلاب ===== */
         .student-item {
             display: flex;
             justify-content: space-between;
@@ -242,7 +233,6 @@
             font-weight: 600;
         }
 
-        /* ===== المودال ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -306,7 +296,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- ===== الهيدر ===== -->
         <div class="header">
             <div class="user-info">
                 <div class="avatar" id="userAvatar">👤</div>
@@ -319,15 +308,14 @@
             <button class="btn-logout" onclick="logout()">🚪 خروج</button>
         </div>
 
-        <!-- ===== معلومات المستخدم ===== -->
         <div class="card">
             <div class="card-title">📋 معلومات الحساب</div>
             <div class="info-row">
-                <span class="info-label">📧 البريد الإلكتروني</span>
+                <span class="info-label">📧 البريد</span>
                 <span class="info-value" id="userEmail">-</span>
             </div>
             <div class="info-row">
-                <span class="info-label">📱 رقم الهاتف</span>
+                <span class="info-label">📱 الهاتف</span>
                 <span class="info-value" id="userPhone">-</span>
             </div>
             <div class="info-row">
@@ -335,33 +323,27 @@
                 <span class="info-value" id="userGrade">-</span>
             </div>
             <div class="info-row">
-                <span class="info-label">📊 عدد الغيابات</span>
+                <span class="info-label">📊 الغيابات</span>
                 <span class="info-value" id="userAbsencesCount">0</span>
             </div>
         </div>
 
-        <!-- ===== QR Code ===== -->
         <div class="qr-section">
             <div id="qrcode"></div>
-            <p class="qr-label">🎫 كود الطالب - استخدمه للمسح</p>
+            <p class="qr-label">🎫 كود الطالب</p>
         </div>
 
-        <!-- ===== أزرار الطالب ===== -->
         <div id="studentActions">
             <button class="btn-secondary" onclick="showAbsences()">📋 غياباتي</button>
         </div>
 
-        <!-- ===== أزرار المدرس ===== -->
         <div id="teacherActions" style="display:none;">
             <button class="btn-primary" onclick="showManageStudents()">📋 إدارة الطلاب</button>
-            <button class="btn-primary" onclick="scanQR()">📷 مسح QR Code</button>
+            <button class="btn-primary" onclick="scanQR()">📷 مسح QR</button>
         </div>
-
-        <!-- ===== رسائل ===== -->
-        <div id="message" class="message" style="display:none;margin-top:10px;padding:12px;border-radius:12px;text-align:center;"></div>
     </div>
 
-    <!-- ===== مودال عرض الغيابات ===== -->
+    <!-- مودال الغيابات -->
     <div id="absencesModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -372,7 +354,7 @@
         </div>
     </div>
 
-    <!-- ===== مودال إدارة الطلاب ===== -->
+    <!-- مودال الطلاب -->
     <div id="studentsModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -391,20 +373,20 @@
         </div>
     </div>
 
-    <!-- ===== مودال مسح QR ===== -->
+    <!-- مودال QR -->
     <div id="qrModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
-                <h3>📷 مسح QR Code</h3>
+                <h3>📷 مسح QR</h3>
                 <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
             </div>
-            <div id="qrScannerContainer" style="text-align:center;padding:20px;">
+            <div style="text-align:center;padding:20px;">
                 <p style="color:#6B7B8D;margin-bottom:15px;">📱 قم بتوجيه الكاميرا نحو كود الطالب</p>
                 <div style="background:#F0F2F5;border-radius:16px;padding:30px;border:2px dashed #C9A84C;">
                     <div style="font-size:4rem;">📷</div>
-                    <p style="color:#6B7B8D;margin-top:10px;">(محاكاة المسح - اضغط على زر المسح أدناه)</p>
+                    <p style="color:#6B7B8D;margin-top:10px;">(محاكاة)</p>
                 </div>
-                <button class="btn-primary" onclick="simulateScan()" style="margin-top:15px;">🔍 مسح الكود</button>
+                <button class="btn-primary" onclick="simulateScan()" style="margin-top:15px;">🔍 مسح</button>
                 <div id="scanResult" style="margin-top:15px;"></div>
             </div>
         </div>
@@ -412,7 +394,7 @@
 
     <script>
         // ============================================================
-        //                      البيانات
+        // البيانات
         // ============================================================
 
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -423,17 +405,13 @@
             window.location.href = 'index.html';
         }
 
-        // ============================================================
-        //                      عرض البيانات
-        // ============================================================
-
+        // عرض البيانات
         document.getElementById('userName').textContent = currentUser.name;
         document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
         document.getElementById('userPhone').textContent = currentUser.phone;
         document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
         document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
 
-        // حساب عدد الغيابات
         const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
         document.getElementById('userAbsencesCount').textContent = userAbsences.length;
 
@@ -448,10 +426,7 @@
             document.getElementById('userRole').textContent = 'طالب';
         }
 
-        // ============================================================
-        //                      QR Code
-        // ============================================================
-
+        // QR Code
         if (document.getElementById('qrcode')) {
             new QRCode(document.getElementById('qrcode'), {
                 text: currentUser.id,
@@ -464,9 +439,23 @@
         }
 
         // ============================================================
-        //                      عرض الغيابات
+        // الدوال
         // ============================================================
 
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // عرض الغيابات
         function showAbsences() {
             const list = document.getElementById('absencesList');
             const userAbs = attendance.filter(a => a.studentId === currentUser.id);
@@ -475,8 +464,7 @@
                 list.innerHTML = `
                     <div class="empty-state">
                         <span class="icon">🎉</span>
-                        <p>لا توجد غيابات مسجلة</p>
-                        <p style="font-size:0.85rem;">ممتاز! استمر في الحضور</p>
+                        <p>لا توجد غيابات</p>
                     </div>
                 `;
             } else {
@@ -491,10 +479,7 @@
             document.getElementById('absencesModal').classList.add('active');
         }
 
-        // ============================================================
-        //                      إدارة الطلاب (للمدرس)
-        // ============================================================
-
+        // إدارة الطلاب
         function showManageStudents() {
             document.getElementById('studentsModal').classList.add('active');
             loadStudentsList();
@@ -505,10 +490,7 @@
             const list = document.getElementById('studentsList');
 
             let students = users.filter(u => !u.is_teacher);
-
-            if (filter) {
-                students = students.filter(u => u.grade === filter);
-            }
+            if (filter) students = students.filter(u => u.grade === filter);
 
             if (students.length === 0) {
                 list.innerHTML = `
@@ -533,10 +515,7 @@
 
         document.getElementById('filterGrade').onchange = loadStudentsList;
 
-        // ============================================================
-        //                      مسح QR (محاكاة)
-        // ============================================================
-
+        // مسح QR
         function scanQR() {
             document.getElementById('qrModal').classList.add('active');
             document.getElementById('scanResult').innerHTML = '';
@@ -544,36 +523,32 @@
 
         function simulateScan() {
             const result = document.getElementById('scanResult');
-
             const students = users.filter(u => !u.is_teacher);
 
             if (students.length === 0) {
                 result.innerHTML = `
                     <div style="padding:12px;background:#FFEBEE;border-radius:12px;color:#C62828;">
-                        ❌ لا يوجد طلاب مسجلين
+                        ❌ لا يوجد طلاب
                     </div>
                 `;
                 return;
             }
 
             const randomStudent = students[Math.floor(Math.random() * students.length)];
-
             const today = new Date().toISOString().split('T')[0];
-            const alreadyExists = attendance.some(a =>
-                a.studentId === randomStudent.id && a.date === today
-            );
+            const alreadyExists = attendance.some(a => a.studentId === randomStudent.id && a.date === today);
 
             if (alreadyExists) {
                 result.innerHTML = `
                     <div style="padding:12px;background:#E8F5E9;border-radius:12px;color:#2E7D32;">
-                        ✅ ${randomStudent.name} مسجل حضور اليوم بالفعل
+                        ✅ ${randomStudent.name} مسجل حضور اليوم
                     </div>
                 `;
                 return;
             }
 
             const now = new Date();
-            const record = {
+            attendance.push({
                 id: generateId(),
                 studentId: randomStudent.id,
                 studentName: randomStudent.name,
@@ -583,53 +558,30 @@
                 teacherId: currentUser.id,
                 teacherName: currentUser.name,
                 timestamp: now.toISOString()
-            };
+            });
 
-            attendance.push(record);
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
             result.innerHTML = `
                 <div style="padding:12px;background:#E8F5E9;border-radius:12px;color:#2E7D32;">
                     ✅ تم تسجيل حضور ${randomStudent.name}
-                    <br><small style="color:#6B7B8D;">${today} - ${record.time}</small>
+                    <br><small style="color:#6B7B8D;">${today} - ${now.toLocaleTimeString('ar-EG')}</small>
                 </div>
             `;
 
             document.getElementById('userAbsencesCount').textContent =
                 attendance.filter(a => a.studentId === currentUser.id).length;
 
-            setTimeout(() => {
-                closeModal('qrModal');
-            }, 2000);
-        }
-
-        // ============================================================
-        //                      دوال مساعدة
-        // ============================================================
-
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        function logout() {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
+            setTimeout(() => closeModal('qrModal'), 2000);
         }
 
         document.querySelectorAll('.modal-overlay').forEach(el => {
             el.onclick = function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                }
+                if (e.target === this) this.classList.remove('active');
             };
         });
 
         console.log('🕌 لوحة التحكم جاهزة');
-        console.log('👤 المستخدم:', currentUser.name);
     </script>
 </body>
 </html>
