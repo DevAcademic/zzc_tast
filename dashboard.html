@@ -145,25 +145,6 @@
             font-size: 0.95rem;
         }
 
-        .qr-section {
-            text-align: center;
-            padding: 15px;
-            background: #FAFBFC;
-            border-radius: 16px;
-            margin: 10px 0;
-        }
-        .qr-section #qrcode {
-            display: inline-block;
-            padding: 10px;
-            background: white;
-            border-radius: 12px;
-        }
-        .qr-section .qr-label {
-            color: #6B7B8D;
-            font-size: 0.85rem;
-            margin-top: 8px;
-        }
-
         .btn-primary {
             width: 100%;
             padding: 14px;
@@ -301,6 +282,36 @@
         .student-item .status-badge.absent {
             background: #FFEBEE;
             color: #C62828;
+        }
+
+        /* ===== اختيار الطلاب ===== */
+        .student-check-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #FAFBFC;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .student-check-item:hover {
+            background: #F0F2F5;
+        }
+        .student-check-item .name {
+            font-weight: 600;
+            color: #0C2340;
+        }
+        .student-check-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #C9A84C;
+        }
+        .student-check-item.selected {
+            background: #FDF8EE;
+            border: 1px solid #C9A84C;
         }
 
         .absence-item {
@@ -471,12 +482,6 @@
             font-size: 0.9rem;
         }
 
-        .student-confirm .student-phone {
-            color: #6B7B8D;
-            font-size: 0.85rem;
-            margin-top: 3px;
-        }
-
         .student-confirm .status-text {
             margin-top: 8px;
             padding: 6px;
@@ -485,6 +490,27 @@
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.9rem;
+        }
+
+        .attendance-counter {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: #FDF8EE;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #C9A84C;
+        }
+
+        .attendance-counter .count {
+            font-weight: 700;
+            color: #0C2340;
+        }
+        .attendance-counter .count.present {
+            color: #2E7D32;
+        }
+        .attendance-counter .count.absent {
+            color: #C62828;
         }
 
         @media (max-width: 480px) {
@@ -571,6 +597,7 @@
                 </select>
                 <button class="btn-primary" onclick="loadGradeStudents()">📋 عرض الطلاب</button>
                 <button class="btn-success" onclick="recordAbsences()" style="margin-top:6px;">📝 تسجيل الغيابات</button>
+                <button class="btn-secondary" onclick="openAddStudents()" style="margin-top:6px;">➕ إضافة طلاب</button>
             </div>
 
             <div id="studentsListContainer" style="display:none;">
@@ -580,7 +607,6 @@
                 </div>
             </div>
 
-            <!-- ===== ماسح QR Code ===== -->
             <button class="btn-primary" onclick="openScanner()" style="background:linear-gradient(135deg,#2ECC71,#27AE60);">
                 📷 فتح الماسح
             </button>
@@ -624,6 +650,33 @@
         </div>
     </div>
 
+    <!-- ===== مودال إضافة طلاب ===== -->
+    <div id="addStudentsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>➕ إضافة طلاب للصف</h3>
+                <button class="modal-close" onclick="closeModal('addStudentsModal')">✕</button>
+            </div>
+
+            <div style="margin-bottom:10px;">
+                <label style="display:block;font-weight:600;color:#0C2340;margin-bottom:5px;">اختر الصف:</label>
+                <select id="addGradeSelect" style="width:100%;padding:14px;border:2px solid #E8ECF0;border-radius:12px;font-size:1rem;font-family:inherit;">
+                    <option value="رابع إعدادي">رابع إعدادي</option>
+                    <option value="خامس إعدادي">خامس إعدادي</option>
+                    <option value="سادس إعدادي">سادس إعدادي</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:10px;">
+                <label style="display:block;font-weight:600;color:#0C2340;margin-bottom:5px;">اختر الطلاب:</label>
+                <div id="allStudentsList" style="max-height:300px;overflow-y:auto;"></div>
+            </div>
+
+            <button class="btn-success" onclick="addSelectedStudents()">✅ إضافة الطلاب المختارين</button>
+            <button class="btn-danger" onclick="closeModal('addStudentsModal')" style="margin-top:6px;">إلغاء</button>
+        </div>
+    </div>
+
     <!-- ===== مودال مسح QR ===== -->
     <div id="scannerModal" class="modal-overlay">
         <div class="modal">
@@ -642,7 +695,6 @@
                     <div style="font-size:2.5rem;">✅</div>
                     <div class="student-name" id="scannedStudentName">-</div>
                     <div class="student-grade" id="scannedStudentGrade">-</div>
-                    <div class="student-phone" id="scannedStudentPhone">-</div>
                     <div class="status-text">✅ تم تسجيل الحضور تلقائياً</div>
                 </div>
             </div>
@@ -736,6 +788,9 @@
         function refreshData() {
             loadData();
             updateUI();
+            if (document.getElementById('studentsListContainer').style.display === 'block') {
+                loadGradeStudents();
+            }
             showToast('🔄 تم تحديث البيانات', 'info');
         }
 
@@ -837,6 +892,7 @@
         // ============================================================
 
         let currentGrade = '';
+        let classStudents = [];
 
         function loadGradeStudents() {
             const grade = document.getElementById('gradeSelect').value;
@@ -859,21 +915,122 @@
                 return;
             }
 
-            list.innerHTML = students.map(s => {
-                const isPresent = attendance.some(a => a.studentId === s.id && a.date === today);
-                const status = isPresent ?
-                    `<span class="status-badge present">✅ حاضر</span>` :
-                    `<span class="status-badge absent">❌ غائب</span>`;
-                return `
-                    <div class="student-item">
-                        <span class="name">${s.name}</span>
-                        ${status}
-                    </div>
-                `;
-            }).join('');
+            const presentCount = students.filter(s => attendance.some(a => a.studentId === s.id && a.date === today)).length;
+            const absentCount = students.length - presentCount;
+
+            list.innerHTML = `
+                <div class="attendance-counter">
+                    <span>✅ الحضور: <span class="count present">${presentCount}</span></span>
+                    <span>❌ الغياب: <span class="count absent">${absentCount}</span></span>
+                    <span>👤 الإجمالي: <span class="count">${students.length}</span></span>
+                </div>
+                ${students.map(s => {
+                    const isPresent = attendance.some(a => a.studentId === s.id && a.date === today);
+                    const status = isPresent ?
+                        `<span class="status-badge present">✅ حاضر</span>` :
+                        `<span class="status-badge absent">❌ غائب</span>`;
+                    return `
+                        <div class="student-item">
+                            <span class="name">${s.name}</span>
+                            ${status}
+                        </div>
+                    `;
+                }).join('')}
+            `;
 
             showToast(`📋 تم تحميل طلاب ${grade}`, 'success');
         }
+
+        // ============================================================
+        // إضافة طلاب جدد للصف
+        // ============================================================
+
+        function openAddStudents() {
+            const modal = document.getElementById('addStudentsModal');
+            modal.classList.add('active');
+            loadAllStudents();
+        }
+
+        function loadAllStudents() {
+            const list = document.getElementById('allStudentsList');
+            // جلب جميع الطلاب (غير المدرسين)
+            const allStudents = users.filter(u => !u.is_teacher);
+
+            if (allStudents.length === 0) {
+                list.innerHTML = `<div class="empty-state"><span class="icon">👤</span><p>لا يوجد طلاب مسجلين</p></div>`;
+                return;
+            }
+
+            // ترتيب أبجدياً
+            allStudents.sort((a, b) => a.name.localeCompare(b.name));
+
+            list.innerHTML = allStudents.map(s => {
+                // التحقق إذا كان الطالب مضافاً مسبقاً للصف المختار
+                const grade = document.getElementById('addGradeSelect').value;
+                const isInClass = users.some(u => u.id === s.id && u.grade === grade && !u.is_teacher);
+                const checked = isInClass ? 'checked' : '';
+                return `
+                    <div class="student-check-item ${isInClass ? 'selected' : ''}">
+                        <span class="name">${s.name}</span>
+                        <div>
+                            <span style="font-size:0.75rem;color:#6B7B8D;margin-left:8px;">${s.phone || ''}</span>
+                            <input type="checkbox" id="student_${s.id}" value="${s.id}" ${checked} onchange="toggleStudentSelect('${s.id}')" />
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleStudentSelect(studentId) {
+            const checkbox = document.getElementById(`student_${studentId}`);
+            const parent = checkbox.closest('.student-check-item');
+            if (checkbox.checked) {
+                parent.classList.add('selected');
+            } else {
+                parent.classList.remove('selected');
+            }
+        }
+
+        function addSelectedStudents() {
+            const grade = document.getElementById('addGradeSelect').value;
+            const checkboxes = document.querySelectorAll('#allStudentsList input[type="checkbox"]:checked');
+
+            if (checkboxes.length === 0) {
+                showToast('⚠️ يرجى اختيار طالب على الأقل', 'error');
+                return;
+            }
+
+            let addedCount = 0;
+            let removedCount = 0;
+
+            // الحصول على قائمة الطلاب الذين تم اختيارهم
+            const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+
+            // تحديث صف الطلاب المختارين
+            users = users.map(u => {
+                if (selectedIds.includes(u.id) && !u.is_teacher) {
+                    if (u.grade !== grade) {
+                        u.grade = grade;
+                        addedCount++;
+                    }
+                }
+                return u;
+            });
+
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // تحديث الواجهة
+            loadAllStudents();
+            loadGradeStudents();
+            updateUI();
+
+            showToast(`✅ تم إضافة ${addedCount} طالب للصف ${grade}`, 'success');
+        }
+
+        // عند تغيير الصف في مودال الإضافة، تحديث القائمة
+        document.getElementById('addGradeSelect').onchange = function() {
+            loadAllStudents();
+        };
 
         // ============================================================
         // تسجيل الغيابات
@@ -927,7 +1084,7 @@
         }
 
         // ============================================================
-        // مسح QR Code - تسجيل تلقائي
+        // مسح QR Code
         // ============================================================
 
         let html5QrCode = null;
@@ -1003,7 +1160,6 @@
             if (alreadyExists) {
                 document.getElementById('scannedStudentName').textContent = student.name;
                 document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
-                document.getElementById('scannedStudentPhone').textContent = '📱 ' + (student.phone || 'غير محدد');
                 document.getElementById('studentConfirm').style.display = 'block';
 
                 status.textContent = '✅ ' + student.name + ' مسجل حضور اليوم';
@@ -1019,7 +1175,7 @@
                 return;
             }
 
-            // ===== تسجيل الحضور تلقائياً =====
+            // تسجيل الحضور
             const now = new Date();
             const record = {
                 id: generateId(),
@@ -1037,10 +1193,8 @@
             attendance.push(record);
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            // عرض رسالة النجاح
             document.getElementById('scannedStudentName').textContent = student.name;
             document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
-            document.getElementById('scannedStudentPhone').textContent = '📱 ' + (student.phone || 'غير محدد');
             document.getElementById('studentConfirm').style.display = 'block';
 
             status.textContent = '✅ تم تسجيل حضور ' + student.name;
@@ -1048,18 +1202,13 @@
             showToast('✅ تم تسجيل حضور ' + student.name, 'success');
 
             updateUI();
-
-            // تحديث قائمة الطلاب
             if (document.getElementById('studentsListContainer').style.display === 'block') {
                 loadGradeStudents();
             }
 
-            // إعادة فتح الماسح بعد 1.5 ثانية
             setTimeout(() => {
                 document.getElementById('studentConfirm').style.display = 'none';
                 isProcessing = false;
-
-                // إعادة تشغيل الماسح
                 if (scannerActive) {
                     status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب التالي';
                     status.className = 'scan-status scanning';
@@ -1067,9 +1216,7 @@
             }, 1500);
         }
 
-        function onScanError(err) {
-            // تجاهل الأخطاء المؤقتة
-        }
+        function onScanError(err) {}
 
         function closeScanner() {
             if (html5QrCode && scannerActive) {
@@ -1114,6 +1261,7 @@
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
         console.log('📊 عدد الحضور:', attendance.length);
+        console.log('👨‍🎓 عدد الطلاب:', users.filter(u => !u.is_teacher).length);
     </script>
 </body>
 </html>
