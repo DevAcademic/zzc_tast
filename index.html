@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>معهد أنوار السلام</title>
+    <title>  </title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <style>
         * {
@@ -133,7 +133,8 @@
             margin-bottom: 5px;
             font-size: 0.85rem;
         }
-        .input-group input {
+        .input-group input,
+        .input-group select {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #E8ECF0;
@@ -144,10 +145,74 @@
             background: #FAFBFC;
             color: #2C3E50;
         }
-        .input-group input:focus {
+        .input-group input:focus,
+        .input-group select:focus {
             outline: none;
             border-color: #C9A84C;
             box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.15);
+        }
+        .input-group small {
+            display: block;
+            color: #95A5A6;
+            font-size: 0.7rem;
+            margin-top: 3px;
+        }
+
+        .phone-input {
+            display: flex;
+            align-items: center;
+            background: #FAFBFC;
+            border: 2px solid #E8ECF0;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .phone-input:focus-within {
+            border-color: #C9A84C;
+            box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.15);
+        }
+        .phone-input .country {
+            padding: 14px 10px;
+            background: #C9A84C;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            min-width: 50px;
+            text-align: center;
+        }
+        .phone-input input {
+            border: none !important;
+            flex: 1;
+            padding: 14px 14px;
+            background: transparent;
+            font-size: 1rem;
+            font-family: inherit;
+            color: #2C3E50;
+        }
+        .phone-input input:focus {
+            box-shadow: none !important;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #C9A84C, #B8942E);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 10px;
+        }
+        .btn-primary:active {
+            transform: scale(0.96);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .role-selector {
@@ -181,28 +246,6 @@
             border-color: #C9A84C;
             background: #FDF8EE;
             color: #0C2340;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #C9A84C, #B8942E);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 10px;
-        }
-        .btn-primary:active {
-            transform: scale(0.96);
-        }
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         .message {
@@ -257,11 +300,26 @@
             margin-bottom: 0;
         }
 
+        /* =====   -    ===== */
+        .grade-section {
+            display: block;
+        }
+        .grade-section.hidden {
+            display: none;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 20px 15px;
             }
             .logo h1 {
+                font-size: 1.5rem;
+            }
+            .role-btn {
+                padding: 12px 8px;
+                font-size: 0.85rem;
+            }
+            .role-btn .emoji {
                 font-size: 1.5rem;
             }
         }
@@ -270,76 +328,96 @@
 <body>
     <div class="container">
         <div class="logo">
-            <span class="icon">🕌</span>
-            <h1>معهد <span>أنوار السلام</span></h1>
-            <p>نظام تسجيل الحضور</p>
+            <span class="icon"></span>
+            <h1> <span> </span></h1>
+            <p>  </p>
         </div>
 
         <div class="tab-selector">
-            <button id="loginTab" class="tab-btn active">
-                <span class="emoji">🔑</span> تسجيل الدخول
+            <button id="loginTab" class="tab-btn active" onclick="showLogin()">
+                <span class="emoji"></span>  
             </button>
-            <button id="registerTab" class="tab-btn">
-                <span class="emoji">📝</span> إنشاء حساب
+            <button id="registerTab" class="tab-btn" onclick="showRegister()">
+                <span class="emoji"></span>  
             </button>
         </div>
 
-        <!-- ===== تسجيل الدخول ===== -->
+        <!-- =====   ===== -->
         <div id="loginForm" class="form-card active">
-            <h3>🔑 <span>تسجيل الدخول</span></h3>
+            <h3> <span> </span></h3>
             <div class="input-group">
-                <label>📧 البريد الإلكتروني</label>
+                <label>  </label>
                 <input type="email" id="loginEmail" placeholder="example@email.com" />
             </div>
             <div class="input-group">
-                <label>🔑 كلمة المرور</label>
-                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" />
+                <label>  </label>
+                <input type="password" id="loginPassword" placeholder="  " />
             </div>
-            <button id="loginBtn" class="btn-primary">تسجيل الدخول</button>
+            <button id="loginBtn" class="btn-primary" onclick="loginUser()"> </button>
         </div>
 
-        <!-- ===== إنشاء حساب ===== -->
+        <!-- =====   ===== -->
         <div id="registerForm" class="form-card">
-            <h3>📝 <span>إنشاء حساب جديد</span></h3>
+            <h3> <span>  </span></h3>
 
             <div class="input-group">
-                <label>👤 الاسم الثلاثي</label>
-                <input type="text" id="regName" placeholder="مثال: أحمد محمد علي" />
+                <label>  </label>
+                <input type="text" id="regName" placeholder=":   " />
+                <small>   </small>
             </div>
 
             <div class="input-group">
-                <label>📧 البريد الإلكتروني</label>
+                <label>  </label>
                 <input type="email" id="regEmail" placeholder="example@email.com" />
             </div>
 
             <div class="input-group">
-                <label>📱 رقم الهاتف</label>
-                <input type="tel" id="regPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                <label>  </label>
+                <div class="phone-input">
+                    <span class="country">+964</span>
+                    <input type="tel" id="regPhone" placeholder="7XXXXXXXXX" maxlength="10" />
+                </div>
+                <small> 10  </small>
             </div>
 
             <div class="input-group">
-                <label>🔑 كلمة المرور</label>
-                <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
+                <label>  </label>
+                <input type="password" id="regPassword" placeholder="6   " />
             </div>
 
-            <div class="role-selector">
-                <button id="roleStudentBtn" class="role-btn active" onclick="selectRole('student')">
-                    <span class="emoji">👤</span> طالب
-                </button>
-                <button id="roleTeacherBtn" class="role-btn" onclick="selectRole('teacher')">
-                    <span class="emoji">👨‍🏫</span> مدرب
-                </button>
-            </div>
-
-            <!-- كود المدرس - يظهر فقط عند اختيار مدرب -->
-            <div id="teacherCodeSection" class="teacher-code-section">
+            <!-- =====   -    ===== -->
+            <div id="gradeSection" class="grade-section">
                 <div class="input-group">
-                    <label>🔐 كود المدرس السري</label>
-                    <input type="password" id="regTeacherCode" placeholder="أدخل الكود السري" />
+                    <label> </label>
+                    <select id="regGrade">
+                        <option value="">--   --</option>
+                        <option value=" "> </option>
+                        <option value=" "> </option>
+                        <option value=" "> </option>
+                    </select>
+                    <small>    </small>
                 </div>
             </div>
 
-            <button id="registerBtn" class="btn-primary">إنشاء حساب</button>
+            <!-- =====   ===== -->
+            <div class="role-selector">
+                <button id="roleStudentBtn" class="role-btn active" onclick="selectRole('student')">
+                    <span class="emoji"></span> 
+                </button>
+                <button id="roleTeacherBtn" class="role-btn" onclick="selectRole('teacher')">
+                    <span class="emoji"></span> 
+                </button>
+            </div>
+
+            <!-- =====   ===== -->
+            <div id="teacherCodeSection" class="teacher-code-section">
+                <div class="input-group">
+                    <label>   </label>
+                    <input type="password" id="regTeacherCode" placeholder="  " />
+                </div>
+            </div>
+
+            <button id="registerBtn" class="btn-primary" onclick="registerUser()"> </button>
         </div>
 
         <div id="message" class="message"></div>
@@ -347,83 +425,69 @@
 
     <script>
         // ============================================================
-        // الكود السري - مخفي تماماً (مشفر)
+        //   ()
         // ============================================================
-        const TEACHER_CODE = atob('enpubjU1MDAxMUFuQA==');
+        const TEACHER_CODE = 'zznn550011AN@';
 
         // ============================================================
-        // دالة التحقق من الكود
-        // ============================================================
-        function isValidTeacherCode(input) {
-            let code = input.trim();
-            const validCodes = [
-                'zznn550011AN@',
-                'zznn550011AN',
-                'ZZNN550011AN@',
-                'ZZNN550011AN'
-            ];
-            return validCodes.some(valid => valid === code);
-        }
-
-        // ============================================================
-        // المتغيرات
+        // 
         // ============================================================
 
         let selectedRole = 'student';
 
-        const loginTab = document.getElementById('loginTab');
-        const registerTab = document.getElementById('registerTab');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
-
-        const roleStudentBtn = document.getElementById('roleStudentBtn');
-        const roleTeacherBtn = document.getElementById('roleTeacherBtn');
-        const teacherCodeSection = document.getElementById('teacherCodeSection');
-
         // ============================================================
-        // التبديل بين التبويبات
+        //   
         // ============================================================
 
-        loginTab.onclick = function() {
-            loginTab.classList.add('active');
-            registerTab.classList.remove('active');
-            loginForm.classList.add('active');
-            registerForm.classList.remove('active');
+        function showLogin() {
+            document.getElementById('loginTab').classList.add('active');
+            document.getElementById('registerTab').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
             hideMessage();
-        };
+        }
 
-        registerTab.onclick = function() {
-            registerTab.classList.add('active');
-            loginTab.classList.remove('active');
-            registerForm.classList.add('active');
-            loginForm.classList.remove('active');
+        function showRegister() {
+            document.getElementById('registerTab').classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
             hideMessage();
-        };
+        }
 
         // ============================================================
-        // اختيار الدور
+        //   -  / 
         // ============================================================
 
         function selectRole(role) {
             selectedRole = role;
 
+            const studentBtn = document.getElementById('roleStudentBtn');
+            const teacherBtn = document.getElementById('roleTeacherBtn');
+            const teacherCodeSection = document.getElementById('teacherCodeSection');
+            const gradeSection = document.getElementById('gradeSection');
+
             if (role === 'student') {
-                roleStudentBtn.classList.add('active');
-                roleTeacherBtn.classList.remove('active');
+                // 
+                studentBtn.classList.add('active');
+                teacherBtn.classList.remove('active');
                 teacherCodeSection.style.display = 'none';
+                //     
+                gradeSection.classList.remove('hidden');
             } else {
-                roleTeacherBtn.classList.add('active');
-                roleStudentBtn.classList.remove('active');
+                // 
+                teacherBtn.classList.add('active');
+                studentBtn.classList.remove('active');
                 teacherCodeSection.style.display = 'block';
+                //     
+                gradeSection.classList.add('hidden');
             }
+
             hideMessage();
         }
 
         // ============================================================
-        // دوال مساعدة
+        //  
         // ============================================================
 
         function showMessage(text, type) {
@@ -441,10 +505,10 @@
         function setLoading(btn, loading) {
             if (loading) {
                 btn.disabled = true;
-                btn.innerHTML = 'جاري <span class="loading"></span>';
+                btn.innerHTML = ' <span class="loading"></span>';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = btn === loginBtn ? 'تسجيل الدخول' : 'إنشاء حساب';
+                btn.innerHTML = btn.id === 'loginBtn' ? ' ' : ' ';
             }
         }
 
@@ -469,95 +533,111 @@
         }
 
         // ============================================================
-        // تسجيل الدخول
+        //  
         // ============================================================
 
-        loginBtn.onclick = function() {
+        function loginUser() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
 
             hideMessage();
 
             if (!isValidEmail(email)) {
-                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
+                showMessage('    ', 'error');
                 return;
             }
             if (!password) {
-                showMessage('⚠️ يرجى إدخال كلمة المرور', 'error');
+                showMessage('    ', 'error');
                 return;
             }
 
-            setLoading(loginBtn, true);
+            setLoading(document.getElementById('loginBtn'), true);
 
             setTimeout(function() {
                 const users = JSON.parse(localStorage.getItem('users')) || [];
                 const user = users.find(u => u.email === email && u.password === password);
 
                 if (!user) {
-                    setLoading(loginBtn, false);
-                    showMessage('❌ البريد أو كلمة المرور غير صحيحة', 'error');
+                    setLoading(document.getElementById('loginBtn'), false);
+                    showMessage('      ', 'error');
                     return;
                 }
 
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                setLoading(loginBtn, false);
-                showMessage('✅ تم تسجيل الدخول بنجاح!', 'success');
+                setLoading(document.getElementById('loginBtn'), false);
+                showMessage('    !', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
                 }, 1000);
             }, 1500);
-        };
+        }
 
         // ============================================================
-        // إنشاء حساب جديد
+        //   
         // ============================================================
 
-        registerBtn.onclick = function() {
+        function registerUser() {
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
             const password = document.getElementById('regPassword').value.trim();
+            const grade = document.getElementById('regGrade').value;
             const teacherCode = document.getElementById('regTeacherCode').value.trim();
 
             hideMessage();
 
+            //   
             if (!isValidName(name)) {
-                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي)', 'error');
-                return;
-            }
-            if (!isValidEmail(email)) {
-                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
-                return;
-            }
-            if (!isValidPhone(phone)) {
-                showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
-                return;
-            }
-            if (!isValidPassword(password)) {
-                showMessage('⚠️ كلمة المرور 6 أحرف على الأقل', 'error');
+                showMessage('      ()', 'error');
                 return;
             }
 
+            //   
+            if (!isValidEmail(email)) {
+                showMessage('    ', 'error');
+                return;
+            }
+
+            //   
+            if (!isValidPhone(phone)) {
+                showMessage('      10 ', 'error');
+                return;
+            }
+
+            //    
+            if (!isValidPassword(password)) {
+                showMessage('      6   ', 'error');
+                return;
+            }
+
+            //        
             const isTeacher = (selectedRole === 'teacher');
             if (isTeacher) {
                 if (!teacherCode) {
-                    showMessage('⚠️ يرجى إدخال كود المدرس', 'error');
+                    showMessage('    ', 'error');
                     return;
                 }
-                if (!isValidTeacherCode(teacherCode)) {
-                    showMessage('❌ كود المدرس غير صحيح!', 'error');
+                if (teacherCode !== TEACHER_CODE) {
+                    showMessage('    !', 'error');
                     return;
                 }
             }
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            if (users.find(u => u.email === email)) {
-                showMessage('⚠️ هذا البريد مسجل مسبقاً', 'error');
+            // =====     ( ) =====
+            if (!isTeacher && !grade) {
+                showMessage('   ', 'error');
                 return;
             }
 
-            setLoading(registerBtn, true);
+            //      
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(u => u.email === email)) {
+                showMessage('    ', 'error');
+                return;
+            }
+
+            setLoading(document.getElementById('registerBtn'), true);
 
             setTimeout(function() {
                 const newUser = {
@@ -566,7 +646,7 @@
                     email: email,
                     phone: phone,
                     password: password,
-                    grade: isTeacher ? 'مدرس' : 'غير محدد',
+                    grade: isTeacher ? '' : grade,
                     is_teacher: isTeacher,
                     registered: new Date().toISOString()
                 };
@@ -575,17 +655,17 @@
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
 
-                setLoading(registerBtn, false);
-                showMessage(isTeacher ? '✅ تم التسجيل كمدرس!' : '✅ تم التسجيل كطالب!', 'success');
+                setLoading(document.getElementById('registerBtn'), false);
+                showMessage(isTeacher ? '   !' : '   !', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
                 }, 1000);
             }, 1500);
-        };
+        }
 
         // ============================================================
-        // التحقق من الجلسة
+        //   
         // ============================================================
 
         const savedUser = localStorage.getItem('currentUser');
@@ -598,8 +678,14 @@
             } catch (e) {}
         }
 
-        console.log('🕌 معهد أنوار السلام - جاهز');
-        console.log('🔑 الكود السري مخفي تماماً');
+        // ============================================================
+        //  
+        // ============================================================
+
+        console.log('    - ');
+        console.log('    ');
+
+        //    
         selectRole('student');
     </script>
 </body>
