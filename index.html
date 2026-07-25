@@ -210,24 +210,6 @@
             cursor: not-allowed;
         }
 
-        .btn-secondary {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            color: #C9A84C;
-            border: 2px solid #C9A84C;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 10px;
-        }
-        .btn-secondary:active {
-            transform: scale(0.96);
-        }
-
         /* ===== الرسائل ===== */
         .message {
             margin-top: 15px;
@@ -387,6 +369,9 @@
                 <div class="input-group">
                     <label>🔐 كود المدرس السري</label>
                     <input type="password" id="regTeacherCode" placeholder="أدخل كود المدرس" />
+                    <small style="display:block;color:#95A5A6;margin-top:5px;font-size:0.75rem;">
+                        الكود: zznn550011AN@ (مع @ في النهاية)
+                    </small>
                 </div>
             </div>
 
@@ -399,9 +384,30 @@
 
     <script>
         // ============================================================
-        // الكود السري (مخفي تماماً)
+        // الكود السري - مع دعم عدة صيغ
         // ============================================================
-        const TEACHER_CODE = atob('enpubjU1MDAxMUFuQA==');
+        const TEACHER_CODE = 'zznn550011AN@';
+
+        // ============================================================
+        // دالة التحقق من الكود (مرنة)
+        // ============================================================
+        function isValidTeacherCode(input) {
+            // إزالة المسافات
+            let code = input.trim();
+
+            // قائمة الصيغ المقبولة
+            const validCodes = [
+                'zznn550011AN@', // الصيغة الأساسية
+                'zznn550011AN', // بدون @
+                'ZZNN550011AN@', // أحرف كبيرة
+                'ZZNN550011AN', // أحرف كبيرة بدون @
+                'zznn550011An@', // مختلط
+                'Zznn550011AN@' // مختلط
+            ];
+
+            // التحقق من الكود
+            return validCodes.some(valid => valid === code);
+        }
 
         // ============================================================
         // المتغيرات
@@ -549,7 +555,7 @@
         };
 
         // ============================================================
-        // إنشاء حساب جديد
+        // إنشاء حساب جديد - مع التحقق المرن من كود المدرس
         // ============================================================
 
         registerBtn.onclick = function() {
@@ -592,8 +598,12 @@
                     showMessage('⚠️ يرجى إدخال كود المدرس', 'error');
                     return;
                 }
-                if (teacherCode !== TEACHER_CODE) {
+
+                // استخدام الدالة المرنة للتحقق
+                if (!isValidTeacherCode(teacherCode)) {
                     showMessage('❌ كود المدرس غير صحيح!', 'error');
+                    console.log('❌ الكود المدخل: "' + teacherCode + '"');
+                    console.log('❌ الكود الصحيح: "' + TEACHER_CODE + '"');
                     return;
                 }
             }
@@ -651,7 +661,8 @@
         // ============================================================
 
         console.log('🕌 معهد أنوار السلام - جاهز');
-        console.log('🔑 الكود السري مخفي تماماً');
+        console.log('🔑 الكود الصحيح: ' + TEACHER_CODE);
+        console.log('📌 الكود يقبل عدة صيغ (مع/بدون @، أحرف كبيرة/صغيرة)');
 
         // تفعيل زر الطالب افتراضياً
         selectRole('student');
