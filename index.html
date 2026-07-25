@@ -300,7 +300,6 @@
             margin-bottom: 0;
         }
 
-        /*   -    */
         .grade-section {
             display: block;
         }
@@ -427,10 +426,8 @@
         //   ()
         const TEACHER_CODE = 'zznn550011AN@';
 
-        // 
         let selectedRole = 'student';
 
-        //   
         function showLogin() {
             document.getElementById('loginTab').classList.add('active');
             document.getElementById('registerTab').classList.remove('active');
@@ -447,7 +444,6 @@
             hideMessage();
         }
 
-        //    / 
         function selectRole(role) {
             selectedRole = role;
 
@@ -471,7 +467,6 @@
             hideMessage();
         }
 
-        //  
         function showMessage(text, type) {
             const el = document.getElementById('message');
             el.textContent = text;
@@ -514,7 +509,6 @@
             return password.length >= 6;
         }
 
-        //  
         function loginUser() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -552,7 +546,6 @@
             }, 1500);
         }
 
-        //   
         function registerUser() {
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -595,7 +588,6 @@
                 }
             }
 
-            //     ( )
             if (!isTeacher && !grade) {
                 showMessage('   ', 'error');
                 return;
@@ -634,7 +626,6 @@
             }, 1500);
         }
 
-        //   
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
             try {
@@ -645,11 +636,9 @@
             } catch (e) {}
         }
 
-        //  
         console.log('    - ');
-        console.log('    ');
+        console.log('  : ' + TEACHER_CODE);
 
-        //    
         selectRole('student');
     </script>
 </body>
