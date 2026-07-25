@@ -215,6 +215,23 @@
         .btn-danger:active {
             transform: scale(0.96);
         }
+        .btn-success {
+            width: 100%;
+            padding: 14px;
+            background: #2ECC71;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 8px;
+        }
+        .btn-success:active {
+            transform: scale(0.96);
+        }
 
         .modal-overlay {
             display: none;
@@ -258,6 +275,34 @@
             color: #6B7B8D;
         }
 
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #FAFBFC;
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+        .student-item .name {
+            font-weight: 600;
+            color: #0C2340;
+        }
+        .student-item .status-badge {
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .student-item .status-badge.present {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .student-item .status-badge.absent {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
         .absence-item {
             display: flex;
             justify-content: space-between;
@@ -276,24 +321,6 @@
             font-size: 0.85rem;
         }
 
-        .attendance-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 14px;
-            background: #E8F5E9;
-            border-radius: 12px;
-            margin-bottom: 6px;
-            border-right: 3px solid #2E7D32;
-        }
-        .attendance-item .name {
-            color: #0C2340;
-            font-weight: 600;
-        }
-        .attendance-item .time {
-            color: #2E7D32;
-            font-size: 0.85rem;
-        }
-
         .empty-state {
             text-align: center;
             padding: 30px 20px;
@@ -303,37 +330,6 @@
             font-size: 3rem;
             display: block;
             margin-bottom: 10px;
-        }
-
-        .student-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
-            background: #FAFBFC;
-            border-radius: 12px;
-            margin-bottom: 6px;
-        }
-        .student-item .name {
-            font-weight: 600;
-            color: #0C2340;
-        }
-        .student-item .absences-badge {
-            background: #FF6B6B;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .student-item .present-badge {
-            background: #2E7D32;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
         }
 
         /* ===== Scanner ===== */
@@ -506,8 +502,8 @@
                 </div>
             </div>
             <div>
-                <button class="btn-refresh" onclick="refreshData()">🔄 تحديث</button>
-                <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+                <button class="btn-refresh" onclick="refreshData()">🔄</button>
+                <button class="btn-logout" onclick="logout()">🚪</button>
             </div>
         </div>
 
@@ -530,24 +526,40 @@
                 <span class="info-value" id="userAbsencesCount">0</span>
             </div>
             <div class="info-row">
-                <span class="info-label">✅ الحضور اليوم</span>
+                <span class="info-label">✅ حضور اليوم</span>
                 <span class="info-value" id="todayAttendanceCount">0</span>
             </div>
         </div>
 
-        <div id="studentQR" class="qr-section">
-            <div id="qrcode"></div>
-            <p class="qr-label">🎫 كود الطالب</p>
-        </div>
-
-        <div id="studentActions">
-            <button class="btn-secondary" onclick="showAbsences()">📋 غياباتي</button>
-            <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
-        </div>
-
+        <!-- ===== اختيار الصف وإدارة الطلاب ===== -->
         <div id="teacherActions" style="display:none;">
-            <button class="btn-primary" onclick="showManageStudents()">📋 إدارة الطلاب</button>
+            <div class="card">
+                <div class="card-title">📚 إدارة الصف</div>
+                <select id="gradeSelect" style="width:100%;padding:14px;border:2px solid #E8ECF0;border-radius:12px;font-size:1rem;font-family:inherit;margin-bottom:10px;">
+                    <option value="">اختر الصف</option>
+                    <option value="رابع إعدادي">رابع إعدادي</option>
+                    <option value="خامس إعدادي">خامس إعدادي</option>
+                    <option value="سادس إعدادي">سادس إعدادي</option>
+                </select>
+                <button class="btn-primary" onclick="loadGradeStudents()">📋 عرض الطلاب</button>
+                <button class="btn-success" onclick="recordAbsences()" style="margin-top:6px;">📝 تسجيل الغيابات</button>
+            </div>
+
+            <div id="studentsListContainer" style="display:none;">
+                <div class="card">
+                    <div class="card-title">👨‍🎓 قائمة الطلاب</div>
+                    <div id="studentsList"></div>
+                </div>
+            </div>
+
             <button class="btn-primary" onclick="openScanner()">📷 مسح QR Code</button>
+            <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
+            <button class="btn-secondary" onclick="showAllAbsences()" style="margin-top:6px;">📋 تقرير الغيابات</button>
+        </div>
+
+        <!-- ===== أزرار الطالب ===== -->
+        <div id="studentActions">
+            <button class="btn-secondary" onclick="showMyAbsences()">📋 غياباتي</button>
             <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
         </div>
     </div>
@@ -571,25 +583,6 @@
                 <button class="modal-close" onclick="closeModal('attendanceModal')">✕</button>
             </div>
             <div id="attendanceList"></div>
-        </div>
-    </div>
-
-    <!-- ===== مودال إدارة الطلاب ===== -->
-    <div id="studentsModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>📋 إدارة الطلاب</h3>
-                <button class="modal-close" onclick="closeModal('studentsModal')">✕</button>
-            </div>
-            <div style="margin-bottom:10px;">
-                <select id="filterGrade" style="width:100%;padding:12px;border:2px solid #E8ECF0;border-radius:12px;font-size:1rem;font-family:inherit;">
-                    <option value="">كل الصفوف</option>
-                    <option value="رابع إعدادي">رابع إعدادي</option>
-                    <option value="خامس إعدادي">خامس إعدادي</option>
-                    <option value="سادس إعدادي">سادس إعدادي</option>
-                </select>
-            </div>
-            <div id="studentsList"></div>
         </div>
     </div>
 
@@ -630,22 +623,26 @@
         // البيانات
         // ============================================================
 
-        // دالة لتحميل البيانات من localStorage
-        function loadData() {
-            const usersData = localStorage.getItem('users');
-            const attendanceData = localStorage.getItem('attendance');
-            const currentUserData = localStorage.getItem('currentUser');
-
-            users = usersData ? JSON.parse(usersData) : [];
-            attendance = attendanceData ? JSON.parse(attendanceData) : [];
-            currentUser = currentUserData ? JSON.parse(currentUserData) : null;
-        }
-
         let currentUser = null;
         let users = [];
         let attendance = [];
 
-        // تحميل البيانات أولاً
+        function loadData() {
+            try {
+                const usersData = localStorage.getItem('users');
+                const attendanceData = localStorage.getItem('attendance');
+                const currentUserData = localStorage.getItem('currentUser');
+
+                users = usersData ? JSON.parse(usersData) : [];
+                attendance = attendanceData ? JSON.parse(attendanceData) : [];
+                currentUser = currentUserData ? JSON.parse(currentUserData) : null;
+
+                console.log('📊 تحميل البيانات:', { users: users.length, attendance: attendance.length });
+            } catch (e) {
+                console.error('❌ خطأ في تحميل البيانات:', e);
+            }
+        }
+
         loadData();
 
         if (!currentUser) {
@@ -668,7 +665,6 @@
             const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
             document.getElementById('userAbsencesCount').textContent = userAbsences.length;
 
-            // عدد الحضور اليوم
             const today = new Date().toISOString().split('T')[0];
             const todayAttendance = attendance.filter(a => a.date === today);
             document.getElementById('todayAttendanceCount').textContent = todayAttendance.length;
@@ -701,22 +697,15 @@
             }
         }
 
-        // ============================================================
-        // تحديث البيانات
-        // ============================================================
-
         function refreshData() {
             loadData();
             updateUI();
             showToast('🔄 تم تحديث البيانات', 'info');
-            console.log('📊 البيانات محدثة:', { users: users.length, attendance: attendance.length });
         }
 
         // ============================================================
         // دوال مساعدة
         // ============================================================
-
-        let scannedStudent = null;
 
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
@@ -741,20 +730,15 @@
         }
 
         // ============================================================
-        // عرض الغيابات
+        // عرض غيابات الطالب
         // ============================================================
 
-        function showAbsences() {
+        function showMyAbsences() {
             const list = document.getElementById('absencesList');
             const userAbs = attendance.filter(a => a.studentId === currentUser.id);
 
             if (userAbs.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <span class="icon">🎉</span>
-                        <p>لا توجد غيابات مسجلة</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="empty-state"><span class="icon">🎉</span><p>لا توجد غيابات مسجلة</p></div>`;
             } else {
                 list.innerHTML = userAbs.map(a => `
                     <div class="absence-item">
@@ -777,17 +761,12 @@
             const todayAtt = attendance.filter(a => a.date === today);
 
             if (todayAtt.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <span class="icon">📭</span>
-                        <p>لا يوجد حضور اليوم</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="empty-state"><span class="icon">📭</span><p>لا يوجد حضور اليوم</p></div>`;
             } else {
                 list.innerHTML = todayAtt.map(a => `
-                    <div class="attendance-item">
+                    <div class="student-item">
                         <span class="name">👤 ${a.studentName}</span>
-                        <span class="time">⏰ ${a.time}</span>
+                        <span class="status-badge present">✅ حاضر</span>
                     </div>
                 `).join('');
             }
@@ -796,51 +775,127 @@
         }
 
         // ============================================================
-        // إدارة الطلاب
+        // عرض تقرير الغيابات (للمدرس)
         // ============================================================
 
-        function showManageStudents() {
-            document.getElementById('studentsModal').classList.add('active');
-            loadStudentsList();
+        function showAllAbsences() {
+            const list = document.getElementById('absencesList');
+
+            if (attendance.length === 0) {
+                list.innerHTML = `<div class="empty-state"><span class="icon">📭</span><p>لا توجد غيابات مسجلة</p></div>`;
+            } else {
+                // ترتيب حسب التاريخ
+                const sorted = [...attendance].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                list.innerHTML = sorted.map(a => `
+                    <div class="absence-item">
+                        <span class="date">👤 ${a.studentName} - 📅 ${a.date}</span>
+                        <span class="time">⏰ ${a.time}</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('absencesModal').classList.add('active');
         }
 
-        function loadStudentsList() {
-            const filter = document.getElementById('filterGrade').value;
+        // ============================================================
+        // إدارة الطلاب (للمدرس)
+        // ============================================================
+
+        let currentGrade = '';
+
+        function loadGradeStudents() {
+            const grade = document.getElementById('gradeSelect').value;
+            if (!grade) {
+                showToast('⚠️ يرجى اختيار الصف أولاً', 'error');
+                return;
+            }
+
+            currentGrade = grade;
+            const container = document.getElementById('studentsListContainer');
+            container.style.display = 'block';
+
             const list = document.getElementById('studentsList');
             const today = new Date().toISOString().split('T')[0];
 
-            let students = users.filter(u => !u.is_teacher);
-            if (filter) students = students.filter(u => u.grade === filter);
+            let students = users.filter(u => !u.is_teacher && u.grade === grade);
 
             if (students.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <span class="icon">👤</span>
-                        <p>لا يوجد طلاب</p>
-                    </div>
-                `;
+                list.innerHTML = `<div class="empty-state"><span class="icon">👤</span><p>لا يوجد طلاب في هذا الصف</p></div>`;
                 return;
             }
 
             list.innerHTML = students.map(s => {
-                const abs = attendance.filter(a => a.studentId === s.id).length;
                 const isPresent = attendance.some(a => a.studentId === s.id && a.date === today);
-                const badge = isPresent ?
-                    `<span class="present-badge">✅ حاضر</span>` :
-                    `<span class="absences-badge">${abs} غياب</span>`;
+                const status = isPresent ?
+                    `<span class="status-badge present">✅ حاضر</span>` :
+                    `<span class="status-badge absent">❌ غائب</span>`;
                 return `
                     <div class="student-item">
                         <span class="name">${s.name}</span>
-                        ${badge}
+                        ${status}
                     </div>
                 `;
             }).join('');
+
+            showToast(`📋 تم تحميل طلاب ${grade}`, 'success');
         }
 
-        document.getElementById('filterGrade').onchange = loadStudentsList;
+        // ============================================================
+        // تسجيل الغيابات (للمدرس)
+        // ============================================================
+
+        function recordAbsences() {
+            if (!currentGrade) {
+                showToast('⚠️ يرجى اختيار الصف أولاً', 'error');
+                return;
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            const students = users.filter(u => !u.is_teacher && u.grade === currentGrade);
+
+            // الطلاب الذين لم يسجلوا حضور اليوم
+            const absentStudents = students.filter(s => {
+                return !attendance.some(a => a.studentId === s.id && a.date === today);
+            });
+
+            if (absentStudents.length === 0) {
+                showToast('🎉 جميع الطلاب حاضرون اليوم', 'success');
+                return;
+            }
+
+            // تسجيل غياب لكل طالب غائب
+            const now = new Date();
+            let count = 0;
+
+            absentStudents.forEach(s => {
+                // التأكد من عدم وجود تسجيل مسبق
+                const exists = attendance.some(a => a.studentId === s.id && a.date === today);
+                if (!exists) {
+                    attendance.push({
+                        id: generateId(),
+                        studentId: s.id,
+                        studentName: s.name,
+                        grade: s.grade,
+                        date: today,
+                        time: 'غائب',
+                        teacherId: currentUser.id,
+                        teacherName: currentUser.name,
+                        timestamp: now.toISOString(),
+                        status: 'absent'
+                    });
+                    count++;
+                }
+            });
+
+            localStorage.setItem('attendance', JSON.stringify(attendance));
+
+            showToast(`📝 تم تسجيل غياب ${count} طالب`, 'success');
+            refreshData();
+            loadGradeStudents();
+        }
 
         // ============================================================
-        // مسح QR Code - تسجيل تلقائي فوراً
+        // مسح QR Code - تسجيل تلقائي
         // ============================================================
 
         let html5QrCode = null;
@@ -852,7 +907,6 @@
             modal.classList.add('active');
 
             document.getElementById('studentConfirm').style.display = 'none';
-            scannedStudent = null;
             isProcessing = false;
 
             const status = document.getElementById('scanStatus');
@@ -894,18 +948,14 @@
             isProcessing = true;
 
             const status = document.getElementById('scanStatus');
-
-            // إعادة تحميل البيانات للتأكد من أحدث البيانات
             loadData();
 
-            // البحث عن الطالب
             const student = users.find(u => u.id === decodedText && !u.is_teacher);
 
             if (!student) {
                 status.textContent = '❌ طالب غير مسجل!';
                 status.className = 'scan-status error';
-                showToast('❌ طالب غير مسجل في النظام', 'error');
-
+                showToast('❌ طالب غير مسجل', 'error');
                 setTimeout(() => {
                     isProcessing = false;
                     status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
@@ -915,9 +965,7 @@
             }
 
             const today = new Date().toISOString().split('T')[0];
-            const alreadyExists = attendance.some(a =>
-                a.studentId === student.id && a.date === today
-            );
+            const alreadyExists = attendance.some(a => a.studentId === student.id && a.date === today);
 
             if (alreadyExists) {
                 document.getElementById('scannedStudentName').textContent = student.name;
@@ -927,7 +975,7 @@
 
                 status.textContent = '✅ ' + student.name + ' مسجل حضور اليوم';
                 status.className = 'scan-status success';
-                showToast('✅ ' + student.name + ' مسجل حضور اليوم', 'success');
+                showToast('✅ ' + student.name + ' حاضر', 'success');
 
                 setTimeout(() => {
                     document.getElementById('studentConfirm').style.display = 'none';
@@ -938,7 +986,7 @@
                 return;
             }
 
-            // ===== تسجيل الحضور =====
+            // تسجيل الحضور
             const now = new Date();
             const record = {
                 id: generateId(),
@@ -949,24 +997,13 @@
                 time: now.toLocaleTimeString('ar-EG'),
                 teacherId: currentUser.id,
                 teacherName: currentUser.name,
-                timestamp: now.toISOString()
+                timestamp: now.toISOString(),
+                status: 'present'
             };
 
-            // إضافة إلى قائمة الحضور
             attendance.push(record);
+            localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            // حفظ في localStorage
-            try {
-                localStorage.setItem('attendance', JSON.stringify(attendance));
-                console.log('✅ تم حفظ الحضور:', record);
-            } catch (e) {
-                console.error('❌ خطأ في الحفظ:', e);
-                showToast('❌ خطأ في حفظ البيانات', 'error');
-                isProcessing = false;
-                return;
-            }
-
-            // عرض بيانات الطالب
             document.getElementById('scannedStudentName').textContent = student.name;
             document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
             document.getElementById('scannedStudentPhone').textContent = '📱 ' + (student.phone || 'غير محدد');
@@ -976,10 +1013,13 @@
             status.className = 'scan-status success';
             showToast('✅ تم تسجيل حضور ' + student.name, 'success');
 
-            // تحديث الواجهة
             updateUI();
 
-            // إخفاء بعد 2 ثانية
+            // تحديث قائمة الطلاب إذا كانت مفتوحة
+            if (document.getElementById('studentsListContainer').style.display === 'block') {
+                loadGradeStudents();
+            }
+
             setTimeout(() => {
                 document.getElementById('studentConfirm').style.display = 'none';
                 isProcessing = false;
@@ -999,18 +1039,19 @@
                     document.getElementById('scannerModal').classList.remove('active');
                     document.getElementById('reader').innerHTML = '';
                     document.getElementById('studentConfirm').style.display = 'none';
-                    scannedStudent = null;
                 }).catch(() => {
                     document.getElementById('scannerModal').classList.remove('active');
                 });
             } else {
                 document.getElementById('scannerModal').classList.remove('active');
                 document.getElementById('studentConfirm').style.display = 'none';
-                scannedStudent = null;
             }
         }
 
+        // ============================================================
         // إغلاق المودال عند الضغط خارجها
+        // ============================================================
+
         document.querySelectorAll('.modal-overlay').forEach(el => {
             el.onclick = function(e) {
                 if (e.target === this) {
