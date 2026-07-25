@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* ============================================================
                            التنسيقات العامة
@@ -35,9 +36,6 @@
             border: 1px solid rgba(201, 168, 76, 0.2);
         }
 
-        /* ============================================================
-                           الهيدر
-                           ============================================================ */
         .header {
             display: flex;
             justify-content: space-between;
@@ -115,9 +113,16 @@
             color: white;
         }
 
-        /* ============================================================
-                           البطاقات
-                           ============================================================ */
+        .btn-icon.settings {
+            background: #6B7B8D;
+            color: white;
+        }
+
+        .btn-icon.notification {
+            background: #C9A84C;
+            color: white;
+        }
+
         .card {
             background: white;
             border-radius: 16px;
@@ -153,9 +158,6 @@
             font-size: 0.9rem;
         }
 
-        /* ============================================================
-                           الأزرار
-                           ============================================================ */
         .btn-primary {
             width: 100%;
             padding: 13px;
@@ -246,9 +248,6 @@
             transform: scale(0.96);
         }
 
-        /* ============================================================
-                           قائمة الطلاب
-                           ============================================================ */
         .student-item {
             display: flex;
             justify-content: space-between;
@@ -309,9 +308,6 @@
             color: #0C2340;
         }
 
-        /* ============================================================
-                           المودال
-                           ============================================================ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -357,9 +353,6 @@
             color: #6B7B8D;
         }
 
-        /* ============================================================
-                           إضافة طلاب
-                           ============================================================ */
         .student-check-item {
             display: flex;
             justify-content: space-between;
@@ -418,9 +411,6 @@
             cursor: pointer;
         }
 
-        /* ============================================================
-                           الغيابات
-                           ============================================================ */
         .absence-item {
             display: flex;
             justify-content: space-between;
@@ -439,9 +429,6 @@
             font-size: 0.85rem;
         }
 
-        /* ============================================================
-                           الماسح
-                           ============================================================ */
         #reader {
             width: 100%;
             border-radius: 16px;
@@ -539,9 +526,6 @@
             font-size: 0.85rem;
         }
 
-        /* ============================================================
-                           رسائل منبثقة
-                           ============================================================ */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -582,9 +566,6 @@
             }
         }
 
-        /* ============================================================
-                           الحقول
-                           ============================================================ */
         .form-select {
             width: 100%;
             padding: 12px 14px;
@@ -609,9 +590,22 @@
             margin-bottom: 4px;
         }
 
-        /* ============================================================
-                           فارغ
-                           ============================================================ */
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #E8ECF0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: #FAFBFC;
+            color: #0C2340;
+            margin-bottom: 8px;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #C9A84C;
+        }
+
         .empty-state {
             text-align: center;
             padding: 30px 20px;
@@ -626,9 +620,6 @@
             font-size: 0.9rem;
         }
 
-        /* ============================================================
-                           QR Code للطالب
-                           ============================================================ */
         .qr-section {
             text-align: center;
             padding: 15px;
@@ -648,9 +639,34 @@
             margin-top: 6px;
         }
 
-        /* ============================================================
-                           استجابة
-                           ============================================================ */
+        .chart-container {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #FAFBFC;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border-right: 3px solid #C9A84C;
+        }
+        .notification-item .title {
+            font-weight: 600;
+            color: #0C2340;
+        }
+        .notification-item .time {
+            color: #6B7B8D;
+            font-size: 0.8rem;
+        }
+        .notification-item.unread {
+            background: #FDF8EE;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 15px;
@@ -702,7 +718,9 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-icon notification" onclick="showNotifications()">🔔</button>
                 <button class="btn-icon refresh" onclick="refreshData()">🔄</button>
+                <button class="btn-icon settings" onclick="showSettings()">⚙️</button>
                 <button class="btn-icon logout" onclick="logout()">🚪</button>
             </div>
         </div>
@@ -763,6 +781,7 @@
             <button class="btn-secondary" onclick="showTodayAttendance()">✅ حضور اليوم</button>
             <button class="btn-secondary" onclick="showAllAbsences()">📋 تقرير الغيابات</button>
             <button class="btn-secondary" onclick="showStudentsByGrade()">📊 إحصائيات الصفوف</button>
+            <button class="btn-secondary" onclick="showReport()">📄 تقرير شامل</button>
         </div>
 
         <!-- ============================================================
@@ -847,6 +866,53 @@
     </div>
 
     <!-- ============================================================
+    مودال تقرير شامل
+    ============================================================ -->
+    <div id="reportModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📄 تقرير شامل</h3>
+                <button class="modal-close" onclick="closeModal('reportModal')">✕</button>
+            </div>
+            <div id="reportContent"></div>
+            <button class="btn-secondary" onclick="exportReport()">📥 تصدير التقرير</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    مودال الإعدادات
+    ============================================================ -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>⚙️ الإعدادات</h3>
+                <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+            </div>
+
+            <label class="form-label">🔑 تغيير كلمة المرور</label>
+            <input type="password" id="newPassword" class="form-input" placeholder="كلمة المرور الجديدة" />
+
+            <label class="form-label">📧 تغيير البريد الإلكتروني</label>
+            <input type="email" id="newEmail" class="form-input" placeholder="البريد الجديد" />
+
+            <button class="btn-success" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    مودال الإشعارات
+    ============================================================ -->
+    <div id="notificationsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🔔 الإشعارات</h3>
+                <button class="modal-close" onclick="closeModal('notificationsModal')">✕</button>
+            </div>
+            <div id="notificationsList"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================
     مودال مسح QR
     ============================================================ -->
     <div id="scannerModal" class="modal-overlay">
@@ -887,6 +953,7 @@
         let currentUser = null;
         let users = [];
         let attendance = [];
+        let notifications = [];
         let currentGrade = '';
 
         function loadData() {
@@ -894,12 +961,15 @@
                 const usersData = localStorage.getItem('users');
                 const attendanceData = localStorage.getItem('attendance');
                 const currentUserData = localStorage.getItem('currentUser');
+                const notificationsData = localStorage.getItem('notifications');
 
                 users = usersData ? JSON.parse(usersData) : [];
                 attendance = attendanceData ? JSON.parse(attendanceData) : [];
                 currentUser = currentUserData ? JSON.parse(currentUserData) : null;
+                notifications = notificationsData ? JSON.parse(notificationsData) : [];
 
-                console.log('📊 تحميل البيانات:', { users: users.length, attendance: attendance.length });
+                console.log('📊 تحميل البيانات:', { users: users.length, attendance: attendance.length, notifications: notifications
+                        .length });
             } catch (e) {
                 console.error('❌ خطأ في تحميل البيانات:', e);
             }
@@ -949,6 +1019,28 @@
             return attendance.some(a => a.studentId === studentId && a.date === date);
         }
 
+        function addNotification(title, body) {
+            notifications.push({
+                id: generateId(),
+                title: title,
+                body: body,
+                time: new Date().toLocaleString('ar-EG'),
+                read: false,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+
+            // إشعار المتصفح
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body: body });
+            }
+        }
+
+        // طلب إذن الإشعارات
+        if ('Notification' in window) {
+            Notification.requestPermission();
+        }
+
         // ============================================================
         //                      عرض البيانات
         // ============================================================
@@ -968,6 +1060,13 @@
             const today = getToday();
             const todayAttendance = attendance.filter(a => a.date === today);
             document.getElementById('todayAttendanceCount').textContent = todayAttendance.length;
+
+            // تحديث عدد الإشعارات غير المقروءة
+            const unreadCount = notifications.filter(n => !n.read).length;
+            const notifBtn = document.querySelector('.btn-icon.notification');
+            if (notifBtn) {
+                notifBtn.textContent = unreadCount > 0 ? `🔔 ${unreadCount}` : '🔔';
+            }
 
             if (currentUser.is_teacher) {
                 document.getElementById('userAvatar').textContent = '👨‍🏫';
@@ -1081,7 +1180,6 @@
             const list = document.getElementById('statsList');
             const today = getToday();
 
-            // الحصول على جميع الصفوف
             const grades = ['رابع إعدادي', 'خامس إعدادي', 'سادس إعدادي'];
             let html = '';
 
@@ -1118,6 +1216,126 @@
 
             list.innerHTML = html;
             document.getElementById('statsModal').classList.add('active');
+        }
+
+        // ============================================================
+        //                      تقرير شامل (مع رسم بياني)
+        // ============================================================
+
+        function showReport() {
+            const container = document.getElementById('reportContent');
+            const today = getToday();
+            const grades = ['رابع إعدادي', 'خامس إعدادي', 'سادس إعدادي'];
+
+            let html = '';
+            let chartData = [];
+            let chartLabels = [];
+
+            grades.forEach(grade => {
+                const students = getStudentsByGrade(grade);
+                const totalStudents = students.length;
+                const presentCount = students.filter(s => isStudentPresent(s.id, today)).length;
+                const absentCount = totalStudents - presentCount;
+                const attendanceRate = totalStudents > 0 ? Math.round((presentCount / totalStudents) * 100) : 0;
+
+                if (totalStudents > 0) {
+                    html += `
+                        <div class="card" style="margin-bottom:8px;padding:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:700;color:#0C2340;">📚 ${grade}</span>
+                                <span style="font-size:0.85rem;color:#6B7B8D;">👤 ${totalStudents} طالب</span>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;font-size:0.85rem;">
+                                <span>✅ الحضور: <span style="color:#2E7D32;font-weight:700;">${presentCount}</span></span>
+                                <span>❌ الغياب: <span style="color:#C62828;font-weight:700;">${absentCount}</span></span>
+                                <span>📊 نسبة الحضور: <span style="color:#0C2340;font-weight:700;">${attendanceRate}%</span></span>
+                            </div>
+                            <div style="margin-top:6px;height:6px;background:#E8ECF0;border-radius:3px;overflow:hidden;">
+                                <div style="height:100%;width:${attendanceRate}%;background:linear-gradient(135deg,#2ECC71,#27AE60);border-radius:3px;"></div>
+                            </div>
+                        </div>
+                    `;
+
+                    chartData.push(attendanceRate);
+                    chartLabels.push(grade);
+                }
+            });
+
+            if (!html) {
+                html = `<div class="empty-state"><span class="icon">📄</span><p>لا يوجد بيانات لعرضها</p></div>`;
+                container.innerHTML = html;
+                document.getElementById('reportModal').classList.add('active');
+                return;
+            }
+
+            // رسم بياني
+            html += `
+                <div class="card">
+                    <div class="card-title">📊 نسبة الحضور لكل صف</div>
+                    <div class="chart-container">
+                        <canvas id="reportChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            document.getElementById('reportModal').classList.add('active');
+
+            // رسم الرسم البياني بعد ظهور المودال
+            setTimeout(() => {
+                const ctx = document.getElementById('reportChart');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: chartLabels,
+                            datasets: [{
+                                label: 'نسبة الحضور %',
+                                data: chartData,
+                                backgroundColor: ['#C9A84C', '#2ECC71', '#3498DB'],
+                                borderColor: ['#B8942E', '#27AE60', '#2980B9'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value + '%';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }, 300);
+        }
+
+        // ============================================================
+        //                      تصدير التقرير
+        // ============================================================
+
+        function exportReport() {
+            const content = document.getElementById('reportContent');
+            const text = content.textContent;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `تقرير_${getToday()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('📥 تم تصدير التقرير', 'success');
         }
 
         // ============================================================
@@ -1328,9 +1546,93 @@
 
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
+            // إضافة إشعار
+            addNotification(
+                '📝 تسجيل غيابات',
+                `تم تسجيل غياب ${count} طالب في صف ${currentGrade}`
+            );
+
             showToast(`📝 تم تسجيل غياب ${count} طالب`, 'success');
             refreshData();
             loadGradeStudents();
+        }
+
+        // ============================================================
+        //                      الإعدادات
+        // ============================================================
+
+        function showSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newEmail').value = '';
+        }
+
+        function saveSettings() {
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const newEmail = document.getElementById('newEmail').value.trim();
+
+            let updated = false;
+
+            if (newPassword && newPassword.length >= 6) {
+                currentUser.password = newPassword;
+                updated = true;
+            }
+
+            if (newEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+                currentUser.email = newEmail;
+                updated = true;
+            }
+
+            if (updated) {
+                // تحديث المستخدم في قائمة users
+                users = users.map(u => {
+                    if (u.id === currentUser.id) {
+                        return currentUser;
+                    }
+                    return u;
+                });
+
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                updateUI();
+                showToast('✅ تم حفظ الإعدادات', 'success');
+                closeModal('settingsModal');
+            } else {
+                showToast('⚠️ لم يتم تغيير أي شيء', 'error');
+            }
+        }
+
+        // ============================================================
+        //                      الإشعارات
+        // ============================================================
+
+        function showNotifications() {
+            const list = document.getElementById('notificationsList');
+
+            // تحديث الإشعارات إلى مقروءة
+            notifications = notifications.map(n => {
+                n.read = true;
+                return n;
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+
+            if (notifications.length === 0) {
+                list.innerHTML = `<div class="empty-state"><span class="icon">🔔</span><p>لا توجد إشعارات</p></div>`;
+            } else {
+                list.innerHTML = notifications.map(n => `
+                    <div class="notification-item">
+                        <div>
+                            <div class="title">${n.title}</div>
+                            <div style="font-size:0.85rem;color:#6B7B8D;">${n.body}</div>
+                        </div>
+                        <div class="time">${n.time}</div>
+                    </div>
+                `).join('');
+            }
+
+            updateUI();
+            document.getElementById('notificationsModal').classList.add('active');
         }
 
         // ============================================================
@@ -1440,6 +1742,12 @@
             attendance.push(record);
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
+            // إضافة إشعار
+            addNotification(
+                '✅ تسجيل حضور',
+                `تم تسجيل حضور ${student.name} في صف ${student.grade}`
+            );
+
             document.getElementById('scannedStudentName').textContent = student.name;
             document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
             document.getElementById('studentConfirm').style.display = 'block';
@@ -1504,11 +1812,20 @@
         // ============================================================
 
         updateUI();
-        console.log('🕌 معهد أنوار السلام - جاهز');
+        console.log('🕌 معهد أنوار السلام - النسخة المتكاملة');
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
         console.log('👨‍🎓 عدد الطلاب:', users.filter(u => !u.is_teacher).length);
         console.log('📊 عدد الحضور:', attendance.length);
+        console.log('🔔 عدد الإشعارات:', notifications.length);
+
+        // عرض إشعار ترحيبي
+        setTimeout(() => {
+            addNotification(
+                '👋 مرحباً بك',
+                `أهلاً بك في معهد أنوار السلام ${currentUser.name}`
+            );
+        }, 1000);
     </script>
 </body>
 </html>
