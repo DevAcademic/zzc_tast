@@ -95,6 +95,22 @@
             transform: scale(0.95);
         }
 
+        .btn-refresh {
+            padding: 10px 18px;
+            background: #3498DB;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .btn-refresh:active {
+            transform: scale(0.95);
+        }
+
         .card {
             background: white;
             border-radius: 16px;
@@ -260,6 +276,24 @@
             font-size: 0.85rem;
         }
 
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: #E8F5E9;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border-right: 3px solid #2E7D32;
+        }
+        .attendance-item .name {
+            color: #0C2340;
+            font-weight: 600;
+        }
+        .attendance-item .time {
+            color: #2E7D32;
+            font-size: 0.85rem;
+        }
+
         .empty-state {
             text-align: center;
             padding: 30px 20px;
@@ -286,6 +320,15 @@
         }
         .student-item .absences-badge {
             background: #FF6B6B;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .student-item .present-badge {
+            background: #2E7D32;
             color: white;
             padding: 2px 12px;
             border-radius: 12px;
@@ -393,7 +436,6 @@
             }
         }
 
-        /* ===== تأكيد الطالب ===== */
         .student-confirm {
             text-align: center;
             padding: 20px;
@@ -463,7 +505,10 @@
                     <span class="grade-badge" id="userGradeBadge">رابع إعدادي</span>
                 </div>
             </div>
-            <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+            <div>
+                <button class="btn-refresh" onclick="refreshData()">🔄 تحديث</button>
+                <button class="btn-logout" onclick="logout()">🚪 خروج</button>
+            </div>
         </div>
 
         <div class="card">
@@ -484,6 +529,10 @@
                 <span class="info-label">📊 الغيابات</span>
                 <span class="info-value" id="userAbsencesCount">0</span>
             </div>
+            <div class="info-row">
+                <span class="info-label">✅ الحضور اليوم</span>
+                <span class="info-value" id="todayAttendanceCount">0</span>
+            </div>
         </div>
 
         <div id="studentQR" class="qr-section">
@@ -493,11 +542,13 @@
 
         <div id="studentActions">
             <button class="btn-secondary" onclick="showAbsences()">📋 غياباتي</button>
+            <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
         </div>
 
         <div id="teacherActions" style="display:none;">
             <button class="btn-primary" onclick="showManageStudents()">📋 إدارة الطلاب</button>
             <button class="btn-primary" onclick="openScanner()">📷 مسح QR Code</button>
+            <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
         </div>
     </div>
 
@@ -509,6 +560,17 @@
                 <button class="modal-close" onclick="closeModal('absencesModal')">✕</button>
             </div>
             <div id="absencesList"></div>
+        </div>
+    </div>
+
+    <!-- ===== مودال حضور اليوم ===== -->
+    <div id="attendanceModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>✅ حضور اليوم</h3>
+                <button class="modal-close" onclick="closeModal('attendanceModal')">✕</button>
+            </div>
+            <div id="attendanceList"></div>
         </div>
     </div>
 
@@ -544,7 +606,6 @@
 
             <div id="scanStatus" class="scan-status">📱 قم بتوجيه الكاميرا نحو كود الطالب</div>
 
-            <!-- ===== قسم تأكيد الطالب ===== -->
             <div id="studentConfirm" style="display:none;">
                 <div class="student-confirm">
                     <div style="font-size:3rem;">✅</div>
@@ -552,7 +613,7 @@
                     <div class="student-grade" id="scannedStudentGrade">-</div>
                     <div class="student-phone" id="scannedStudentPhone">-</div>
                     <div style="margin-top:10px;padding:8px;background:#E8F5E9;border-radius:8px;color:#2E7D32;font-weight:600;">
-                        ✅ تم تسجيل الحضور تلقائياً
+                        ✅ تم تسجيل الحضور
                     </div>
                 </div>
             </div>
@@ -569,9 +630,23 @@
         // البيانات
         // ============================================================
 
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        let attendance = JSON.parse(localStorage.getItem('attendance')) || [];
+        // دالة لتحميل البيانات من localStorage
+        function loadData() {
+            const usersData = localStorage.getItem('users');
+            const attendanceData = localStorage.getItem('attendance');
+            const currentUserData = localStorage.getItem('currentUser');
+
+            users = usersData ? JSON.parse(usersData) : [];
+            attendance = attendanceData ? JSON.parse(attendanceData) : [];
+            currentUser = currentUserData ? JSON.parse(currentUserData) : null;
+        }
+
+        let currentUser = null;
+        let users = [];
+        let attendance = [];
+
+        // تحميل البيانات أولاً
+        loadData();
 
         if (!currentUser) {
             window.location.href = 'index.html';
@@ -581,39 +656,60 @@
         // عرض البيانات
         // ============================================================
 
-        document.getElementById('userName').textContent = currentUser.name;
-        document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
-        document.getElementById('userPhone').textContent = currentUser.phone;
-        document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
-        document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
+        function updateUI() {
+            loadData();
 
-        const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
-        document.getElementById('userAbsencesCount').textContent = userAbsences.length;
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
+            document.getElementById('userPhone').textContent = currentUser.phone;
+            document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
+            document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
 
-        if (currentUser.is_teacher) {
-            document.getElementById('userAvatar').textContent = '👨‍🏫';
-            document.getElementById('userRole').textContent = 'مدرس';
-            document.getElementById('userGradeBadge').style.display = 'none';
-            document.getElementById('studentQR').style.display = 'none';
-            document.getElementById('studentActions').style.display = 'none';
-            document.getElementById('teacherActions').style.display = 'block';
-        } else {
-            document.getElementById('userAvatar').textContent = '👤';
-            document.getElementById('userRole').textContent = 'طالب';
-            document.getElementById('studentQR').style.display = 'block';
-            document.getElementById('studentActions').style.display = 'block';
-            document.getElementById('teacherActions').style.display = 'none';
+            const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
+            document.getElementById('userAbsencesCount').textContent = userAbsences.length;
 
-            if (document.getElementById('qrcode')) {
-                new QRCode(document.getElementById('qrcode'), {
-                    text: currentUser.id,
-                    width: 160,
-                    height: 160,
-                    colorDark: '#0C2340',
-                    colorLight: '#FFFFFF',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
+            // عدد الحضور اليوم
+            const today = new Date().toISOString().split('T')[0];
+            const todayAttendance = attendance.filter(a => a.date === today);
+            document.getElementById('todayAttendanceCount').textContent = todayAttendance.length;
+
+            if (currentUser.is_teacher) {
+                document.getElementById('userAvatar').textContent = '👨‍🏫';
+                document.getElementById('userRole').textContent = 'مدرس';
+                document.getElementById('userGradeBadge').style.display = 'none';
+                document.getElementById('studentQR').style.display = 'none';
+                document.getElementById('studentActions').style.display = 'none';
+                document.getElementById('teacherActions').style.display = 'block';
+            } else {
+                document.getElementById('userAvatar').textContent = '👤';
+                document.getElementById('userRole').textContent = 'طالب';
+                document.getElementById('studentQR').style.display = 'block';
+                document.getElementById('studentActions').style.display = 'block';
+                document.getElementById('teacherActions').style.display = 'none';
+
+                if (document.getElementById('qrcode')) {
+                    document.getElementById('qrcode').innerHTML = '';
+                    new QRCode(document.getElementById('qrcode'), {
+                        text: currentUser.id,
+                        width: 160,
+                        height: 160,
+                        colorDark: '#0C2340',
+                        colorLight: '#FFFFFF',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
             }
+        }
+
+        // ============================================================
+        // تحديث البيانات
+        // ============================================================
+
+        function refreshData() {
+            loadData();
+            updateUI();
+            showToast('🔄 تم تحديث البيانات', 'info');
+            console.log('📊 البيانات محدثة:', { users: users.length, attendance: attendance.length });
         }
 
         // ============================================================
@@ -672,6 +768,34 @@
         }
 
         // ============================================================
+        // عرض حضور اليوم
+        // ============================================================
+
+        function showTodayAttendance() {
+            const today = new Date().toISOString().split('T')[0];
+            const list = document.getElementById('attendanceList');
+            const todayAtt = attendance.filter(a => a.date === today);
+
+            if (todayAtt.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <span class="icon">📭</span>
+                        <p>لا يوجد حضور اليوم</p>
+                    </div>
+                `;
+            } else {
+                list.innerHTML = todayAtt.map(a => `
+                    <div class="attendance-item">
+                        <span class="name">👤 ${a.studentName}</span>
+                        <span class="time">⏰ ${a.time}</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('attendanceModal').classList.add('active');
+        }
+
+        // ============================================================
         // إدارة الطلاب
         // ============================================================
 
@@ -683,6 +807,7 @@
         function loadStudentsList() {
             const filter = document.getElementById('filterGrade').value;
             const list = document.getElementById('studentsList');
+            const today = new Date().toISOString().split('T')[0];
 
             let students = users.filter(u => !u.is_teacher);
             if (filter) students = students.filter(u => u.grade === filter);
@@ -699,10 +824,14 @@
 
             list.innerHTML = students.map(s => {
                 const abs = attendance.filter(a => a.studentId === s.id).length;
+                const isPresent = attendance.some(a => a.studentId === s.id && a.date === today);
+                const badge = isPresent ?
+                    `<span class="present-badge">✅ حاضر</span>` :
+                    `<span class="absences-badge">${abs} غياب</span>`;
                 return `
                     <div class="student-item">
                         <span class="name">${s.name}</span>
-                        <span class="absences-badge">${abs} غياب</span>
+                        ${badge}
                     </div>
                 `;
             }).join('');
@@ -722,7 +851,6 @@
             const modal = document.getElementById('scannerModal');
             modal.classList.add('active');
 
-            // إخفاء قسم التأكيد
             document.getElementById('studentConfirm').style.display = 'none';
             scannedStudent = null;
             isProcessing = false;
@@ -762,11 +890,13 @@
         }
 
         function onScanSuccess(decodedText) {
-            // منع المسح المتكرر أثناء المعالجة
             if (isProcessing) return;
             isProcessing = true;
 
             const status = document.getElementById('scanStatus');
+
+            // إعادة تحميل البيانات للتأكد من أحدث البيانات
+            loadData();
 
             // البحث عن الطالب
             const student = users.find(u => u.id === decodedText && !u.is_teacher);
@@ -776,7 +906,6 @@
                 status.className = 'scan-status error';
                 showToast('❌ طالب غير مسجل في النظام', 'error');
 
-                // إعادة تفعيل المسح بعد 2 ثانية
                 setTimeout(() => {
                     isProcessing = false;
                     status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
@@ -785,14 +914,12 @@
                 return;
             }
 
-            // التحقق من عدم تسجيل حضور مكرر اليوم
             const today = new Date().toISOString().split('T')[0];
             const alreadyExists = attendance.some(a =>
                 a.studentId === student.id && a.date === today
             );
 
             if (alreadyExists) {
-                // عرض بيانات الطالب مع رسالة مسجل حضور
                 document.getElementById('scannedStudentName').textContent = student.name;
                 document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
                 document.getElementById('scannedStudentPhone').textContent = '📱 ' + (student.phone || 'غير محدد');
@@ -802,7 +929,6 @@
                 status.className = 'scan-status success';
                 showToast('✅ ' + student.name + ' مسجل حضور اليوم', 'success');
 
-                // إخفاء بعد 2 ثانية وإعادة تشغيل الماسح
                 setTimeout(() => {
                     document.getElementById('studentConfirm').style.display = 'none';
                     isProcessing = false;
@@ -812,7 +938,7 @@
                 return;
             }
 
-            // ===== تسجيل الحضور تلقائياً =====
+            // ===== تسجيل الحضور =====
             const now = new Date();
             const record = {
                 id: generateId(),
@@ -826,10 +952,21 @@
                 timestamp: now.toISOString()
             };
 
+            // إضافة إلى قائمة الحضور
             attendance.push(record);
-            localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            // عرض بيانات الطالب مع رسالة نجاح
+            // حفظ في localStorage
+            try {
+                localStorage.setItem('attendance', JSON.stringify(attendance));
+                console.log('✅ تم حفظ الحضور:', record);
+            } catch (e) {
+                console.error('❌ خطأ في الحفظ:', e);
+                showToast('❌ خطأ في حفظ البيانات', 'error');
+                isProcessing = false;
+                return;
+            }
+
+            // عرض بيانات الطالب
             document.getElementById('scannedStudentName').textContent = student.name;
             document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
             document.getElementById('scannedStudentPhone').textContent = '📱 ' + (student.phone || 'غير محدد');
@@ -839,11 +976,10 @@
             status.className = 'scan-status success';
             showToast('✅ تم تسجيل حضور ' + student.name, 'success');
 
-            // تحديث عدد الغيابات
-            document.getElementById('userAbsencesCount').textContent =
-                attendance.filter(a => a.studentId === currentUser.id).length;
+            // تحديث الواجهة
+            updateUI();
 
-            // إخفاء بعد 2 ثانية وإعادة تشغيل الماسح
+            // إخفاء بعد 2 ثانية
             setTimeout(() => {
                 document.getElementById('studentConfirm').style.display = 'none';
                 isProcessing = false;
@@ -852,13 +988,7 @@
             }, 2000);
         }
 
-        function onScanError(err) {
-            // تجاهل الأخطاء المؤقتة
-        }
-
-        // ============================================================
-        // إغلاق الماسح
-        // ============================================================
+        function onScanError(err) {}
 
         function closeScanner() {
             if (html5QrCode && scannerActive) {
@@ -893,9 +1023,15 @@
             };
         });
 
+        // ============================================================
+        // بدء التطبيق
+        // ============================================================
+
+        updateUI();
         console.log('🕌 معهد أنوار السلام - جاهز');
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
+        console.log('📊 عدد الحضور:', attendance.length);
     </script>
 </body>
 </html>
