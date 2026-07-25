@@ -6,6 +6,7 @@
     <title>لوحة التحكم - معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -128,6 +129,7 @@
             font-size: 0.95rem;
         }
 
+        /* ===== QR Code - يظهر للطلاب فقط ===== */
         .qr-section {
             text-align: center;
             padding: 15px;
@@ -147,6 +149,7 @@
             margin-top: 8px;
         }
 
+        /* ===== الأزرار ===== */
         .btn-primary {
             width: 100%;
             padding: 14px;
@@ -180,6 +183,66 @@
         }
         .btn-secondary:active {
             transform: scale(0.96);
+        }
+        .btn-danger {
+            width: 100%;
+            padding: 14px;
+            background: #E74C3C;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 8px;
+        }
+        .btn-danger:active {
+            transform: scale(0.96);
+        }
+
+        /* ===== المودال ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .modal-header h3 {
+            color: #0C2340;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #6B7B8D;
         }
 
         .absence-item {
@@ -233,46 +296,49 @@
             font-weight: 600;
         }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal {
-            background: white;
-            border-radius: 24px;
-            padding: 25px;
-            max-width: 400px;
+        /* ===== Scanner ===== */
+        #qr-reader {
             width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
+            border-radius: 16px;
+            overflow: hidden;
         }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        #qr-reader video {
+            border-radius: 16px;
         }
-        .modal-header h3 {
+
+        .scanner-container {
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 10px 0;
+            position: relative;
+            min-height: 250px;
+        }
+
+        .scanner-container #qr-reader {
+            min-height: 250px;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px solid #C9A84C;
+            border-radius: 16px;
+            pointer-events: none;
+            box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.4);
+        }
+
+        .scan-status {
+            text-align: center;
+            padding: 10px;
+            background: #FFF8E7;
+            border-radius: 12px;
+            margin-top: 10px;
             color: #0C2340;
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #6B7B8D;
         }
 
         @media (max-width: 480px) {
@@ -291,11 +357,16 @@
             .user-info .details h2 {
                 font-size: 1rem;
             }
+            .scanner-overlay {
+                width: 150px;
+                height: 150px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- ===== الهيدر ===== -->
         <div class="header">
             <div class="user-info">
                 <div class="avatar" id="userAvatar">👤</div>
@@ -308,6 +379,7 @@
             <button class="btn-logout" onclick="logout()">🚪 خروج</button>
         </div>
 
+        <!-- ===== معلومات الحساب ===== -->
         <div class="card">
             <div class="card-title">📋 معلومات الحساب</div>
             <div class="info-row">
@@ -328,22 +400,25 @@
             </div>
         </div>
 
-        <div class="qr-section">
+        <!-- ===== QR Code - يظهر للطلاب فقط ===== -->
+        <div id="studentQR" class="qr-section">
             <div id="qrcode"></div>
-            <p class="qr-label">🎫 كود الطالب</p>
+            <p class="qr-label">🎫 كود الطالب - استخدمه للمسح</p>
         </div>
 
+        <!-- ===== أزرار الطالب ===== -->
         <div id="studentActions">
             <button class="btn-secondary" onclick="showAbsences()">📋 غياباتي</button>
         </div>
 
+        <!-- ===== أزرار المدرس ===== -->
         <div id="teacherActions" style="display:none;">
             <button class="btn-primary" onclick="showManageStudents()">📋 إدارة الطلاب</button>
-            <button class="btn-primary" onclick="scanQR()">📷 مسح QR</button>
+            <button class="btn-primary" onclick="openScanner()">📷 مسح QR Code</button>
         </div>
     </div>
 
-    <!-- مودال الغيابات -->
+    <!-- ===== مودال الغيابات ===== -->
     <div id="absencesModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -354,7 +429,7 @@
         </div>
     </div>
 
-    <!-- مودال الطلاب -->
+    <!-- ===== مودال إدارة الطلاب ===== -->
     <div id="studentsModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -373,22 +448,19 @@
         </div>
     </div>
 
-    <!-- مودال QR -->
-    <div id="qrModal" class="modal-overlay">
+    <!-- ===== مودال مسح QR ===== -->
+    <div id="scannerModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
-                <h3>📷 مسح QR</h3>
-                <button class="modal-close" onclick="closeModal('qrModal')">✕</button>
+                <h3>📷 مسح QR Code</h3>
+                <button class="modal-close" onclick="closeScanner()">✕</button>
             </div>
-            <div style="text-align:center;padding:20px;">
-                <p style="color:#6B7B8D;margin-bottom:15px;">📱 قم بتوجيه الكاميرا نحو كود الطالب</p>
-                <div style="background:#F0F2F5;border-radius:16px;padding:30px;border:2px dashed #C9A84C;">
-                    <div style="font-size:4rem;">📷</div>
-                    <p style="color:#6B7B8D;margin-top:10px;">(محاكاة)</p>
-                </div>
-                <button class="btn-primary" onclick="simulateScan()" style="margin-top:15px;">🔍 مسح</button>
-                <div id="scanResult" style="margin-top:15px;"></div>
+            <div class="scanner-container">
+                <div id="qr-reader"></div>
+                <div class="scanner-overlay"></div>
             </div>
+            <div id="scanStatus" class="scan-status">📱 قم بتوجيه الكاميرا نحو كود الطالب</div>
+            <button class="btn-danger" onclick="closeScanner()">إيقاف المسح</button>
         </div>
     </div>
 
@@ -405,7 +477,10 @@
             window.location.href = 'index.html';
         }
 
+        // ============================================================
         // عرض البيانات
+        // ============================================================
+
         document.getElementById('userName').textContent = currentUser.name;
         document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
         document.getElementById('userPhone').textContent = currentUser.phone;
@@ -415,31 +490,53 @@
         const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
         document.getElementById('userAbsencesCount').textContent = userAbsences.length;
 
+        // ============================================================
+        // تحديد واجهة الطالب أو المدرس
+        // ============================================================
+
         if (currentUser.is_teacher) {
+            // ===== واجهة المدرس =====
             document.getElementById('userAvatar').textContent = '👨‍🏫';
             document.getElementById('userRole').textContent = 'مدرس';
             document.getElementById('userGradeBadge').style.display = 'none';
-            document.getElementById('teacherActions').style.display = 'block';
+
+            // إخفاء QR Code للطلاب
+            document.getElementById('studentQR').style.display = 'none';
+
+            // إخفاء أزرار الطالب
             document.getElementById('studentActions').style.display = 'none';
+
+            // إظهار أزرار المدرس
+            document.getElementById('teacherActions').style.display = 'block';
         } else {
+            // ===== واجهة الطالب =====
             document.getElementById('userAvatar').textContent = '👤';
             document.getElementById('userRole').textContent = 'طالب';
-        }
 
-        // QR Code
-        if (document.getElementById('qrcode')) {
-            new QRCode(document.getElementById('qrcode'), {
-                text: currentUser.id,
-                width: 160,
-                height: 160,
-                colorDark: '#0C2340',
-                colorLight: '#FFFFFF',
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            // إظهار QR Code للطالب
+            document.getElementById('studentQR').style.display = 'block';
+
+            // إظهار أزرار الطالب
+            document.getElementById('studentActions').style.display = 'block';
+
+            // إخفاء أزرار المدرس
+            document.getElementById('teacherActions').style.display = 'none';
+
+            // إنشاء QR Code للطالب
+            if (document.getElementById('qrcode')) {
+                new QRCode(document.getElementById('qrcode'), {
+                    text: currentUser.id,
+                    width: 160,
+                    height: 160,
+                    colorDark: '#0C2340',
+                    colorLight: '#FFFFFF',
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
         }
 
         // ============================================================
-        // الدوال
+        // الدوال المشتركة
         // ============================================================
 
         function generateId() {
@@ -455,7 +552,10 @@
             window.location.href = 'index.html';
         }
 
-        // عرض الغيابات
+        // ============================================================
+        // عرض الغيابات (للطالب)
+        // ============================================================
+
         function showAbsences() {
             const list = document.getElementById('absencesList');
             const userAbs = attendance.filter(a => a.studentId === currentUser.id);
@@ -464,7 +564,7 @@
                 list.innerHTML = `
                     <div class="empty-state">
                         <span class="icon">🎉</span>
-                        <p>لا توجد غيابات</p>
+                        <p>لا توجد غيابات مسجلة</p>
                     </div>
                 `;
             } else {
@@ -479,7 +579,10 @@
             document.getElementById('absencesModal').classList.add('active');
         }
 
-        // إدارة الطلاب
+        // ============================================================
+        // إدارة الطلاب (للمدرس)
+        // ============================================================
+
         function showManageStudents() {
             document.getElementById('studentsModal').classList.add('active');
             loadStudentsList();
@@ -515,44 +618,73 @@
 
         document.getElementById('filterGrade').onchange = loadStudentsList;
 
-        // مسح QR
-        function scanQR() {
-            document.getElementById('qrModal').classList.add('active');
-            document.getElementById('scanResult').innerHTML = '';
+        // ============================================================
+        // مسح QR Code (للمدرس - يعمل بالكاميرا)
+        // ============================================================
+
+        let html5QrCode = null;
+        let scannerActive = false;
+
+        function openScanner() {
+            document.getElementById('scannerModal').classList.add('active');
+            document.getElementById('scanStatus').textContent = '📱 جاري تشغيل الكاميرا...';
+
+            if (scannerActive) return;
+
+            const readerElement = document.getElementById('qr-reader');
+            readerElement.innerHTML = '';
+
+            html5QrCode = new Html5Qrcode("qr-reader");
+
+            html5QrCode.start({
+                    facingMode: "environment"
+                }, {
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 }
+                },
+                onScanSuccess,
+                onScanError
+            );
+
+            scannerActive = true;
+            document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
         }
 
-        function simulateScan() {
-            const result = document.getElementById('scanResult');
-            const students = users.filter(u => !u.is_teacher);
+        function onScanSuccess(decodedText) {
+            document.getElementById('scanStatus').textContent = '✅ تم المسح بنجاح!';
 
-            if (students.length === 0) {
-                result.innerHTML = `
-                    <div style="padding:12px;background:#FFEBEE;border-radius:12px;color:#C62828;">
-                        ❌ لا يوجد طلاب
-                    </div>
-                `;
+            // البحث عن الطالب
+            const student = users.find(u => u.id === decodedText && !u.is_teacher);
+
+            if (!student) {
+                document.getElementById('scanStatus').textContent = '❌ طالب غير مسجل!';
+                setTimeout(() => {
+                    document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
+                }, 2000);
                 return;
             }
 
-            const randomStudent = students[Math.floor(Math.random() * students.length)];
+            // التحقق من عدم تسجيل حضور مكرر
             const today = new Date().toISOString().split('T')[0];
-            const alreadyExists = attendance.some(a => a.studentId === randomStudent.id && a.date === today);
+            const alreadyExists = attendance.some(a =>
+                a.studentId === student.id && a.date === today
+            );
 
             if (alreadyExists) {
-                result.innerHTML = `
-                    <div style="padding:12px;background:#E8F5E9;border-radius:12px;color:#2E7D32;">
-                        ✅ ${randomStudent.name} مسجل حضور اليوم
-                    </div>
-                `;
+                document.getElementById('scanStatus').textContent = `✅ ${student.name} مسجل حضور اليوم`;
+                setTimeout(() => {
+                    document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
+                }, 2000);
                 return;
             }
 
+            // تسجيل الحضور
             const now = new Date();
             attendance.push({
                 id: generateId(),
-                studentId: randomStudent.id,
-                studentName: randomStudent.name,
-                grade: randomStudent.grade,
+                studentId: student.id,
+                studentName: student.name,
+                grade: student.grade,
                 date: today,
                 time: now.toLocaleTimeString('ar-EG'),
                 teacherId: currentUser.id,
@@ -562,26 +694,46 @@
 
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            result.innerHTML = `
-                <div style="padding:12px;background:#E8F5E9;border-radius:12px;color:#2E7D32;">
-                    ✅ تم تسجيل حضور ${randomStudent.name}
-                    <br><small style="color:#6B7B8D;">${today} - ${now.toLocaleTimeString('ar-EG')}</small>
-                </div>
-            `;
+            document.getElementById('scanStatus').textContent = `✅ تم تسجيل حضور ${student.name}`;
 
-            document.getElementById('userAbsencesCount').textContent =
-                attendance.filter(a => a.studentId === currentUser.id).length;
-
-            setTimeout(() => closeModal('qrModal'), 2000);
+            setTimeout(() => {
+                document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
+            }, 2000);
         }
 
+        function onScanError(err) {
+            // تجاهل الأخطاء
+        }
+
+        function closeScanner() {
+            if (html5QrCode && scannerActive) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    scannerActive = false;
+                    document.getElementById('scannerModal').classList.remove('active');
+                    document.getElementById('qr-reader').innerHTML = '';
+                }).catch(() => {});
+            } else {
+                document.getElementById('scannerModal').classList.remove('active');
+            }
+        }
+
+        // إغلاق المودال عند الضغط خارجها
         document.querySelectorAll('.modal-overlay').forEach(el => {
             el.onclick = function(e) {
-                if (e.target === this) this.classList.remove('active');
+                if (e.target === this) {
+                    if (this.id === 'scannerModal') {
+                        closeScanner();
+                    } else {
+                        this.classList.remove('active');
+                    }
+                }
             };
         });
 
         console.log('🕌 لوحة التحكم جاهزة');
+        console.log('👤 المستخدم:', currentUser.name);
+        console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
     </script>
 </body>
 </html>
