@@ -98,6 +98,7 @@
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
+            position: relative;
         }
         .btn-icon:active {
             transform: scale(0.95);
@@ -121,7 +122,6 @@
         .btn-icon.notification {
             background: #C9A84C;
             color: white;
-            position: relative;
         }
 
         .notification-badge {
@@ -1050,11 +1050,17 @@
             return attendance.some(a => a.studentId === studentId && a.date === date);
         }
 
+        function getStudentAbsences(studentId) {
+            return attendance.filter(a => a.studentId === studentId && a.status === 'absent');
+        }
+
         // ============================================================
         //                      نظام الإشعارات
         // ============================================================
 
-        function addNotification(title, body, icon = '🔔') {
+        function addNotification(title, body, icon = '🔔', userId = null) {
+            const targetUser = userId || currentUser.id;
+
             const notif = {
                 id: generateId(),
                 title: title,
@@ -1063,17 +1069,16 @@
                 time: new Date().toLocaleString('ar-EG'),
                 read: false,
                 timestamp: new Date().toISOString(),
-                userId: currentUser.id
+                userId: targetUser
             };
 
             notifications.push(notif);
             localStorage.setItem('notifications', JSON.stringify(notifications));
 
-            // تحديث عدد الإشعارات
             updateNotificationBadge();
 
-            // إشعار المتصفح
-            if (Notification.permission === 'granted') {
+            // إشعار المتصفح للمستخدم الحالي فقط
+            if (targetUser === currentUser.id && Notification.permission === 'granted') {
                 new Notification(title, {
                     body: body,
                     icon: '🕌'
@@ -1086,7 +1091,6 @@
         function updateNotificationBadge() {
             const unreadCount = notifications.filter(n => !n.read && n.userId === currentUser.id).length;
             const badge = document.getElementById('notifBadge');
-            const btn = document.getElementById('notifBtn');
 
             if (badge) {
                 if (unreadCount > 0) {
@@ -1101,7 +1105,6 @@
         function showNotifications() {
             const list = document.getElementById('notificationsList');
 
-            // تحديث الإشعارات إلى مقروءة
             notifications = notifications.map(n => {
                 if (n.userId === currentUser.id) {
                     n.read = true;
@@ -1151,7 +1154,7 @@
             document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
             document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
 
-            const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
+            const userAbsences = getStudentAbsences(currentUser.id);
             document.getElementById('userAbsencesCount').textContent = userAbsences.length;
 
             const today = getToday();
@@ -1203,7 +1206,7 @@
 
         function showMyAbsences() {
             const list = document.getElementById('absencesList');
-            const userAbs = attendance.filter(a => a.studentId === currentUser.id);
+            const userAbs = getStudentAbsences(currentUser.id);
 
             if (userAbs.length === 0) {
                 list.innerHTML = `<div class="empty-state"><span class="icon">🎉</span><p>لا توجد غيابات مسجلة</p></div>`;
@@ -1248,11 +1251,12 @@
 
         function showAllAbsences() {
             const list = document.getElementById('absencesList');
+            const allAbsences = attendance.filter(a => a.status === 'absent');
 
-            if (attendance.length === 0) {
+            if (allAbsences.length === 0) {
                 list.innerHTML = `<div class="empty-state"><span class="icon">📭</span><p>لا توجد غيابات مسجلة</p></div>`;
             } else {
-                const sorted = [...attendance].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                const sorted = [...allAbsences].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 list.innerHTML = sorted.map(a => `
                     <div class="absence-item">
                         <span class="student-name">👤 ${a.studentName}</span>
@@ -1594,7 +1598,7 @@
         document.getElementById('addGradeSelect').onchange = loadAllStudents;
 
         // ============================================================
-        //                      تسجيل الغيابات (مع إشعار للطلاب)
+        //                      تسجيل الغيابات للطلاب الغائبين
         // ============================================================
 
         function recordAbsences() {
@@ -1606,6 +1610,7 @@
             const today = getToday();
             const students = getStudentsByGrade(currentGrade);
 
+            // الطلاب الذين لم يسجلوا حضور اليوم
             const absentStudents = students.filter(s => !isStudentPresent(s.id, today));
 
             if (absentStudents.length === 0) {
@@ -1617,7 +1622,12 @@
             let count = 0;
 
             absentStudents.forEach(s => {
-                if (!isStudentPresent(s.id, today)) {
+                // التحقق من عدم وجود تسجيل غياب مسبق لهذا اليوم
+                const existingAbsence = attendance.some(a =>
+                    a.studentId === s.id && a.date === today && a.status === 'absent'
+                );
+
+                if (!existingAbsence) {
                     const record = {
                         id: generateId(),
                         studentId: s.id,
@@ -1637,7 +1647,8 @@
                     addNotification(
                         '❌ تم تسجيل غيابك',
                         `تم تسجيل غيابك اليوم ${today} في صف ${s.grade}`,
-                        '❌'
+                        '❌',
+                        s.id
                     );
 
                     count++;
@@ -1655,7 +1666,11 @@
 
             showToast(`📝 تم تسجيل غياب ${count} طالب`, 'success');
             refreshData();
-            loadGradeStudents();
+
+            // تحديث قائمة الطلاب إذا كانت مفتوحة
+            if (document.getElementById('studentsListContainer').style.display === 'block') {
+                loadGradeStudents();
+            }
         }
 
         // ============================================================
@@ -1704,7 +1719,7 @@
         }
 
         // ============================================================
-        //                      مسح QR Code (مع إشعار للطالب)
+        //                      مسح QR Code - تسجيل حضور تلقائي
         // ============================================================
 
         let html5QrCode = null;
@@ -1757,6 +1772,7 @@
             const status = document.getElementById('scanStatus');
             loadData();
 
+            // البحث عن الطالب
             const student = users.find(u => u.id === decodedText && !u.is_teacher);
 
             if (!student) {
@@ -1774,6 +1790,7 @@
 
             const today = getToday();
 
+            // التحقق من وجود حضور مسبق
             if (isStudentPresent(student.id, today)) {
                 document.getElementById('scannedStudentName').textContent = student.name;
                 document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
@@ -1814,7 +1831,8 @@
             addNotification(
                 '✅ تم تسجيل حضورك',
                 `تم تسجيل حضورك اليوم ${today} في صف ${student.grade}`,
-                '✅'
+                '✅',
+                student.id
             );
 
             // إشعار للمدرس
@@ -1824,6 +1842,7 @@
                 '✅'
             );
 
+            // عرض بيانات الطالب
             document.getElementById('scannedStudentName').textContent = student.name;
             document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
             document.getElementById('studentConfirm').style.display = 'block';
@@ -1832,11 +1851,15 @@
             status.className = 'scan-status success';
             showToast('✅ تم تسجيل حضور ' + student.name, 'success');
 
+            // تحديث الواجهة
             updateUI();
+
+            // تحديث قائمة الطلاب إذا كانت مفتوحة
             if (document.getElementById('studentsListContainer').style.display === 'block' && currentGrade) {
                 loadGradeStudents();
             }
 
+            // إعادة فتح الماسح بعد 1.5 ثانية
             setTimeout(() => {
                 document.getElementById('studentConfirm').style.display = 'none';
                 isProcessing = false;
@@ -1896,7 +1919,7 @@
         // ============================================================
 
         updateUI();
-        console.log('🕌 معهد أنوار السلام - النسخة المتكاملة مع الإشعارات');
+        console.log('🕌 معهد أنوار السلام - النسخة النهائية');
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
         console.log('👨‍🎓 عدد الطلاب:', users.filter(u => !u.is_teacher).length);
