@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>لوحة التحكم - معهد أنوار السلام</title>
+    <title>معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -762,6 +762,7 @@
 
             <button class="btn-secondary" onclick="showTodayAttendance()">✅ حضور اليوم</button>
             <button class="btn-secondary" onclick="showAllAbsences()">📋 تقرير الغيابات</button>
+            <button class="btn-secondary" onclick="showStudentsByGrade()">📊 إحصائيات الصفوف</button>
         </div>
 
         <!-- ============================================================
@@ -829,6 +830,19 @@
 
             <button class="btn-success" onclick="addSelectedStudents()">✅ إضافة الطلاب المختارين</button>
             <button class="btn-danger" onclick="closeModal('addStudentsModal')">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    مودال إحصائيات الصفوف
+    ============================================================ -->
+    <div id="statsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>📊 إحصائيات الصفوف</h3>
+                <button class="modal-close" onclick="closeModal('statsModal')">✕</button>
+            </div>
+            <div id="statsList"></div>
         </div>
     </div>
 
@@ -1060,6 +1074,53 @@
         }
 
         // ============================================================
+        //                      عرض إحصائيات الصفوف
+        // ============================================================
+
+        function showStudentsByGrade() {
+            const list = document.getElementById('statsList');
+            const today = getToday();
+
+            // الحصول على جميع الصفوف
+            const grades = ['رابع إعدادي', 'خامس إعدادي', 'سادس إعدادي'];
+            let html = '';
+
+            grades.forEach(grade => {
+                const students = getStudentsByGrade(grade);
+                const presentCount = students.filter(s => isStudentPresent(s.id, today)).length;
+                const absentCount = students.length - presentCount;
+
+                if (students.length > 0) {
+                    html += `
+                        <div class="card" style="margin-bottom:8px;padding:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span style="font-weight:700;color:#0C2340;">📚 ${grade}</span>
+                                <span style="font-size:0.85rem;color:#6B7B8D;">👤 ${students.length} طالب</span>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:6px;font-size:0.85rem;">
+                                <span>✅ الحضور: <span style="color:#2E7D32;font-weight:700;">${presentCount}</span></span>
+                                <span>❌ الغياب: <span style="color:#C62828;font-weight:700;">${absentCount}</span></span>
+                            </div>
+                            <div style="margin-top:6px;font-size:0.75rem;color:#6B7B8D;">
+                                ${students.map(s => {
+                                    const isPresent = isStudentPresent(s.id, today);
+                                    return `<span style="margin-left:6px;">${s.name} ${isPresent ? '✅' : '❌'}</span>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (!html) {
+                html = `<div class="empty-state"><span class="icon">📊</span><p>لا يوجد طلاب مسجلين</p></div>`;
+            }
+
+            list.innerHTML = html;
+            document.getElementById('statsModal').classList.add('active');
+        }
+
+        // ============================================================
         //                      عرض طلاب الصف
         // ============================================================
 
@@ -1152,7 +1213,6 @@
                 }).join('')}
             `;
 
-            // تحديث حالة "اختيار الكل"
             updateSelectAllState();
         }
 
@@ -1344,7 +1404,6 @@
 
             const today = getToday();
 
-            // التحقق من حضور الطالب اليوم
             if (isStudentPresent(student.id, today)) {
                 document.getElementById('scannedStudentName').textContent = student.name;
                 document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
