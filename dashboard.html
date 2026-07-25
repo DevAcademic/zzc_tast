@@ -121,6 +121,23 @@
         .btn-icon.notification {
             background: #C9A84C;
             color: white;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #E74C3C;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
         }
 
         .card {
@@ -659,12 +676,22 @@
             font-weight: 600;
             color: #0C2340;
         }
+        .notification-item .body {
+            font-size: 0.85rem;
+            color: #6B7B8D;
+        }
         .notification-item .time {
             color: #6B7B8D;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
         }
         .notification-item.unread {
             background: #FDF8EE;
+            border-right-color: #2ECC71;
+        }
+        .notification-item .icon {
+            font-size: 1.2rem;
+            margin-left: 8px;
         }
 
         @media (max-width: 480px) {
@@ -718,7 +745,10 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button class="btn-icon notification" onclick="showNotifications()">🔔</button>
+                <button class="btn-icon notification" onclick="showNotifications()" id="notifBtn">
+                    🔔
+                    <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+                </button>
                 <button class="btn-icon refresh" onclick="refreshData()">🔄</button>
                 <button class="btn-icon settings" onclick="showSettings()">⚙️</button>
                 <button class="btn-icon logout" onclick="logout()">🚪</button>
@@ -909,6 +939,7 @@
                 <button class="modal-close" onclick="closeModal('notificationsModal')">✕</button>
             </div>
             <div id="notificationsList"></div>
+            <button class="btn-secondary" onclick="clearNotifications()" style="margin-top:10px;">🗑️ مسح الكل</button>
         </div>
     </div>
 
@@ -1019,26 +1050,92 @@
             return attendance.some(a => a.studentId === studentId && a.date === date);
         }
 
-        function addNotification(title, body) {
-            notifications.push({
+        // ============================================================
+        //                      نظام الإشعارات
+        // ============================================================
+
+        function addNotification(title, body, icon = '🔔') {
+            const notif = {
                 id: generateId(),
                 title: title,
                 body: body,
+                icon: icon,
                 time: new Date().toLocaleString('ar-EG'),
                 read: false,
-                timestamp: new Date().toISOString()
-            });
+                timestamp: new Date().toISOString(),
+                userId: currentUser.id
+            };
+
+            notifications.push(notif);
             localStorage.setItem('notifications', JSON.stringify(notifications));
+
+            // تحديث عدد الإشعارات
+            updateNotificationBadge();
 
             // إشعار المتصفح
             if (Notification.permission === 'granted') {
-                new Notification(title, { body: body });
+                new Notification(title, {
+                    body: body,
+                    icon: '🕌'
+                });
+            }
+
+            console.log('🔔 إشعار جديد:', title, body);
+        }
+
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => !n.read && n.userId === currentUser.id).length;
+            const badge = document.getElementById('notifBadge');
+            const btn = document.getElementById('notifBtn');
+
+            if (badge) {
+                if (unreadCount > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+                } else {
+                    badge.style.display = 'none';
+                }
             }
         }
 
-        // طلب إذن الإشعارات
-        if ('Notification' in window) {
-            Notification.requestPermission();
+        function showNotifications() {
+            const list = document.getElementById('notificationsList');
+
+            // تحديث الإشعارات إلى مقروءة
+            notifications = notifications.map(n => {
+                if (n.userId === currentUser.id) {
+                    n.read = true;
+                }
+                return n;
+            });
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+
+            const userNotifs = notifications.filter(n => n.userId === currentUser.id);
+
+            if (userNotifs.length === 0) {
+                list.innerHTML = `<div class="empty-state"><span class="icon">🔔</span><p>لا توجد إشعارات</p></div>`;
+            } else {
+                list.innerHTML = userNotifs.map(n => `
+                    <div class="notification-item">
+                        <div>
+                            <div class="title">${n.icon} ${n.title}</div>
+                            <div class="body">${n.body}</div>
+                        </div>
+                        <div class="time">${n.time}</div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('notificationsModal').classList.add('active');
+        }
+
+        function clearNotifications() {
+            notifications = notifications.filter(n => n.userId !== currentUser.id);
+            localStorage.setItem('notifications', JSON.stringify(notifications));
+            updateNotificationBadge();
+            showNotifications();
+            showToast('🗑️ تم مسح جميع الإشعارات', 'success');
         }
 
         // ============================================================
@@ -1061,12 +1158,7 @@
             const todayAttendance = attendance.filter(a => a.date === today);
             document.getElementById('todayAttendanceCount').textContent = todayAttendance.length;
 
-            // تحديث عدد الإشعارات غير المقروءة
-            const unreadCount = notifications.filter(n => !n.read).length;
-            const notifBtn = document.querySelector('.btn-icon.notification');
-            if (notifBtn) {
-                notifBtn.textContent = unreadCount > 0 ? `🔔 ${unreadCount}` : '🔔';
-            }
+            updateNotificationBadge();
 
             if (currentUser.is_teacher) {
                 document.getElementById('userAvatar').textContent = '👨‍🏫';
@@ -1268,7 +1360,6 @@
                 return;
             }
 
-            // رسم بياني
             html += `
                 <div class="card">
                     <div class="card-title">📊 نسبة الحضور لكل صف</div>
@@ -1281,7 +1372,6 @@
             container.innerHTML = html;
             document.getElementById('reportModal').classList.add('active');
 
-            // رسم الرسم البياني بعد ظهور المودال
             setTimeout(() => {
                 const ctx = document.getElementById('reportChart');
                 if (ctx) {
@@ -1504,7 +1594,7 @@
         document.getElementById('addGradeSelect').onchange = loadAllStudents;
 
         // ============================================================
-        //                      تسجيل الغيابات
+        //                      تسجيل الغيابات (مع إشعار للطلاب)
         // ============================================================
 
         function recordAbsences() {
@@ -1528,7 +1618,7 @@
 
             absentStudents.forEach(s => {
                 if (!isStudentPresent(s.id, today)) {
-                    attendance.push({
+                    const record = {
                         id: generateId(),
                         studentId: s.id,
                         studentName: s.name,
@@ -1539,17 +1629,28 @@
                         teacherName: currentUser.name,
                         timestamp: now.toISOString(),
                         status: 'absent'
-                    });
+                    };
+
+                    attendance.push(record);
+
+                    // ===== إشعار للطالب =====
+                    addNotification(
+                        '❌ تم تسجيل غيابك',
+                        `تم تسجيل غيابك اليوم ${today} في صف ${s.grade}`,
+                        '❌'
+                    );
+
                     count++;
                 }
             });
 
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            // إضافة إشعار
+            // إشعار للمدرس
             addNotification(
                 '📝 تسجيل غيابات',
-                `تم تسجيل غياب ${count} طالب في صف ${currentGrade}`
+                `تم تسجيل غياب ${count} طالب في صف ${currentGrade}`,
+                '📝'
             );
 
             showToast(`📝 تم تسجيل غياب ${count} طالب`, 'success');
@@ -1584,7 +1685,6 @@
             }
 
             if (updated) {
-                // تحديث المستخدم في قائمة users
                 users = users.map(u => {
                     if (u.id === currentUser.id) {
                         return currentUser;
@@ -1604,39 +1704,7 @@
         }
 
         // ============================================================
-        //                      الإشعارات
-        // ============================================================
-
-        function showNotifications() {
-            const list = document.getElementById('notificationsList');
-
-            // تحديث الإشعارات إلى مقروءة
-            notifications = notifications.map(n => {
-                n.read = true;
-                return n;
-            });
-            localStorage.setItem('notifications', JSON.stringify(notifications));
-
-            if (notifications.length === 0) {
-                list.innerHTML = `<div class="empty-state"><span class="icon">🔔</span><p>لا توجد إشعارات</p></div>`;
-            } else {
-                list.innerHTML = notifications.map(n => `
-                    <div class="notification-item">
-                        <div>
-                            <div class="title">${n.title}</div>
-                            <div style="font-size:0.85rem;color:#6B7B8D;">${n.body}</div>
-                        </div>
-                        <div class="time">${n.time}</div>
-                    </div>
-                `).join('');
-            }
-
-            updateUI();
-            document.getElementById('notificationsModal').classList.add('active');
-        }
-
-        // ============================================================
-        //                      مسح QR Code
+        //                      مسح QR Code (مع إشعار للطالب)
         // ============================================================
 
         let html5QrCode = null;
@@ -1724,7 +1792,7 @@
                 return;
             }
 
-            // تسجيل الحضور
+            // ===== تسجيل الحضور =====
             const now = new Date();
             const record = {
                 id: generateId(),
@@ -1742,10 +1810,18 @@
             attendance.push(record);
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            // إضافة إشعار
+            // ===== إشعار للطالب =====
+            addNotification(
+                '✅ تم تسجيل حضورك',
+                `تم تسجيل حضورك اليوم ${today} في صف ${student.grade}`,
+                '✅'
+            );
+
+            // إشعار للمدرس
             addNotification(
                 '✅ تسجيل حضور',
-                `تم تسجيل حضور ${student.name} في صف ${student.grade}`
+                `تم تسجيل حضور ${student.name} في صف ${student.grade}`,
+                '✅'
             );
 
             document.getElementById('scannedStudentName').textContent = student.name;
@@ -1808,11 +1884,19 @@
         });
 
         // ============================================================
+        //                      طلب إذن الإشعارات
+        // ============================================================
+
+        if ('Notification' in window) {
+            Notification.requestPermission();
+        }
+
+        // ============================================================
         //                      بدء التطبيق
         // ============================================================
 
         updateUI();
-        console.log('🕌 معهد أنوار السلام - النسخة المتكاملة');
+        console.log('🕌 معهد أنوار السلام - النسخة المتكاملة مع الإشعارات');
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
         console.log('👨‍🎓 عدد الطلاب:', users.filter(u => !u.is_teacher).length);
@@ -1823,7 +1907,8 @@
         setTimeout(() => {
             addNotification(
                 '👋 مرحباً بك',
-                `أهلاً بك في معهد أنوار السلام ${currentUser.name}`
+                `أهلاً بك في معهد أنوار السلام ${currentUser.name}`,
+                '👋'
             );
         }, 1000);
     </script>
