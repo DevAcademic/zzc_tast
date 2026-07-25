@@ -129,7 +129,6 @@
             font-size: 0.95rem;
         }
 
-        /* ===== QR Code - يظهر للطلاب فقط ===== */
         .qr-section {
             text-align: center;
             padding: 15px;
@@ -149,7 +148,6 @@
             margin-top: 8px;
         }
 
-        /* ===== الأزرار ===== */
         .btn-primary {
             width: 100%;
             padding: 14px;
@@ -202,7 +200,6 @@
             transform: scale(0.96);
         }
 
-        /* ===== المودال ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -297,26 +294,19 @@
         }
 
         /* ===== Scanner ===== */
-        #qr-reader {
+        #reader {
             width: 100%;
             border-radius: 16px;
             overflow: hidden;
-        }
-        #qr-reader video {
-            border-radius: 16px;
-        }
-
-        .scanner-container {
             background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            margin: 10px 0;
-            position: relative;
             min-height: 250px;
+            position: relative;
         }
 
-        .scanner-container #qr-reader {
-            min-height: 250px;
+        #reader video {
+            border-radius: 16px;
+            width: 100%;
+            height: auto;
         }
 
         .scanner-overlay {
@@ -329,16 +319,75 @@
             border: 3px solid #C9A84C;
             border-radius: 16px;
             pointer-events: none;
-            box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.3);
+            z-index: 10;
         }
 
         .scan-status {
             text-align: center;
-            padding: 10px;
-            background: #FFF8E7;
+            padding: 12px;
+            background: #FDF8EE;
             border-radius: 12px;
             margin-top: 10px;
             color: #0C2340;
+            font-weight: 500;
+            border: 1px solid #C9A84C;
+        }
+
+        .scan-status.success {
+            background: #E8F5E9;
+            border-color: #2E7D32;
+            color: #2E7D32;
+        }
+
+        .scan-status.error {
+            background: #FFEBEE;
+            border-color: #C62828;
+            color: #C62828;
+        }
+
+        /* ===== رسالة منبثقة ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 25px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            display: none;
+            animation: slideUp 0.4s ease;
+            max-width: 90%;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .toast.success {
+            background: #2E7D32;
+            display: block;
+        }
+
+        .toast.error {
+            background: #C62828;
+            display: block;
+        }
+
+        .toast.info {
+            background: #0C2340;
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         @media (max-width: 480px) {
@@ -361,12 +410,16 @@
                 width: 150px;
                 height: 150px;
             }
+            .toast {
+                bottom: 20px;
+                padding: 14px 20px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- ===== الهيدر ===== -->
         <div class="header">
             <div class="user-info">
                 <div class="avatar" id="userAvatar">👤</div>
@@ -379,7 +432,6 @@
             <button class="btn-logout" onclick="logout()">🚪 خروج</button>
         </div>
 
-        <!-- ===== معلومات الحساب ===== -->
         <div class="card">
             <div class="card-title">📋 معلومات الحساب</div>
             <div class="info-row">
@@ -400,7 +452,7 @@
             </div>
         </div>
 
-        <!-- ===== QR Code - يظهر للطلاب فقط ===== -->
+        <!-- ===== QR Code للطالب ===== -->
         <div id="studentQR" class="qr-section">
             <div id="qrcode"></div>
             <p class="qr-label">🎫 كود الطالب - استخدمه للمسح</p>
@@ -455,14 +507,15 @@
                 <h3>📷 مسح QR Code</h3>
                 <button class="modal-close" onclick="closeScanner()">✕</button>
             </div>
-            <div class="scanner-container">
-                <div id="qr-reader"></div>
-                <div class="scanner-overlay"></div>
-            </div>
+            <div id="reader"></div>
+            <div class="scanner-overlay"></div>
             <div id="scanStatus" class="scan-status">📱 قم بتوجيه الكاميرا نحو كود الطالب</div>
             <button class="btn-danger" onclick="closeScanner()">إيقاف المسح</button>
         </div>
     </div>
+
+    <!-- ===== رسالة منبثقة ===== -->
+    <div id="toast" class="toast"></div>
 
     <script>
         // ============================================================
@@ -495,34 +548,19 @@
         // ============================================================
 
         if (currentUser.is_teacher) {
-            // ===== واجهة المدرس =====
             document.getElementById('userAvatar').textContent = '👨‍🏫';
             document.getElementById('userRole').textContent = 'مدرس';
             document.getElementById('userGradeBadge').style.display = 'none';
-
-            // إخفاء QR Code للطلاب
             document.getElementById('studentQR').style.display = 'none';
-
-            // إخفاء أزرار الطالب
             document.getElementById('studentActions').style.display = 'none';
-
-            // إظهار أزرار المدرس
             document.getElementById('teacherActions').style.display = 'block';
         } else {
-            // ===== واجهة الطالب =====
             document.getElementById('userAvatar').textContent = '👤';
             document.getElementById('userRole').textContent = 'طالب';
-
-            // إظهار QR Code للطالب
             document.getElementById('studentQR').style.display = 'block';
-
-            // إظهار أزرار الطالب
             document.getElementById('studentActions').style.display = 'block';
-
-            // إخفاء أزرار المدرس
             document.getElementById('teacherActions').style.display = 'none';
 
-            // إنشاء QR Code للطالب
             if (document.getElementById('qrcode')) {
                 new QRCode(document.getElementById('qrcode'), {
                     text: currentUser.id,
@@ -536,7 +574,7 @@
         }
 
         // ============================================================
-        // الدوال المشتركة
+        // دوال مساعدة
         // ============================================================
 
         function generateId() {
@@ -550,6 +588,15 @@
         function logout() {
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
+        }
+
+        function showToast(text, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = text;
+            toast.className = 'toast ' + type;
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 4000);
         }
 
         // ============================================================
@@ -619,68 +666,79 @@
         document.getElementById('filterGrade').onchange = loadStudentsList;
 
         // ============================================================
-        // مسح QR Code (للمدرس - يعمل بالكاميرا)
+        // مسح QR Code (للمدرس)
         // ============================================================
 
         let html5QrCode = null;
         let scannerActive = false;
 
         function openScanner() {
-            document.getElementById('scannerModal').classList.add('active');
-            document.getElementById('scanStatus').textContent = '📱 جاري تشغيل الكاميرا...';
+            const modal = document.getElementById('scannerModal');
+            modal.classList.add('active');
+
+            const status = document.getElementById('scanStatus');
+            status.textContent = '📱 جاري تشغيل الكاميرا...';
+            status.className = 'scan-status';
 
             if (scannerActive) return;
 
-            const readerElement = document.getElementById('qr-reader');
+            const readerElement = document.getElementById('reader');
             readerElement.innerHTML = '';
 
-            html5QrCode = new Html5Qrcode("qr-reader");
+            try {
+                html5QrCode = new Html5Qrcode("reader");
 
-            html5QrCode.start({
-                    facingMode: "environment"
-                }, {
-                    fps: 10,
-                    qrbox: { width: 250, height: 250 }
-                },
-                onScanSuccess,
-                onScanError
-            );
-
-            scannerActive = true;
-            document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
+                html5QrCode.start({
+                        facingMode: "environment"
+                    }, {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    onScanSuccess,
+                    onScanError
+                ).then(() => {
+                    scannerActive = true;
+                    status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
+                    status.className = 'scan-status';
+                }).catch((err) => {
+                    status.textContent = '❌ تعذر فتح الكاميرا: ' + err;
+                    status.className = 'scan-status error';
+                });
+            } catch (err) {
+                status.textContent = '❌ خطأ: ' + err.message;
+                status.className = 'scan-status error';
+            }
         }
 
         function onScanSuccess(decodedText) {
-            document.getElementById('scanStatus').textContent = '✅ تم المسح بنجاح!';
+            const status = document.getElementById('scanStatus');
 
             // البحث عن الطالب
             const student = users.find(u => u.id === decodedText && !u.is_teacher);
 
             if (!student) {
-                document.getElementById('scanStatus').textContent = '❌ طالب غير مسجل!';
-                setTimeout(() => {
-                    document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-                }, 2000);
+                status.textContent = '❌ طالب غير مسجل!';
+                status.className = 'scan-status error';
+                showToast('❌ طالب غير مسجل في النظام', 'error');
                 return;
             }
 
-            // التحقق من عدم تسجيل حضور مكرر
+            // التحقق من عدم تسجيل حضور مكرر اليوم
             const today = new Date().toISOString().split('T')[0];
             const alreadyExists = attendance.some(a =>
                 a.studentId === student.id && a.date === today
             );
 
             if (alreadyExists) {
-                document.getElementById('scanStatus').textContent = `✅ ${student.name} مسجل حضور اليوم`;
-                setTimeout(() => {
-                    document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-                }, 2000);
+                status.textContent = `✅ ${student.name} مسجل حضور اليوم`;
+                status.className = 'scan-status success';
+                showToast(`✅ ${student.name} مسجل حضور اليوم`, 'success');
                 return;
             }
 
             // تسجيل الحضور
             const now = new Date();
-            attendance.push({
+            const record = {
                 id: generateId(),
                 studentId: student.id,
                 studentName: student.name,
@@ -690,19 +748,27 @@
                 teacherId: currentUser.id,
                 teacherName: currentUser.name,
                 timestamp: now.toISOString()
-            });
+            };
 
+            attendance.push(record);
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
-            document.getElementById('scanStatus').textContent = `✅ تم تسجيل حضور ${student.name}`;
+            status.textContent = `✅ تم تسجيل حضور ${student.name}`;
+            status.className = 'scan-status success';
+            showToast(`✅ تم تسجيل حضور ${student.name}`, 'success');
 
+            // تحديث عدد الغيابات
+            document.getElementById('userAbsencesCount').textContent =
+                attendance.filter(a => a.studentId === currentUser.id).length;
+
+            // إغلاق الماسح بعد 3 ثواني
             setTimeout(() => {
-                document.getElementById('scanStatus').textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-            }, 2000);
+                closeScanner();
+            }, 3000);
         }
 
         function onScanError(err) {
-            // تجاهل الأخطاء
+            // تجاهل الأخطاء المؤقتة
         }
 
         function closeScanner() {
@@ -711,8 +777,10 @@
                     html5QrCode.clear();
                     scannerActive = false;
                     document.getElementById('scannerModal').classList.remove('active');
-                    document.getElementById('qr-reader').innerHTML = '';
-                }).catch(() => {});
+                    document.getElementById('reader').innerHTML = '';
+                }).catch(() => {
+                    document.getElementById('scannerModal').classList.remove('active');
+                });
             } else {
                 document.getElementById('scannerModal').classList.remove('active');
             }
@@ -731,7 +799,7 @@
             };
         });
 
-        console.log('🕌 لوحة التحكم جاهزة');
+        console.log('🕌 معهد أنوار السلام - جاهز');
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
     </script>
