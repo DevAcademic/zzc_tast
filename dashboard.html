@@ -338,7 +338,7 @@
             border-radius: 16px;
             overflow: hidden;
             background: #000;
-            min-height: 250px;
+            min-height: 280px;
             position: relative;
         }
 
@@ -375,6 +375,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1rem;
         }
 
         .scan-status.success {
@@ -387,6 +388,23 @@
             background: #FFEBEE;
             border-color: #C62828;
             color: #C62828;
+        }
+
+        .scan-status.scanning {
+            background: #FFF8E7;
+            border-color: #C9A84C;
+            color: #0C2340;
+            animation: pulse 1s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
 
         .toast {
@@ -434,29 +452,39 @@
 
         .student-confirm {
             text-align: center;
-            padding: 20px;
-            background: #FDF8EE;
+            padding: 15px;
+            background: #E8F5E9;
             border-radius: 16px;
-            border: 2px solid #C9A84C;
+            border: 2px solid #2E7D32;
             margin: 10px 0;
         }
 
         .student-confirm .student-name {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #0C2340;
-            margin: 10px 0;
+            margin: 5px 0;
         }
 
         .student-confirm .student-grade {
             color: #6B7B8D;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .student-confirm .student-phone {
             color: #6B7B8D;
+            font-size: 0.85rem;
+            margin-top: 3px;
+        }
+
+        .student-confirm .status-text {
+            margin-top: 8px;
+            padding: 6px;
+            background: #2E7D32;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
             font-size: 0.9rem;
-            margin-top: 5px;
         }
 
         @media (max-width: 480px) {
@@ -480,7 +508,7 @@
                 height: 150px;
             }
             .student-confirm .student-name {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
             .toast {
                 bottom: 20px;
@@ -531,7 +559,7 @@
             </div>
         </div>
 
-        <!-- ===== اختيار الصف وإدارة الطلاب ===== -->
+        <!-- ===== أزرار المدرس ===== -->
         <div id="teacherActions" style="display:none;">
             <div class="card">
                 <div class="card-title">📚 إدارة الصف</div>
@@ -552,7 +580,11 @@
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="openScanner()">📷 مسح QR Code</button>
+            <!-- ===== ماسح QR Code ===== -->
+            <button class="btn-primary" onclick="openScanner()" style="background:linear-gradient(135deg,#2ECC71,#27AE60);">
+                📷 فتح الماسح
+            </button>
+
             <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
             <button class="btn-secondary" onclick="showAllAbsences()" style="margin-top:6px;">📋 تقرير الغيابات</button>
         </div>
@@ -561,6 +593,12 @@
         <div id="studentActions">
             <button class="btn-secondary" onclick="showMyAbsences()">📋 غياباتي</button>
             <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
+        </div>
+
+        <!-- ===== QR Code للطالب ===== -->
+        <div id="studentQR" class="qr-section" style="display:none;">
+            <div id="qrcode"></div>
+            <p class="qr-label">🎫 كود الطالب</p>
         </div>
     </div>
 
@@ -597,21 +635,19 @@
             <div id="reader"></div>
             <div class="scanner-overlay"></div>
 
-            <div id="scanStatus" class="scan-status">📱 قم بتوجيه الكاميرا نحو كود الطالب</div>
+            <div id="scanStatus" class="scan-status scanning">📱 قم بتوجيه الكاميرا نحو كود الطالب</div>
 
             <div id="studentConfirm" style="display:none;">
                 <div class="student-confirm">
-                    <div style="font-size:3rem;">✅</div>
+                    <div style="font-size:2.5rem;">✅</div>
                     <div class="student-name" id="scannedStudentName">-</div>
                     <div class="student-grade" id="scannedStudentGrade">-</div>
                     <div class="student-phone" id="scannedStudentPhone">-</div>
-                    <div style="margin-top:10px;padding:8px;background:#E8F5E9;border-radius:8px;color:#2E7D32;font-weight:600;">
-                        ✅ تم تسجيل الحضور
-                    </div>
+                    <div class="status-text">✅ تم تسجيل الحضور تلقائياً</div>
                 </div>
             </div>
 
-            <button class="btn-danger" onclick="closeScanner()" style="margin-top:10px;">إيقاف المسح</button>
+            <button class="btn-danger" onclick="closeScanner()" style="margin-top:10px;">✖ إغلاق الماسح</button>
         </div>
     </div>
 
@@ -726,7 +762,7 @@
             toast.className = 'toast ' + type;
             setTimeout(() => {
                 toast.className = 'toast';
-            }, 4000);
+            }, 3000);
         }
 
         // ============================================================
@@ -775,7 +811,7 @@
         }
 
         // ============================================================
-        // عرض تقرير الغيابات (للمدرس)
+        // عرض تقرير الغيابات
         // ============================================================
 
         function showAllAbsences() {
@@ -784,7 +820,6 @@
             if (attendance.length === 0) {
                 list.innerHTML = `<div class="empty-state"><span class="icon">📭</span><p>لا توجد غيابات مسجلة</p></div>`;
             } else {
-                // ترتيب حسب التاريخ
                 const sorted = [...attendance].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 list.innerHTML = sorted.map(a => `
                     <div class="absence-item">
@@ -798,7 +833,7 @@
         }
 
         // ============================================================
-        // إدارة الطلاب (للمدرس)
+        // إدارة الطلاب
         // ============================================================
 
         let currentGrade = '';
@@ -841,7 +876,7 @@
         }
 
         // ============================================================
-        // تسجيل الغيابات (للمدرس)
+        // تسجيل الغيابات
         // ============================================================
 
         function recordAbsences() {
@@ -853,7 +888,6 @@
             const today = new Date().toISOString().split('T')[0];
             const students = users.filter(u => !u.is_teacher && u.grade === currentGrade);
 
-            // الطلاب الذين لم يسجلوا حضور اليوم
             const absentStudents = students.filter(s => {
                 return !attendance.some(a => a.studentId === s.id && a.date === today);
             });
@@ -863,12 +897,10 @@
                 return;
             }
 
-            // تسجيل غياب لكل طالب غائب
             const now = new Date();
             let count = 0;
 
             absentStudents.forEach(s => {
-                // التأكد من عدم وجود تسجيل مسبق
                 const exists = attendance.some(a => a.studentId === s.id && a.date === today);
                 if (!exists) {
                     attendance.push({
@@ -924,7 +956,7 @@
                 html5QrCode.start({
                         facingMode: "environment"
                     }, {
-                        fps: 5,
+                        fps: 10,
                         qrbox: { width: 250, height: 250 }
                     },
                     onScanSuccess,
@@ -932,7 +964,7 @@
                 ).then(() => {
                     scannerActive = true;
                     status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-                    status.className = 'scan-status';
+                    status.className = 'scan-status scanning';
                 }).catch((err) => {
                     status.textContent = '❌ تعذر فتح الكاميرا: ' + err;
                     status.className = 'scan-status error';
@@ -956,11 +988,12 @@
                 status.textContent = '❌ طالب غير مسجل!';
                 status.className = 'scan-status error';
                 showToast('❌ طالب غير مسجل', 'error');
+
                 setTimeout(() => {
                     isProcessing = false;
                     status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-                    status.className = 'scan-status';
-                }, 2000);
+                    status.className = 'scan-status scanning';
+                }, 1500);
                 return;
             }
 
@@ -981,12 +1014,12 @@
                     document.getElementById('studentConfirm').style.display = 'none';
                     isProcessing = false;
                     status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-                    status.className = 'scan-status';
-                }, 2000);
+                    status.className = 'scan-status scanning';
+                }, 1500);
                 return;
             }
 
-            // تسجيل الحضور
+            // ===== تسجيل الحضور تلقائياً =====
             const now = new Date();
             const record = {
                 id: generateId(),
@@ -1004,6 +1037,7 @@
             attendance.push(record);
             localStorage.setItem('attendance', JSON.stringify(attendance));
 
+            // عرض رسالة النجاح
             document.getElementById('scannedStudentName').textContent = student.name;
             document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
             document.getElementById('scannedStudentPhone').textContent = '📱 ' + (student.phone || 'غير محدد');
@@ -1015,20 +1049,27 @@
 
             updateUI();
 
-            // تحديث قائمة الطلاب إذا كانت مفتوحة
+            // تحديث قائمة الطلاب
             if (document.getElementById('studentsListContainer').style.display === 'block') {
                 loadGradeStudents();
             }
 
+            // إعادة فتح الماسح بعد 1.5 ثانية
             setTimeout(() => {
                 document.getElementById('studentConfirm').style.display = 'none';
                 isProcessing = false;
-                status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب';
-                status.className = 'scan-status';
-            }, 2000);
+
+                // إعادة تشغيل الماسح
+                if (scannerActive) {
+                    status.textContent = '📱 قم بتوجيه الكاميرا نحو كود الطالب التالي';
+                    status.className = 'scan-status scanning';
+                }
+            }, 1500);
         }
 
-        function onScanError(err) {}
+        function onScanError(err) {
+            // تجاهل الأخطاء المؤقتة
+        }
 
         function closeScanner() {
             if (html5QrCode && scannerActive) {
@@ -1049,7 +1090,7 @@
         }
 
         // ============================================================
-        // إغلاق المودال عند الضغط خارجها
+        // إغلاق المودال
         // ============================================================
 
         document.querySelectorAll('.modal-overlay').forEach(el => {
