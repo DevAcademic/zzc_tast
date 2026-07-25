@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>  </title>
+    <title>معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <style>
         * {
@@ -11,9 +11,8 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Tajawal', 'Arial', sans-serif;
             background: linear-gradient(135deg, #0C2340, #1A3A5C, #2A5F7A);
             min-height: 100vh;
             display: flex;
@@ -21,23 +20,21 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             width: 100%;
             max-width: 420px;
-            background: rgba(255, 255, 255, 0.95);
+            background: #ffffff;
             border-radius: 30px;
             padding: 30px 25px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(201, 168, 76, 0.2);
+            border: 1px solid rgba(201, 168, 76, 0.3);
         }
-
         .logo {
             text-align: center;
             padding: 10px 0 25px;
         }
         .logo .icon {
-            font-size: 3.5rem;
+            font-size: 4rem;
             display: block;
             margin-bottom: 8px;
         }
@@ -51,7 +48,7 @@
         }
         .logo p {
             color: #6B7B8D;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .tab-selector {
@@ -60,7 +57,6 @@
             gap: 12px;
             margin: 15px 0 20px;
         }
-
         .tab-btn {
             padding: 14px 10px;
             border: 2px solid #E8ECF0;
@@ -70,7 +66,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: inherit;
+            font-family: 'Tajawal', 'Arial', sans-serif;
             color: #6B7B8D;
         }
         .tab-btn:active {
@@ -101,7 +97,6 @@
             display: block;
             animation: slideDown 0.4s ease;
         }
-
         @keyframes slideDown {
             from {
                 opacity: 0;
@@ -112,7 +107,6 @@
                 transform: translateY(0);
             }
         }
-
         .form-card h3 {
             color: #0C2340;
             font-size: 1.1rem;
@@ -131,7 +125,7 @@
             font-weight: 500;
             color: #2C3E50;
             margin-bottom: 5px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
         .input-group input,
         .input-group select {
@@ -140,7 +134,7 @@
             border: 2px solid #E8ECF0;
             border-radius: 12px;
             font-size: 1rem;
-            font-family: inherit;
+            font-family: 'Tajawal', 'Arial', sans-serif;
             transition: all 0.3s;
             background: #FAFBFC;
             color: #2C3E50;
@@ -154,7 +148,7 @@
         .input-group small {
             display: block;
             color: #95A5A6;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin-top: 3px;
         }
 
@@ -186,7 +180,7 @@
             padding: 14px 14px;
             background: transparent;
             font-size: 1rem;
-            font-family: inherit;
+            font-family: 'Tajawal', 'Arial', sans-serif;
             color: #2C3E50;
         }
         .phone-input input:focus {
@@ -204,7 +198,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: inherit;
+            font-family: 'Tajawal', 'Arial', sans-serif;
             margin-top: 10px;
         }
         .btn-primary:active {
@@ -221,7 +215,6 @@
             gap: 10px;
             margin: 10px 0;
         }
-
         .role-btn {
             padding: 14px;
             border: 2px solid #E8ECF0;
@@ -231,7 +224,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-family: inherit;
+            font-family: 'Tajawal', 'Arial', sans-serif;
             color: #6B7B8D;
         }
         .role-btn:active {
@@ -325,109 +318,123 @@
     </style>
 </head>
 <body>
+
     <div class="container">
+
+        <!-- ===== الشعار ===== -->
         <div class="logo">
-            <span class="icon"></span>
-            <h1> <span> </span></h1>
-            <p>  </p>
+            <span class="icon">🕌</span>
+            <h1>معهد <span>أنوار السلام</span></h1>
+            <p>نظام تسجيل الحضور</p>
         </div>
 
+        <!-- ===== التبويبات ===== -->
         <div class="tab-selector">
             <button id="loginTab" class="tab-btn active" onclick="showLogin()">
-                <span class="emoji"></span>  
+                <span class="emoji">🔑</span> تسجيل الدخول
             </button>
             <button id="registerTab" class="tab-btn" onclick="showRegister()">
-                <span class="emoji"></span>  
+                <span class="emoji">📝</span> إنشاء حساب
             </button>
         </div>
 
-        <!--   -->
+        <!-- ===== تسجيل الدخول ===== -->
         <div id="loginForm" class="form-card active">
-            <h3> <span> </span></h3>
+            <h3>🔑 <span>تسجيل الدخول</span></h3>
             <div class="input-group">
-                <label>  </label>
+                <label>📧 البريد الإلكتروني</label>
                 <input type="email" id="loginEmail" placeholder="example@email.com" />
             </div>
             <div class="input-group">
-                <label>  </label>
-                <input type="password" id="loginPassword" placeholder="  " />
+                <label>🔑 كلمة المرور</label>
+                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" />
             </div>
-            <button id="loginBtn" class="btn-primary" onclick="loginUser()"> </button>
+            <button id="loginBtn" class="btn-primary" onclick="loginUser()">تسجيل الدخول</button>
         </div>
 
-        <!--   -->
+        <!-- ===== إنشاء حساب ===== -->
         <div id="registerForm" class="form-card">
-            <h3> <span>  </span></h3>
+            <h3>📝 <span>إنشاء حساب جديد</span></h3>
 
             <div class="input-group">
-                <label>  </label>
-                <input type="text" id="regName" placeholder=":   " />
-                <small>   </small>
+                <label>👤 الاسم الثلاثي</label>
+                <input type="text" id="regName" placeholder="مثال: أحمد محمد علي" />
+                <small>الاسم باللغة العربية فقط</small>
             </div>
 
             <div class="input-group">
-                <label>  </label>
+                <label>📧 البريد الإلكتروني</label>
                 <input type="email" id="regEmail" placeholder="example@email.com" />
             </div>
 
             <div class="input-group">
-                <label>  </label>
+                <label>📱 رقم الهاتف</label>
                 <div class="phone-input">
                     <span class="country">+964</span>
                     <input type="tel" id="regPhone" placeholder="7XXXXXXXXX" maxlength="10" />
                 </div>
-                <small> 10  </small>
+                <small>أدخل 10 أرقام فقط</small>
             </div>
 
             <div class="input-group">
-                <label>  </label>
-                <input type="password" id="regPassword" placeholder="6   " />
+                <label>🔑 كلمة المرور</label>
+                <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
             </div>
 
-            <!--   -    -->
+            <!-- ===== اختيار الصف ===== -->
             <div id="gradeSection" class="grade-section">
                 <div class="input-group">
-                    <label> </label>
+                    <label>📚 الصف</label>
                     <select id="regGrade">
-                        <option value="">--   --</option>
-                        <option value=" "> </option>
-                        <option value=" "> </option>
-                        <option value=" "> </option>
+                        <option value="">-- اختر الصف --</option>
+                        <option value="رابع إعدادي">رابع إعدادي</option>
+                        <option value="خامس إعدادي">خامس إعدادي</option>
+                        <option value="سادس إعدادي">سادس إعدادي</option>
                     </select>
-                    <small>    </small>
+                    <small>اختر الصف الذي تنتمي إليه</small>
                 </div>
             </div>
 
-            <!--   -->
+            <!-- ===== اختيار الدور ===== -->
             <div class="role-selector">
                 <button id="roleStudentBtn" class="role-btn active" onclick="selectRole('student')">
-                    <span class="emoji"></span> 
+                    <span class="emoji">👤</span> طالب
                 </button>
                 <button id="roleTeacherBtn" class="role-btn" onclick="selectRole('teacher')">
-                    <span class="emoji"></span> 
+                    <span class="emoji">👨‍🏫</span> مدرس
                 </button>
             </div>
 
-            <!--   -->
+            <!-- ===== كود المدرس ===== -->
             <div id="teacherCodeSection" class="teacher-code-section">
                 <div class="input-group">
-                    <label>   </label>
-                    <input type="password" id="regTeacherCode" placeholder="  " />
+                    <label>🔐 كود المدرس السري</label>
+                    <input type="password" id="regTeacherCode" placeholder="أدخل الكود السري" />
                 </div>
             </div>
 
-            <button id="registerBtn" class="btn-primary" onclick="registerUser()"> </button>
+            <button id="registerBtn" class="btn-primary" onclick="registerUser()">إنشاء حساب</button>
         </div>
 
+        <!-- ===== الرسائل ===== -->
         <div id="message" class="message"></div>
+
     </div>
 
     <script>
-        //   ()
+        // ============================================================
+        // الكود السري (مخفي)
+        // ============================================================
         const TEACHER_CODE = 'zznn550011AN@';
 
+        // ============================================================
+        // المتغيرات
+        // ============================================================
         let selectedRole = 'student';
 
+        // ============================================================
+        // التبديل بين التبويبات
+        // ============================================================
         function showLogin() {
             document.getElementById('loginTab').classList.add('active');
             document.getElementById('registerTab').classList.remove('active');
@@ -444,6 +451,9 @@
             hideMessage();
         }
 
+        // ============================================================
+        // اختيار الدور - مع إظهار/إخفاء الصف
+        // ============================================================
         function selectRole(role) {
             selectedRole = role;
 
@@ -467,6 +477,9 @@
             hideMessage();
         }
 
+        // ============================================================
+        // دوال مساعدة
+        // ============================================================
         function showMessage(text, type) {
             const el = document.getElementById('message');
             el.textContent = text;
@@ -482,10 +495,10 @@
         function setLoading(btn, loading) {
             if (loading) {
                 btn.disabled = true;
-                btn.innerHTML = ' <span class="loading"></span>';
+                btn.innerHTML = 'جاري <span class="loading"></span>';
             } else {
                 btn.disabled = false;
-                btn.innerHTML = btn.id === 'loginBtn' ? ' ' : ' ';
+                btn.innerHTML = btn.id === 'loginBtn' ? 'تسجيل الدخول' : 'إنشاء حساب';
             }
         }
 
@@ -509,6 +522,9 @@
             return password.length >= 6;
         }
 
+        // ============================================================
+        // تسجيل الدخول
+        // ============================================================
         function loginUser() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -516,11 +532,11 @@
             hideMessage();
 
             if (!isValidEmail(email)) {
-                showMessage('    ', 'error');
+                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
             if (!password) {
-                showMessage('    ', 'error');
+                showMessage('⚠️ يرجى إدخال كلمة المرور', 'error');
                 return;
             }
 
@@ -532,13 +548,13 @@
 
                 if (!user) {
                     setLoading(document.getElementById('loginBtn'), false);
-                    showMessage('      ', 'error');
+                    showMessage('❌ البريد أو كلمة المرور غير صحيحة', 'error');
                     return;
                 }
 
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 setLoading(document.getElementById('loginBtn'), false);
-                showMessage('    !', 'success');
+                showMessage('✅ تم تسجيل الدخول بنجاح!', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
@@ -546,6 +562,9 @@
             }, 1500);
         }
 
+        // ============================================================
+        // إنشاء حساب جديد
+        // ============================================================
         function registerUser() {
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -557,45 +576,46 @@
             hideMessage();
 
             if (!isValidName(name)) {
-                showMessage('      ()', 'error');
+                showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي)', 'error');
                 return;
             }
 
             if (!isValidEmail(email)) {
-                showMessage('    ', 'error');
+                showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
 
             if (!isValidPhone(phone)) {
-                showMessage('      10 ', 'error');
+                showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
                 return;
             }
 
             if (!isValidPassword(password)) {
-                showMessage('      6   ', 'error');
+                showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
                 return;
             }
 
             const isTeacher = (selectedRole === 'teacher');
             if (isTeacher) {
                 if (!teacherCode) {
-                    showMessage('    ', 'error');
+                    showMessage('⚠️ يرجى إدخال كود المدرس', 'error');
                     return;
                 }
                 if (teacherCode !== TEACHER_CODE) {
-                    showMessage('    !', 'error');
+                    showMessage('❌ كود المدرس غير صحيح!', 'error');
                     return;
                 }
             }
 
+            // التحقق من اختيار الصف (للطالب فقط)
             if (!isTeacher && !grade) {
-                showMessage('   ', 'error');
+                showMessage('⚠️ يرجى اختيار الصف', 'error');
                 return;
             }
 
             const users = JSON.parse(localStorage.getItem('users')) || [];
             if (users.find(u => u.email === email)) {
-                showMessage('    ', 'error');
+                showMessage('⚠️ هذا البريد مسجل مسبقاً', 'error');
                 return;
             }
 
@@ -608,7 +628,7 @@
                     email: email,
                     phone: phone,
                     password: password,
-                    grade: isTeacher ? '' : grade,
+                    grade: isTeacher ? 'مدرس' : grade,
                     is_teacher: isTeacher,
                     registered: new Date().toISOString()
                 };
@@ -618,7 +638,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
 
                 setLoading(document.getElementById('registerBtn'), false);
-                showMessage(isTeacher ? '   !' : '   !', 'success');
+                showMessage(isTeacher ? '✅ تم التسجيل كمدرس!' : '✅ تم التسجيل كطالب!', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
@@ -626,6 +646,9 @@
             }, 1500);
         }
 
+        // ============================================================
+        // التحقق من الجلسة
+        // ============================================================
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
             try {
@@ -636,9 +659,13 @@
             } catch (e) {}
         }
 
-        console.log('    - ');
-        console.log('  : ' + TEACHER_CODE);
+        // ============================================================
+        // بدء التطبيق
+        // ============================================================
+        console.log('🕌 معهد أنوار السلام - جاهز');
+        console.log('🔑 الكود السري: ' + TEACHER_CODE);
 
+        // تفعيل زر الطالب افتراضياً
         selectRole('student');
     </script>
 </body>
