@@ -8,6 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <style>
+        /* ============================================================
+                           التنسيقات العامة
+                           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -27,16 +30,19 @@
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(201, 168, 76, 0.2);
         }
 
+        /* ============================================================
+                           الهيدر
+                           ============================================================ */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0 20px;
+            padding: 10px 0 15px;
             border-bottom: 2px solid #F0F2F5;
         }
 
@@ -47,89 +53,91 @@
         }
 
         .user-info .avatar {
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #C9A84C, #B8942E);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: white;
+            flex-shrink: 0;
         }
 
         .user-info .details h2 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #0C2340;
+            line-height: 1.3;
         }
 
         .user-info .details .role {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #6B7B8D;
         }
 
         .user-info .details .grade-badge {
             display: inline-block;
-            padding: 2px 12px;
+            padding: 2px 10px;
             background: #FDF8EE;
             color: #C9A84C;
-            border-radius: 12px;
-            font-size: 0.75rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
             font-weight: 600;
             margin-top: 2px;
         }
 
-        .btn-logout {
-            padding: 10px 18px;
-            background: #E74C3C;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s;
+        .header-actions {
+            display: flex;
+            gap: 6px;
         }
-        .btn-logout:active {
+
+        .btn-icon {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .btn-icon:active {
             transform: scale(0.95);
         }
 
-        .btn-refresh {
-            padding: 10px 18px;
+        .btn-icon.refresh {
             background: #3498DB;
             color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: all 0.3s;
-        }
-        .btn-refresh:active {
-            transform: scale(0.95);
         }
 
+        .btn-icon.logout {
+            background: #E74C3C;
+            color: white;
+        }
+
+        /* ============================================================
+                           البطاقات
+                           ============================================================ */
         .card {
             background: white;
             border-radius: 16px;
-            padding: 18px;
+            padding: 16px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin: 15px 0;
+            margin: 12px 0;
             border: 1px solid #F0F2F5;
         }
 
         .card-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #6B7B8D;
             margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #F5F6F8;
         }
         .info-row:last-child {
@@ -137,83 +145,173 @@
         }
         .info-label {
             color: #6B7B8D;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .info-value {
             color: #0C2340;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
+        /* ============================================================
+                           الأزرار
+                           ============================================================ */
         .btn-primary {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             background: linear-gradient(135deg, #C9A84C, #B8942E);
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .btn-primary:active {
             transform: scale(0.96);
         }
+
         .btn-secondary {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             background: #E8ECF0;
             color: #0C2340;
             border: none;
             border-radius: 14px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .btn-secondary:active {
             transform: scale(0.96);
         }
-        .btn-danger {
-            width: 100%;
-            padding: 14px;
-            background: #E74C3C;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            margin-top: 8px;
-        }
-        .btn-danger:active {
-            transform: scale(0.96);
-        }
+
         .btn-success {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             background: #2ECC71;
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             font-family: inherit;
-            margin-top: 8px;
+            margin-top: 6px;
         }
         .btn-success:active {
             transform: scale(0.96);
         }
 
+        .btn-danger {
+            width: 100%;
+            padding: 13px;
+            background: #E74C3C;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 6px;
+        }
+        .btn-danger:active {
+            transform: scale(0.96);
+        }
+
+        .btn-scan {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2ECC71, #27AE60);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 6px;
+        }
+        .btn-scan:active {
+            transform: scale(0.96);
+        }
+
+        /* ============================================================
+                           قائمة الطلاب
+                           ============================================================ */
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #FAFBFC;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            transition: all 0.3s;
+        }
+        .student-item:hover {
+            background: #F5F6F8;
+        }
+
+        .student-item .name {
+            font-weight: 600;
+            color: #0C2340;
+            font-size: 0.95rem;
+        }
+
+        .student-item .status-badge {
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .student-item .status-badge.present {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .student-item .status-badge.absent {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+
+        .attendance-counter {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 10px;
+            background: #FDF8EE;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #C9A84C;
+            font-size: 0.85rem;
+        }
+
+        .attendance-counter .count {
+            font-weight: 700;
+        }
+        .attendance-counter .count.present {
+            color: #2E7D32;
+        }
+        .attendance-counter .count.absent {
+            color: #C62828;
+        }
+        .attendance-counter .count.total {
+            color: #0C2340;
+        }
+
+        /* ============================================================
+                           المودال
+                           ============================================================ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -230,61 +328,38 @@
         .modal-overlay.active {
             display: flex;
         }
+
         .modal {
             background: white;
             border-radius: 24px;
-            padding: 25px;
+            padding: 20px;
             max-width: 400px;
             width: 100%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .modal-header h3 {
             color: #0C2340;
+            font-size: 1.1rem;
         }
         .modal-close {
             background: none;
             border: none;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             cursor: pointer;
             color: #6B7B8D;
         }
 
-        .student-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
-            background: #FAFBFC;
-            border-radius: 12px;
-            margin-bottom: 6px;
-        }
-        .student-item .name {
-            font-weight: 600;
-            color: #0C2340;
-        }
-        .student-item .status-badge {
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        .student-item .status-badge.present {
-            background: #E8F5E9;
-            color: #2E7D32;
-        }
-        .student-item .status-badge.absent {
-            background: #FFEBEE;
-            color: #C62828;
-        }
-
-        /* ===== اختيار الطلاب ===== */
+        /* ============================================================
+                           إضافة طلاب
+                           ============================================================ */
         .student-check-item {
             display: flex;
             justify-content: space-between;
@@ -302,18 +377,50 @@
         .student-check-item .name {
             font-weight: 600;
             color: #0C2340;
+            font-size: 0.9rem;
+        }
+        .student-check-item .phone {
+            font-size: 0.75rem;
+            color: #6B7B8D;
         }
         .student-check-item input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
             accent-color: #C9A84C;
+            flex-shrink: 0;
         }
         .student-check-item.selected {
             background: #FDF8EE;
             border: 1px solid #C9A84C;
         }
 
+        .select-all {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background: #F5F6F8;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .select-all input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #C9A84C;
+            cursor: pointer;
+        }
+        .select-all label {
+            font-weight: 600;
+            color: #0C2340;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* ============================================================
+                           الغيابات
+                           ============================================================ */
         .absence-item {
             display: flex;
             justify-content: space-between;
@@ -323,36 +430,26 @@
             margin-bottom: 6px;
             border-right: 3px solid #C9A84C;
         }
-        .absence-item .date {
-            color: #0C2340;
+        .absence-item .student-name {
             font-weight: 500;
+            color: #0C2340;
         }
-        .absence-item .time {
+        .absence-item .date {
             color: #6B7B8D;
             font-size: 0.85rem;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 30px 20px;
-            color: #6B7B8D;
-        }
-        .empty-state .icon {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        /* ===== Scanner ===== */
+        /* ============================================================
+                           الماسح
+                           ============================================================ */
         #reader {
             width: 100%;
             border-radius: 16px;
             overflow: hidden;
             background: #000;
-            min-height: 280px;
+            min-height: 250px;
             position: relative;
         }
-
         #reader video {
             border-radius: 16px;
             width: 100%;
@@ -364,8 +461,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
+            width: 180px;
+            height: 180px;
             border: 3px solid #C9A84C;
             border-radius: 16px;
             pointer-events: none;
@@ -375,36 +472,32 @@
 
         .scan-status {
             text-align: center;
-            padding: 12px;
+            padding: 10px;
             background: #FDF8EE;
             border-radius: 12px;
             margin-top: 10px;
             color: #0C2340;
             font-weight: 500;
             border: 1px solid #C9A84C;
-            min-height: 50px;
+            min-height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
-
         .scan-status.success {
             background: #E8F5E9;
             border-color: #2E7D32;
             color: #2E7D32;
         }
-
         .scan-status.error {
             background: #FFEBEE;
             border-color: #C62828;
             color: #C62828;
         }
-
         .scan-status.scanning {
             background: #FFF8E7;
             border-color: #C9A84C;
-            color: #0C2340;
             animation: pulse 1s ease infinite;
         }
 
@@ -414,16 +507,47 @@
                 opacity: 1;
             }
             50% {
-                opacity: 0.5;
+                opacity: 0.6;
             }
         }
 
+        .student-confirm {
+            text-align: center;
+            padding: 15px;
+            background: #E8F5E9;
+            border-radius: 16px;
+            border: 2px solid #2E7D32;
+            margin: 10px 0;
+        }
+        .student-confirm .student-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0C2340;
+            margin: 5px 0;
+        }
+        .student-confirm .student-grade {
+            color: #6B7B8D;
+            font-size: 0.9rem;
+        }
+        .student-confirm .status-text {
+            margin-top: 6px;
+            padding: 6px;
+            background: #2E7D32;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* ============================================================
+                           رسائل منبثقة
+                           ============================================================ */
         .toast {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            padding: 16px 25px;
+            padding: 14px 22px;
             border-radius: 16px;
             color: white;
             font-weight: 600;
@@ -432,19 +556,16 @@
             animation: slideUp 0.4s ease;
             max-width: 90%;
             text-align: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
-
         .toast.success {
             background: #2E7D32;
             display: block;
         }
-
         .toast.error {
             background: #C62828;
             display: block;
         }
-
         .toast.info {
             background: #0C2340;
             display: block;
@@ -461,91 +582,116 @@
             }
         }
 
-        .student-confirm {
+        /* ============================================================
+                           الحقول
+                           ============================================================ */
+        .form-select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #E8ECF0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: #FAFBFC;
+            color: #0C2340;
+            margin-bottom: 8px;
+        }
+        .form-select:focus {
+            outline: none;
+            border-color: #C9A84C;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #0C2340;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        /* ============================================================
+                           فارغ
+                           ============================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6B7B8D;
+        }
+        .empty-state .icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        /* ============================================================
+                           QR Code للطالب
+                           ============================================================ */
+        .qr-section {
             text-align: center;
             padding: 15px;
-            background: #E8F5E9;
+            background: #FAFBFC;
             border-radius: 16px;
-            border: 2px solid #2E7D32;
             margin: 10px 0;
         }
-
-        .student-confirm .student-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #0C2340;
-            margin: 5px 0;
-        }
-
-        .student-confirm .student-grade {
-            color: #6B7B8D;
-            font-size: 0.9rem;
-        }
-
-        .student-confirm .status-text {
-            margin-top: 8px;
-            padding: 6px;
-            background: #2E7D32;
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .attendance-counter {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 14px;
-            background: #FDF8EE;
+        .qr-section #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
             border-radius: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #C9A84C;
+        }
+        .qr-section .qr-label {
+            color: #6B7B8D;
+            font-size: 0.8rem;
+            margin-top: 6px;
         }
 
-        .attendance-counter .count {
-            font-weight: 700;
-            color: #0C2340;
-        }
-        .attendance-counter .count.present {
-            color: #2E7D32;
-        }
-        .attendance-counter .count.absent {
-            color: #C62828;
-        }
-
+        /* ============================================================
+                           استجابة
+                           ============================================================ */
         @media (max-width: 480px) {
             .container {
                 padding: 15px;
-            }
-            .header {
-                flex-wrap: wrap;
-                gap: 10px;
+                border-radius: 20px;
             }
             .user-info .avatar {
-                width: 45px;
-                height: 45px;
-                font-size: 1.4rem;
+                width: 42px;
+                height: 42px;
+                font-size: 1.3rem;
             }
             .user-info .details h2 {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
             .scanner-overlay {
-                width: 150px;
-                height: 150px;
+                width: 140px;
+                height: 140px;
             }
             .student-confirm .student-name {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
             .toast {
-                bottom: 20px;
-                padding: 14px 20px;
-                font-size: 0.9rem;
+                bottom: 15px;
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
+            .attendance-counter {
+                font-size: 0.75rem;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .modal {
+                padding: 15px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- ============================================================
+        الهيدر
+        ============================================================ -->
         <div class="header">
             <div class="user-info">
                 <div class="avatar" id="userAvatar">👤</div>
@@ -555,12 +701,15 @@
                     <span class="grade-badge" id="userGradeBadge">رابع إعدادي</span>
                 </div>
             </div>
-            <div>
-                <button class="btn-refresh" onclick="refreshData()">🔄</button>
-                <button class="btn-logout" onclick="logout()">🚪</button>
+            <div class="header-actions">
+                <button class="btn-icon refresh" onclick="refreshData()">🔄</button>
+                <button class="btn-icon logout" onclick="logout()">🚪</button>
             </div>
         </div>
 
+        <!-- ============================================================
+        معلومات الحساب
+        ============================================================ -->
         <div class="card">
             <div class="card-title">📋 معلومات الحساب</div>
             <div class="info-row">
@@ -585,19 +734,21 @@
             </div>
         </div>
 
-        <!-- ===== أزرار المدرس ===== -->
+        <!-- ============================================================
+        أزرار المدرس
+        ============================================================ -->
         <div id="teacherActions" style="display:none;">
             <div class="card">
                 <div class="card-title">📚 إدارة الصف</div>
-                <select id="gradeSelect" style="width:100%;padding:14px;border:2px solid #E8ECF0;border-radius:12px;font-size:1rem;font-family:inherit;margin-bottom:10px;">
-                    <option value="">اختر الصف</option>
+                <select id="gradeSelect" class="form-select">
+                    <option value="">-- اختر الصف --</option>
                     <option value="رابع إعدادي">رابع إعدادي</option>
                     <option value="خامس إعدادي">خامس إعدادي</option>
                     <option value="سادس إعدادي">سادس إعدادي</option>
                 </select>
                 <button class="btn-primary" onclick="loadGradeStudents()">📋 عرض الطلاب</button>
-                <button class="btn-success" onclick="recordAbsences()" style="margin-top:6px;">📝 تسجيل الغيابات</button>
-                <button class="btn-secondary" onclick="openAddStudents()" style="margin-top:6px;">➕ إضافة طلاب</button>
+                <button class="btn-success" onclick="recordAbsences()">📝 تسجيل الغيابات</button>
+                <button class="btn-secondary" onclick="openAddStudents()">➕ إضافة طلاب</button>
             </div>
 
             <div id="studentsListContainer" style="display:none;">
@@ -607,28 +758,32 @@
                 </div>
             </div>
 
-            <button class="btn-primary" onclick="openScanner()" style="background:linear-gradient(135deg,#2ECC71,#27AE60);">
-                📷 فتح الماسح
-            </button>
+            <button class="btn-scan" onclick="openScanner()">📷 فتح الماسح</button>
 
-            <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
-            <button class="btn-secondary" onclick="showAllAbsences()" style="margin-top:6px;">📋 تقرير الغيابات</button>
+            <button class="btn-secondary" onclick="showTodayAttendance()">✅ حضور اليوم</button>
+            <button class="btn-secondary" onclick="showAllAbsences()">📋 تقرير الغيابات</button>
         </div>
 
-        <!-- ===== أزرار الطالب ===== -->
+        <!-- ============================================================
+        أزرار الطالب
+        ============================================================ -->
         <div id="studentActions">
             <button class="btn-secondary" onclick="showMyAbsences()">📋 غياباتي</button>
-            <button class="btn-secondary" onclick="showTodayAttendance()" style="margin-top:6px;">✅ حضور اليوم</button>
+            <button class="btn-secondary" onclick="showTodayAttendance()">✅ حضور اليوم</button>
         </div>
 
-        <!-- ===== QR Code للطالب ===== -->
+        <!-- ============================================================
+        QR Code للطالب
+        ============================================================ -->
         <div id="studentQR" class="qr-section" style="display:none;">
             <div id="qrcode"></div>
             <p class="qr-label">🎫 كود الطالب</p>
         </div>
     </div>
 
-    <!-- ===== مودال الغيابات ===== -->
+    <!-- ============================================================
+    مودال الغيابات
+    ============================================================ -->
     <div id="absencesModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -639,7 +794,9 @@
         </div>
     </div>
 
-    <!-- ===== مودال حضور اليوم ===== -->
+    <!-- ============================================================
+    مودال حضور اليوم
+    ============================================================ -->
     <div id="attendanceModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -650,7 +807,9 @@
         </div>
     </div>
 
-    <!-- ===== مودال إضافة طلاب ===== -->
+    <!-- ============================================================
+    مودال إضافة طلاب
+    ============================================================ -->
     <div id="addStudentsModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -658,26 +817,24 @@
                 <button class="modal-close" onclick="closeModal('addStudentsModal')">✕</button>
             </div>
 
-            <div style="margin-bottom:10px;">
-                <label style="display:block;font-weight:600;color:#0C2340;margin-bottom:5px;">اختر الصف:</label>
-                <select id="addGradeSelect" style="width:100%;padding:14px;border:2px solid #E8ECF0;border-radius:12px;font-size:1rem;font-family:inherit;">
-                    <option value="رابع إعدادي">رابع إعدادي</option>
-                    <option value="خامس إعدادي">خامس إعدادي</option>
-                    <option value="سادس إعدادي">سادس إعدادي</option>
-                </select>
-            </div>
+            <label class="form-label">اختر الصف:</label>
+            <select id="addGradeSelect" class="form-select">
+                <option value="رابع إعدادي">رابع إعدادي</option>
+                <option value="خامس إعدادي">خامس إعدادي</option>
+                <option value="سادس إعدادي">سادس إعدادي</option>
+            </select>
 
-            <div style="margin-bottom:10px;">
-                <label style="display:block;font-weight:600;color:#0C2340;margin-bottom:5px;">اختر الطلاب:</label>
-                <div id="allStudentsList" style="max-height:300px;overflow-y:auto;"></div>
-            </div>
+            <label class="form-label" style="margin-top:10px;">اختر الطلاب:</label>
+            <div id="allStudentsList" style="max-height:300px;overflow-y:auto;"></div>
 
             <button class="btn-success" onclick="addSelectedStudents()">✅ إضافة الطلاب المختارين</button>
-            <button class="btn-danger" onclick="closeModal('addStudentsModal')" style="margin-top:6px;">إلغاء</button>
+            <button class="btn-danger" onclick="closeModal('addStudentsModal')">إلغاء</button>
         </div>
     </div>
 
-    <!-- ===== مودال مسح QR ===== -->
+    <!-- ============================================================
+    مودال مسح QR
+    ============================================================ -->
     <div id="scannerModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -692,28 +849,31 @@
 
             <div id="studentConfirm" style="display:none;">
                 <div class="student-confirm">
-                    <div style="font-size:2.5rem;">✅</div>
+                    <div style="font-size:2rem;">✅</div>
                     <div class="student-name" id="scannedStudentName">-</div>
                     <div class="student-grade" id="scannedStudentGrade">-</div>
                     <div class="status-text">✅ تم تسجيل الحضور تلقائياً</div>
                 </div>
             </div>
 
-            <button class="btn-danger" onclick="closeScanner()" style="margin-top:10px;">✖ إغلاق الماسح</button>
+            <button class="btn-danger" onclick="closeScanner()">✖ إغلاق الماسح</button>
         </div>
     </div>
 
-    <!-- ===== رسالة منبثقة ===== -->
+    <!-- ============================================================
+    رسالة منبثقة
+    ============================================================ -->
     <div id="toast" class="toast"></div>
 
     <script>
         // ============================================================
-        // البيانات
+        //                      البيانات
         // ============================================================
 
         let currentUser = null;
         let users = [];
         let attendance = [];
+        let currentGrade = '';
 
         function loadData() {
             try {
@@ -738,64 +898,7 @@
         }
 
         // ============================================================
-        // عرض البيانات
-        // ============================================================
-
-        function updateUI() {
-            loadData();
-
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
-            document.getElementById('userPhone').textContent = currentUser.phone;
-            document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
-            document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
-
-            const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
-            document.getElementById('userAbsencesCount').textContent = userAbsences.length;
-
-            const today = new Date().toISOString().split('T')[0];
-            const todayAttendance = attendance.filter(a => a.date === today);
-            document.getElementById('todayAttendanceCount').textContent = todayAttendance.length;
-
-            if (currentUser.is_teacher) {
-                document.getElementById('userAvatar').textContent = '👨‍🏫';
-                document.getElementById('userRole').textContent = 'مدرس';
-                document.getElementById('userGradeBadge').style.display = 'none';
-                document.getElementById('studentQR').style.display = 'none';
-                document.getElementById('studentActions').style.display = 'none';
-                document.getElementById('teacherActions').style.display = 'block';
-            } else {
-                document.getElementById('userAvatar').textContent = '👤';
-                document.getElementById('userRole').textContent = 'طالب';
-                document.getElementById('studentQR').style.display = 'block';
-                document.getElementById('studentActions').style.display = 'block';
-                document.getElementById('teacherActions').style.display = 'none';
-
-                if (document.getElementById('qrcode')) {
-                    document.getElementById('qrcode').innerHTML = '';
-                    new QRCode(document.getElementById('qrcode'), {
-                        text: currentUser.id,
-                        width: 160,
-                        height: 160,
-                        colorDark: '#0C2340',
-                        colorLight: '#FFFFFF',
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
-                }
-            }
-        }
-
-        function refreshData() {
-            loadData();
-            updateUI();
-            if (document.getElementById('studentsListContainer').style.display === 'block') {
-                loadGradeStudents();
-            }
-            showToast('🔄 تم تحديث البيانات', 'info');
-        }
-
-        // ============================================================
-        // دوال مساعدة
+        //                      دوال مساعدة
         // ============================================================
 
         function generateId() {
@@ -820,8 +923,77 @@
             }, 3000);
         }
 
+        function getToday() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function getStudentsByGrade(grade) {
+            return users.filter(u => !u.is_teacher && u.grade === grade);
+        }
+
+        function isStudentPresent(studentId, date) {
+            return attendance.some(a => a.studentId === studentId && a.date === date);
+        }
+
         // ============================================================
-        // عرض غيابات الطالب
+        //                      عرض البيانات
+        // ============================================================
+
+        function updateUI() {
+            loadData();
+
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email || 'غير محدد';
+            document.getElementById('userPhone').textContent = currentUser.phone;
+            document.getElementById('userGrade').textContent = currentUser.grade || 'غير محدد';
+            document.getElementById('userGradeBadge').textContent = currentUser.grade || 'غير محدد';
+
+            const userAbsences = attendance.filter(a => a.studentId === currentUser.id);
+            document.getElementById('userAbsencesCount').textContent = userAbsences.length;
+
+            const today = getToday();
+            const todayAttendance = attendance.filter(a => a.date === today);
+            document.getElementById('todayAttendanceCount').textContent = todayAttendance.length;
+
+            if (currentUser.is_teacher) {
+                document.getElementById('userAvatar').textContent = '👨‍🏫';
+                document.getElementById('userRole').textContent = 'مدرس';
+                document.getElementById('userGradeBadge').style.display = 'none';
+                document.getElementById('studentQR').style.display = 'none';
+                document.getElementById('studentActions').style.display = 'none';
+                document.getElementById('teacherActions').style.display = 'block';
+            } else {
+                document.getElementById('userAvatar').textContent = '👤';
+                document.getElementById('userRole').textContent = 'طالب';
+                document.getElementById('studentQR').style.display = 'block';
+                document.getElementById('studentActions').style.display = 'block';
+                document.getElementById('teacherActions').style.display = 'none';
+
+                if (document.getElementById('qrcode')) {
+                    document.getElementById('qrcode').innerHTML = '';
+                    new QRCode(document.getElementById('qrcode'), {
+                        text: currentUser.id,
+                        width: 150,
+                        height: 150,
+                        colorDark: '#0C2340',
+                        colorLight: '#FFFFFF',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }
+            }
+        }
+
+        function refreshData() {
+            loadData();
+            updateUI();
+            if (document.getElementById('studentsListContainer').style.display === 'block' && currentGrade) {
+                loadGradeStudents();
+            }
+            showToast('🔄 تم تحديث البيانات', 'info');
+        }
+
+        // ============================================================
+        //                      عرض الغيابات (للطالب)
         // ============================================================
 
         function showMyAbsences() {
@@ -833,8 +1005,8 @@
             } else {
                 list.innerHTML = userAbs.map(a => `
                     <div class="absence-item">
-                        <span class="date">📅 ${a.date}</span>
-                        <span class="time">⏰ ${a.time}</span>
+                        <span class="student-name">📅 ${a.date}</span>
+                        <span class="date">⏰ ${a.time}</span>
                     </div>
                 `).join('');
             }
@@ -843,11 +1015,11 @@
         }
 
         // ============================================================
-        // عرض حضور اليوم
+        //                      عرض حضور اليوم
         // ============================================================
 
         function showTodayAttendance() {
-            const today = new Date().toISOString().split('T')[0];
+            const today = getToday();
             const list = document.getElementById('attendanceList');
             const todayAtt = attendance.filter(a => a.date === today);
 
@@ -866,7 +1038,7 @@
         }
 
         // ============================================================
-        // عرض تقرير الغيابات
+        //                      عرض تقرير الغيابات (للمدرس)
         // ============================================================
 
         function showAllAbsences() {
@@ -878,8 +1050,8 @@
                 const sorted = [...attendance].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 list.innerHTML = sorted.map(a => `
                     <div class="absence-item">
-                        <span class="date">👤 ${a.studentName} - 📅 ${a.date}</span>
-                        <span class="time">⏰ ${a.time}</span>
+                        <span class="student-name">👤 ${a.studentName}</span>
+                        <span class="date">📅 ${a.date} - ⏰ ${a.time}</span>
                     </div>
                 `).join('');
             }
@@ -888,11 +1060,8 @@
         }
 
         // ============================================================
-        // إدارة الطلاب
+        //                      عرض طلاب الصف
         // ============================================================
-
-        let currentGrade = '';
-        let classStudents = [];
 
         function loadGradeStudents() {
             const grade = document.getElementById('gradeSelect').value;
@@ -906,26 +1075,26 @@
             container.style.display = 'block';
 
             const list = document.getElementById('studentsList');
-            const today = new Date().toISOString().split('T')[0];
+            const today = getToday();
 
-            let students = users.filter(u => !u.is_teacher && u.grade === grade);
+            const students = getStudentsByGrade(grade);
 
             if (students.length === 0) {
                 list.innerHTML = `<div class="empty-state"><span class="icon">👤</span><p>لا يوجد طلاب في هذا الصف</p></div>`;
                 return;
             }
 
-            const presentCount = students.filter(s => attendance.some(a => a.studentId === s.id && a.date === today)).length;
+            const presentCount = students.filter(s => isStudentPresent(s.id, today)).length;
             const absentCount = students.length - presentCount;
 
             list.innerHTML = `
                 <div class="attendance-counter">
                     <span>✅ الحضور: <span class="count present">${presentCount}</span></span>
                     <span>❌ الغياب: <span class="count absent">${absentCount}</span></span>
-                    <span>👤 الإجمالي: <span class="count">${students.length}</span></span>
+                    <span>👤 الإجمالي: <span class="count total">${students.length}</span></span>
                 </div>
                 ${students.map(s => {
-                    const isPresent = attendance.some(a => a.studentId === s.id && a.date === today);
+                    const isPresent = isStudentPresent(s.id, today);
                     const status = isPresent ?
                         `<span class="status-badge present">✅ حاضر</span>` :
                         `<span class="status-badge absent">❌ غائب</span>`;
@@ -942,18 +1111,16 @@
         }
 
         // ============================================================
-        // إضافة طلاب جدد للصف
+        //                      إضافة طلاب للصف
         // ============================================================
 
         function openAddStudents() {
-            const modal = document.getElementById('addStudentsModal');
-            modal.classList.add('active');
+            document.getElementById('addStudentsModal').classList.add('active');
             loadAllStudents();
         }
 
         function loadAllStudents() {
             const list = document.getElementById('allStudentsList');
-            // جلب جميع الطلاب (غير المدرسين)
             const allStudents = users.filter(u => !u.is_teacher);
 
             if (allStudents.length === 0) {
@@ -961,24 +1128,46 @@
                 return;
             }
 
-            // ترتيب أبجدياً
             allStudents.sort((a, b) => a.name.localeCompare(b.name));
 
-            list.innerHTML = allStudents.map(s => {
-                // التحقق إذا كان الطالب مضافاً مسبقاً للصف المختار
-                const grade = document.getElementById('addGradeSelect').value;
-                const isInClass = users.some(u => u.id === s.id && u.grade === grade && !u.is_teacher);
-                const checked = isInClass ? 'checked' : '';
-                return `
-                    <div class="student-check-item ${isInClass ? 'selected' : ''}">
-                        <span class="name">${s.name}</span>
-                        <div>
-                            <span style="font-size:0.75rem;color:#6B7B8D;margin-left:8px;">${s.phone || ''}</span>
+            const grade = document.getElementById('addGradeSelect').value;
+
+            list.innerHTML = `
+                <div class="select-all" onclick="toggleAllStudents()">
+                    <input type="checkbox" id="selectAllCheckbox" />
+                    <label for="selectAllCheckbox">اختيار الكل</label>
+                </div>
+                ${allStudents.map(s => {
+                    const isInClass = s.grade === grade;
+                    const checked = isInClass ? 'checked' : '';
+                    return `
+                        <div class="student-check-item ${isInClass ? 'selected' : ''}">
+                            <div>
+                                <div class="name">${s.name}</div>
+                                <div class="phone">📱 ${s.phone || 'غير محدد'}</div>
+                            </div>
                             <input type="checkbox" id="student_${s.id}" value="${s.id}" ${checked} onchange="toggleStudentSelect('${s.id}')" />
                         </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('')}
+            `;
+
+            // تحديث حالة "اختيار الكل"
+            updateSelectAllState();
+        }
+
+        function toggleAllStudents() {
+            const selectAll = document.getElementById('selectAllCheckbox');
+            const checkboxes = document.querySelectorAll('#allStudentsList input[type="checkbox"]:not(#selectAllCheckbox)');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll.checked;
+                const parent = cb.closest('.student-check-item');
+                if (selectAll.checked) {
+                    parent.classList.add('selected');
+                } else {
+                    parent.classList.remove('selected');
+                }
+            });
         }
 
         function toggleStudentSelect(studentId) {
@@ -988,6 +1177,16 @@
                 parent.classList.add('selected');
             } else {
                 parent.classList.remove('selected');
+            }
+            updateSelectAllState();
+        }
+
+        function updateSelectAllState() {
+            const checkboxes = document.querySelectorAll('#allStudentsList input[type="checkbox"]:not(#selectAllCheckbox)');
+            const checked = document.querySelectorAll('#allStudentsList input[type="checkbox"]:not(#selectAllCheckbox):checked');
+            const selectAll = document.getElementById('selectAllCheckbox');
+            if (selectAll) {
+                selectAll.checked = checkboxes.length > 0 && checkboxes.length === checked.length;
             }
         }
 
@@ -1000,13 +1199,9 @@
                 return;
             }
 
-            let addedCount = 0;
-            let removedCount = 0;
-
-            // الحصول على قائمة الطلاب الذين تم اختيارهم
             const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+            let addedCount = 0;
 
-            // تحديث صف الطلاب المختارين
             users = users.map(u => {
                 if (selectedIds.includes(u.id) && !u.is_teacher) {
                     if (u.grade !== grade) {
@@ -1019,21 +1214,19 @@
 
             localStorage.setItem('users', JSON.stringify(users));
 
-            // تحديث الواجهة
             loadAllStudents();
-            loadGradeStudents();
+            if (document.getElementById('studentsListContainer').style.display === 'block') {
+                loadGradeStudents();
+            }
             updateUI();
 
             showToast(`✅ تم إضافة ${addedCount} طالب للصف ${grade}`, 'success');
         }
 
-        // عند تغيير الصف في مودال الإضافة، تحديث القائمة
-        document.getElementById('addGradeSelect').onchange = function() {
-            loadAllStudents();
-        };
+        document.getElementById('addGradeSelect').onchange = loadAllStudents;
 
         // ============================================================
-        // تسجيل الغيابات
+        //                      تسجيل الغيابات
         // ============================================================
 
         function recordAbsences() {
@@ -1042,12 +1235,10 @@
                 return;
             }
 
-            const today = new Date().toISOString().split('T')[0];
-            const students = users.filter(u => !u.is_teacher && u.grade === currentGrade);
+            const today = getToday();
+            const students = getStudentsByGrade(currentGrade);
 
-            const absentStudents = students.filter(s => {
-                return !attendance.some(a => a.studentId === s.id && a.date === today);
-            });
+            const absentStudents = students.filter(s => !isStudentPresent(s.id, today));
 
             if (absentStudents.length === 0) {
                 showToast('🎉 جميع الطلاب حاضرون اليوم', 'success');
@@ -1058,8 +1249,7 @@
             let count = 0;
 
             absentStudents.forEach(s => {
-                const exists = attendance.some(a => a.studentId === s.id && a.date === today);
-                if (!exists) {
+                if (!isStudentPresent(s.id, today)) {
                     attendance.push({
                         id: generateId(),
                         studentId: s.id,
@@ -1084,7 +1274,7 @@
         }
 
         // ============================================================
-        // مسح QR Code
+        //                      مسح QR Code
         // ============================================================
 
         let html5QrCode = null;
@@ -1092,9 +1282,7 @@
         let isProcessing = false;
 
         function openScanner() {
-            const modal = document.getElementById('scannerModal');
-            modal.classList.add('active');
-
+            document.getElementById('scannerModal').classList.add('active');
             document.getElementById('studentConfirm').style.display = 'none';
             isProcessing = false;
 
@@ -1154,10 +1342,10 @@
                 return;
             }
 
-            const today = new Date().toISOString().split('T')[0];
-            const alreadyExists = attendance.some(a => a.studentId === student.id && a.date === today);
+            const today = getToday();
 
-            if (alreadyExists) {
+            // التحقق من حضور الطالب اليوم
+            if (isStudentPresent(student.id, today)) {
                 document.getElementById('scannedStudentName').textContent = student.name;
                 document.getElementById('scannedStudentGrade').textContent = '📚 ' + (student.grade || 'غير محدد');
                 document.getElementById('studentConfirm').style.display = 'block';
@@ -1202,7 +1390,7 @@
             showToast('✅ تم تسجيل حضور ' + student.name, 'success');
 
             updateUI();
-            if (document.getElementById('studentsListContainer').style.display === 'block') {
+            if (document.getElementById('studentsListContainer').style.display === 'block' && currentGrade) {
                 loadGradeStudents();
             }
 
@@ -1237,7 +1425,7 @@
         }
 
         // ============================================================
-        // إغلاق المودال
+        //                      إغلاق المودال
         // ============================================================
 
         document.querySelectorAll('.modal-overlay').forEach(el => {
@@ -1253,15 +1441,15 @@
         });
 
         // ============================================================
-        // بدء التطبيق
+        //                      بدء التطبيق
         // ============================================================
 
         updateUI();
         console.log('🕌 معهد أنوار السلام - جاهز');
         console.log('👤 المستخدم:', currentUser.name);
         console.log('📌 الدور:', currentUser.is_teacher ? 'مدرس' : 'طالب');
-        console.log('📊 عدد الحضور:', attendance.length);
         console.log('👨‍🎓 عدد الطلاب:', users.filter(u => !u.is_teacher).length);
+        console.log('📊 عدد الحضور:', attendance.length);
     </script>
 </body>
 </html>
