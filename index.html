@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>تسجيل الدخول - معهد أنوار السلام</title>
+    <title>معهد أنوار السلام</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <style>
         * {
@@ -54,6 +54,7 @@
             font-size: 0.9rem;
         }
 
+        /* ===== التبويبات ===== */
         .tab-selector {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -88,6 +89,7 @@
             box-shadow: 0 4px 15px rgba(201, 168, 76, 0.2);
         }
 
+        /* ===== النماذج ===== */
         .form-card {
             background: white;
             border-radius: 20px;
@@ -123,6 +125,7 @@
             color: #C9A84C;
         }
 
+        /* ===== الحقول ===== */
         .input-group {
             margin-bottom: 14px;
         }
@@ -150,6 +153,41 @@
             box-shadow: 0 0 0 4px rgba(201, 168, 76, 0.15);
         }
 
+        /* ===== أزرار الدور ===== */
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .role-btn {
+            padding: 14px;
+            border: 2px solid #E8ECF0;
+            border-radius: 12px;
+            background: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            color: #6B7B8D;
+        }
+        .role-btn:active {
+            transform: scale(0.95);
+        }
+        .role-btn .emoji {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 3px;
+        }
+        .role-btn.active {
+            border-color: #C9A84C;
+            background: #FDF8EE;
+            color: #0C2340;
+        }
+
+        /* ===== الأزرار ===== */
         .btn-primary {
             width: 100%;
             padding: 16px;
@@ -189,11 +227,8 @@
         .btn-secondary:active {
             transform: scale(0.96);
         }
-        .btn-secondary:hover {
-            background: #C9A84C;
-            color: white;
-        }
 
+        /* ===== الرسائل ===== */
         .message {
             margin-top: 15px;
             padding: 14px;
@@ -234,6 +269,19 @@
             }
         }
 
+        /* ===== كود المدرس ===== */
+        .teacher-code-section {
+            display: none;
+            margin-top: 10px;
+            padding: 15px;
+            background: #FFF8E7;
+            border-radius: 12px;
+            border: 2px dashed #C9A84C;
+        }
+        .teacher-code-section .input-group {
+            margin-bottom: 0;
+        }
+
         .divider {
             display: flex;
             align-items: center;
@@ -257,25 +305,19 @@
             .logo h1 {
                 font-size: 1.5rem;
             }
-            .tab-btn {
-                padding: 12px 8px;
-                font-size: 0.85rem;
-            }
-            .tab-btn .emoji {
-                font-size: 1.5rem;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- ===== الشعار ===== -->
         <div class="logo">
             <span class="icon">🕌</span>
             <h1>معهد <span>أنوار السلام</span></h1>
             <p>نظام تسجيل الحضور</p>
         </div>
 
-        <!-- ===== أزرار التبديل ===== -->
+        <!-- ===== التبويبات ===== -->
         <div class="tab-selector">
             <button id="loginTab" class="tab-btn active">
                 <span class="emoji">🔑</span> تسجيل الدخول
@@ -285,21 +327,28 @@
             </button>
         </div>
 
+        <!-- ============================================================ -->
         <!-- ===== نموذج تسجيل الدخول ===== -->
+        <!-- ============================================================ -->
         <div id="loginForm" class="form-card active">
             <h3>🔑 <span>تسجيل الدخول</span></h3>
+
             <div class="input-group">
                 <label>📧 البريد الإلكتروني</label>
                 <input type="email" id="loginEmail" placeholder="example@email.com" />
             </div>
+
             <div class="input-group">
                 <label>🔑 كلمة المرور</label>
                 <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" />
             </div>
+
             <button id="loginBtn" class="btn-primary">تسجيل الدخول</button>
         </div>
 
+        <!-- ============================================================ -->
         <!-- ===== نموذج إنشاء حساب ===== -->
+        <!-- ============================================================ -->
         <div id="registerForm" class="form-card">
             <h3>📝 <span>إنشاء حساب جديد</span></h3>
 
@@ -307,44 +356,58 @@
                 <label>👤 الاسم الثلاثي</label>
                 <input type="text" id="regName" placeholder="مثال: أحمد محمد علي" />
             </div>
+
             <div class="input-group">
                 <label>📧 البريد الإلكتروني</label>
                 <input type="email" id="regEmail" placeholder="example@email.com" />
             </div>
+
             <div class="input-group">
                 <label>📱 رقم الهاتف</label>
                 <input type="tel" id="regPhone" placeholder="7XXXXXXXXX" maxlength="10" />
             </div>
+
             <div class="input-group">
                 <label>🔑 كلمة المرور</label>
                 <input type="password" id="regPassword" placeholder="6 أحرف على الأقل" />
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0;">
-                <button id="registerStudentBtn" class="btn-primary" style="margin:0;">طالب</button>
-                <button id="registerTeacherBtn" class="btn-primary" style="margin:0; background:linear-gradient(135deg,#2980B9,#1A5276);">مدرس</button>
+            <!-- ===== اختيار الدور ===== -->
+            <div class="role-selector">
+                <button id="roleStudentBtn" class="role-btn active" onclick="selectRole('student')">
+                    <span class="emoji">👤</span> طالب
+                </button>
+                <button id="roleTeacherBtn" class="role-btn" onclick="selectRole('teacher')">
+                    <span class="emoji">👨‍🏫</span> مدرب
+                </button>
             </div>
 
-            <div id="teacherCodeSection" style="display:none; margin-top:10px;">
+            <!-- ===== كود المدرس (يظهر فقط عند اختيار مدرب) ===== -->
+            <div id="teacherCodeSection" class="teacher-code-section">
                 <div class="input-group">
                     <label>🔐 كود المدرس السري</label>
                     <input type="password" id="regTeacherCode" placeholder="أدخل كود المدرس" />
                 </div>
             </div>
+
+            <button id="registerBtn" class="btn-primary">إنشاء حساب</button>
         </div>
 
+        <!-- ===== الرسائل ===== -->
         <div id="message" class="message"></div>
     </div>
 
     <script>
         // ============================================================
-        // الكود السري (مخفي)
+        // الكود السري (مخفي تماماً)
         // ============================================================
         const TEACHER_CODE = atob('enpubjU1MDAxMUFuQA==');
 
         // ============================================================
-        // العناصر
+        // المتغيرات
         // ============================================================
+
+        let selectedRole = 'student'; // 'student' أو 'teacher'
 
         const loginTab = document.getElementById('loginTab');
         const registerTab = document.getElementById('registerTab');
@@ -352,11 +415,11 @@
         const registerForm = document.getElementById('registerForm');
 
         const loginBtn = document.getElementById('loginBtn');
-        const registerStudentBtn = document.getElementById('registerStudentBtn');
-        const registerTeacherBtn = document.getElementById('registerTeacherBtn');
+        const registerBtn = document.getElementById('registerBtn');
 
+        const roleStudentBtn = document.getElementById('roleStudentBtn');
+        const roleTeacherBtn = document.getElementById('roleTeacherBtn');
         const teacherCodeSection = document.getElementById('teacherCodeSection');
-        const regTeacherCode = document.getElementById('regTeacherCode');
 
         // ============================================================
         // التبديل بين التبويبات
@@ -376,26 +439,27 @@
             registerForm.classList.add('active');
             loginForm.classList.remove('active');
             hideMessage();
-            teacherCodeSection.style.display = 'none';
         };
 
         // ============================================================
-        // إظهار/إخفاء كود المدرس
+        // اختيار الدور (طالب / مدرب)
         // ============================================================
 
-        registerTeacherBtn.onclick = function() {
-            teacherCodeSection.style.display = 'block';
-            registerTeacherBtn.style.background = 'linear-gradient(135deg,#C9A84C,#B8942E)';
-            registerStudentBtn.style.background = 'linear-gradient(135deg,#2980B9,#1A5276)';
-            hideMessage();
-        };
+        function selectRole(role) {
+            selectedRole = role;
 
-        registerStudentBtn.onclick = function() {
-            teacherCodeSection.style.display = 'none';
-            registerStudentBtn.style.background = 'linear-gradient(135deg,#C9A84C,#B8942E)';
-            registerTeacherBtn.style.background = 'linear-gradient(135deg,#2980B9,#1A5276)';
+            if (role === 'student') {
+                roleStudentBtn.classList.add('active');
+                roleTeacherBtn.classList.remove('active');
+                teacherCodeSection.style.display = 'none';
+            } else {
+                roleTeacherBtn.classList.add('active');
+                roleStudentBtn.classList.remove('active');
+                teacherCodeSection.style.display = 'block';
+            }
+
             hideMessage();
-        };
+        }
 
         // ============================================================
         // دوال مساعدة
@@ -485,10 +549,10 @@
         };
 
         // ============================================================
-        // إنشاء حساب (طالب أو مدرس)
+        // إنشاء حساب جديد
         // ============================================================
 
-        function registerUser(isTeacher) {
+        registerBtn.onclick = function() {
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
@@ -497,24 +561,32 @@
 
             hideMessage();
 
+            // التحقق من الاسم
             if (!isValidName(name)) {
                 showMessage('⚠️ الاسم يجب أن يكون عربياً (ثلاثي)', 'error');
                 return;
             }
+
+            // التحقق من البريد
             if (!isValidEmail(email)) {
                 showMessage('⚠️ البريد الإلكتروني غير صحيح', 'error');
                 return;
             }
+
+            // التحقق من الهاتف
             if (!isValidPhone(phone)) {
-                showMessage('⚠️ رقم الهاتف 10 أرقام', 'error');
-                return;
-            }
-            if (!isValidPassword(password)) {
-                showMessage('⚠️ كلمة المرور 6 أحرف', 'error');
+                showMessage('⚠️ رقم الهاتف يجب أن يكون 10 أرقام', 'error');
                 return;
             }
 
-            // التحقق من كود المدرس
+            // التحقق من كلمة المرور
+            if (!isValidPassword(password)) {
+                showMessage('⚠️ كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+
+            // التحقق من كود المدرس إذا كان المدرب مختاراً
+            const isTeacher = (selectedRole === 'teacher');
             if (isTeacher) {
                 if (!teacherCode) {
                     showMessage('⚠️ يرجى إدخال كود المدرس', 'error');
@@ -533,8 +605,7 @@
                 return;
             }
 
-            const btn = isTeacher ? registerTeacherBtn : registerStudentBtn;
-            setLoading(btn, true);
+            setLoading(registerBtn, true);
 
             setTimeout(function() {
                 const newUser = {
@@ -552,21 +623,13 @@
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
 
-                setLoading(btn, false);
+                setLoading(registerBtn, false);
                 showMessage(isTeacher ? '✅ تم التسجيل كمدرس!' : '✅ تم التسجيل كطالب!', 'success');
 
                 setTimeout(function() {
                     window.location.href = 'dashboard.html';
                 }, 1000);
             }, 1500);
-        }
-
-        registerStudentBtn.onclick = function() {
-            registerUser(false);
-        };
-
-        registerTeacherBtn.onclick = function() {
-            registerUser(true);
         };
 
         // ============================================================
@@ -583,8 +646,15 @@
             } catch (e) {}
         }
 
+        // ============================================================
+        // بدء التطبيق
+        // ============================================================
+
         console.log('🕌 معهد أنوار السلام - جاهز');
         console.log('🔑 الكود السري مخفي تماماً');
+
+        // تفعيل زر الطالب افتراضياً
+        selectRole('student');
     </script>
 </body>
 </html>
